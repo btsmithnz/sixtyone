@@ -6,6 +6,7 @@ import {
 } from "@/components/electorate-grid";
 import { LiveStatus } from "@/components/live-status";
 import { Skeleton } from "@/components/ui/skeleton";
+import mapData from "@/data/electorate-map.json";
 import {
   displayCandidateName,
   partyColorVar,
@@ -34,22 +35,28 @@ export default function ElectoratesPage() {
 
 async function Grid() {
   const { electorates, version, updatedAt } = await getOverview();
-  const cards: ElectorateCard[] = electorates.map((e) => {
-    const lead = e.votesCast > 0 ? e.candidates[0] : undefined;
-    return {
-      eNo: e.eNo,
-      name: e.name,
-      slug: e.slug,
-      kind: e.kind,
-      leaderName: lead ? displayCandidateName(lead.name) : null,
-      party: lead ? partyStyle(lead.pNo).short : null,
-      color: partyColorVar(lead?.pNo),
-      ink: partyInkVar(lead?.pNo),
-      margin: e.margin,
-      percentCounted: e.percentCounted,
-      complete: e.complete,
-    };
-  });
+  const results = new Map(electorates.map((e) => [e.eNo, e]));
+  // List all 71 from the static map data, so the grid is complete even
+  // before the first scrape has loaded anything into the database.
+  const cards: ElectorateCard[] = [...mapData.general, ...mapData.maori].map(
+    ({ eNo, name, slug }) => {
+      const e = results.get(eNo);
+      const lead = e && e.votesCast > 0 ? e.candidates[0] : undefined;
+      return {
+        eNo,
+        name: e?.name ?? name,
+        slug,
+        kind: eNo > 64 ? "maori" : "general",
+        leaderName: lead ? displayCandidateName(lead.name) : null,
+        party: lead ? partyStyle(lead.pNo).short : null,
+        color: partyColorVar(lead?.pNo),
+        ink: partyInkVar(lead?.pNo),
+        margin: e?.margin ?? null,
+        percentCounted: e?.percentCounted ?? 0,
+        complete: e?.complete ?? false,
+      };
+    },
+  );
   return (
     <>
       <LiveStatus updatedAt={updatedAt} version={version} />

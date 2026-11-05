@@ -61,9 +61,12 @@ async function Electorate({
 }: Pick<PageProps<"/electorates/[slug]">, "params">) {
   const { slug } = await params;
   // Only the 71 real electorates reach the database and the cache.
-  if (!ALL.some((e) => e.slug === slug)) notFound();
+  const known = ALL.find((e) => e.slug === slug);
+  if (!known) notFound();
   const detail = await getElectorateDetail(slug);
-  if (!detail) notFound();
+  // A real electorate with nothing stored yet (a fresh database before its
+  // first scrape) gets an empty state, not a 404 that would be cached.
+  if (!detail) return <NoResultsYet eNo={known.eNo} name={known.name} />;
   const { summary: e, partyVotes, history } = detail;
   const [leader, runnerUp] = e.candidates;
   const hasVotes = e.votesCast > 0;
@@ -251,6 +254,34 @@ async function Electorate({
         </section>
       </div>
     </>
+  );
+}
+
+function NoResultsYet({ eNo, name }: { eNo: number; name: string }) {
+  return (
+    <header className="grid items-end gap-6 md:grid-cols-[minmax(0,1fr)_220px]">
+      <div>
+        <span className="sticker inline-block -rotate-2 !rounded-full bg-secondary px-3 py-0.5 text-sm font-semibold">
+          {eNo > 64 ? "Māori electorate" : "General electorate"}
+        </span>
+        <h1 className="mt-3 font-display text-5xl leading-[0.95] font-extrabold tracking-tight [font-stretch:80%] sm:text-7xl">
+          {name}
+        </h1>
+        <p className="hatch mt-6 max-w-xl rounded-2xl p-5 text-muted-foreground">
+          <span className="rounded bg-card px-1">
+            No results yet. Candidates and votes for {name} appear here once the
+            count starts.
+          </span>
+        </p>
+      </div>
+      <div className="hidden md:block">
+        <LocatorMap
+          eNo={eNo}
+          color="var(--primary)"
+          label={`Where ${name} is`}
+        />
+      </div>
+    </header>
   );
 }
 
