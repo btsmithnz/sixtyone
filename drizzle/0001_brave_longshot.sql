@@ -1,0 +1,1 @@
+CREATE INDEX "electorate_snapshots_updated_idx" ON "electorate_snapshots" USING btree ("feed_updated_at" DESC NULLS LAST);
