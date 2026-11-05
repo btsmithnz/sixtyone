@@ -35,9 +35,6 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       path: "/",
-      image: "/og",
-      imageAlt:
-        "Who’s getting to 61? The race to a majority in the 2026 New Zealand election",
       version: overview.version,
     }),
   };

@@ -13,7 +13,7 @@ import {
   partyInkVar,
   partyStyle,
 } from "@/lib/parties";
-import { getLastUpdated, getOverview } from "@/lib/results";
+import { getOverview } from "@/lib/results";
 import { shareMetadata } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,10 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
       title: `${title} | NZ election 2026`,
       description,
       path: "/electorates",
-      image: "/og",
-      imageAlt:
-        "Who’s getting to 61? The race to a majority in the 2026 New Zealand election",
-      version: await getLastUpdated(),
+      // Same data the share image is drawn from.
+      version: (await getOverview()).version,
     }),
   };
 }

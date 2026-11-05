@@ -18,6 +18,13 @@ export const SITE_URL =
 
 export const OG_SIZE = { width: 1200, height: 630 };
 
+/** The home page's share image, also used by pages without their own. */
+const RACE_IMAGE = {
+  image: "/og",
+  imageAlt:
+    "Who’s getting to 61? The race to a majority in the 2026 New Zealand election",
+};
+
 /**
  * Open Graph + Twitter metadata for a page. `image` is a share-image route;
  * `version` (the results version) is appended so each update gets a new
@@ -28,15 +35,16 @@ export function shareMetadata({
   title,
   description,
   path,
-  image,
-  imageAlt,
+  image = RACE_IMAGE.image,
+  imageAlt = RACE_IMAGE.imageAlt,
   version,
 }: {
   title: string;
   description: string;
   path: string;
-  image: string;
-  imageAlt: string;
+  /** Share-image route; defaults to the race-to-61 image. */
+  image?: string;
+  imageAlt?: string;
   version: number | null;
 }): Metadata {
   const url = version ? `${image}?v=${version}` : image;

@@ -11,9 +11,6 @@ export const metadata: Metadata = {
     title: "About SixtyOne",
     description,
     path: "/about",
-    image: "/og",
-    imageAlt:
-      "Who’s getting to 61? The race to a majority in the 2026 New Zealand election",
     version: null,
   }),
 };

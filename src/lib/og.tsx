@@ -47,7 +47,7 @@ const fonts = Promise.all([
 const host = new URL(SITE_URL).host;
 
 async function render(body: ReactNode) {
-  return new ImageResponse(
+  const image = new ImageResponse(
     <div
       style={{
         width: "100%",
@@ -77,17 +77,13 @@ async function render(body: ReactNode) {
         {body}
       </div>
     </div>,
-    {
-      ...OG_SIZE,
-      fonts: await fonts,
-      headers: {
-        // Prerendered and revalidated with the results; let shared caches
-        // keep a copy for a few minutes too.
-        "cache-control":
-          "public, max-age=0, s-maxage=300, stale-while-revalidate=86400",
-      },
-    },
+    { ...OG_SIZE, fonts: await fonts },
   );
+  // The image routes are prerendered and revalidated with the results, like
+  // the pages. Drop ImageResponse's own Cache-Control so Next sends the same
+  // ISR header as the pages (a header set here would override it).
+  image.headers.delete("cache-control");
+  return image;
 }
 
 function Header() {
