@@ -67,6 +67,12 @@ Electoral Commission feed ──(Vercel Cron, every 5 min)──▶ /api/cron/sc
   `public/map/`. Pages draw electorates with `<use href="/map/electorates.<hash>.svg#e12">`,
   so the geometry is downloaded once and cached immutably, without any map library,
   tiles or paid service.
+- **Sharing and SEO** (`src/lib/site.ts`, `src/lib/og.tsx`): every page has a canonical
+  URL, a live description ("National-led 63 seats, Labour-led 57…") and a share image
+  rendered from the current results (`/og`, `/og/electorates/<slug>`). The image URLs
+  carry `?v=<results version>`, so Slack, iMessage, X and friends fetch a fresh preview
+  after each update instead of reusing a cached one. Also `sitemap.xml`, `robots.txt`
+  (previews are `noindex`), a web manifest and WebSite JSON-LD.
 - **Seats** (`src/lib/seats.ts`): the Commission's own allocation is used when it's
   published. Otherwise we project seats with Sainte-Laguë, the 5% / one-electorate
   threshold and overhang.

@@ -1,9 +1,21 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/lib/site";
+
+const description =
+  "Where SixtyOne's numbers come from, how seats are worked out under MMP, and why 61 is the magic number.";
 
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "Where SixtyOne's numbers come from and how seats are worked out.",
+  description,
+  ...shareMetadata({
+    title: "About SixtyOne",
+    description,
+    path: "/about",
+    image: "/og",
+    imageAlt:
+      "Who’s getting to 61? The race to a majority in the 2026 New Zealand election",
+    version: null,
+  }),
 };
 
 export default function AboutPage() {
