@@ -1,0 +1,536 @@
+{
+  "source": "Stats NZ / Representation Commission, 2025 electorate boundaries (CC BY 4.0)",
+  "sprite": "/map/electorates.a6d69856ef.svg",
+  "width": 1000,
+  "height": 1480,
+  "general": [
+    {
+      "eNo": 1,
+      "name": "Auckland Central",
+      "slug": "auckland-central",
+      "centroid": [713.7, 254],
+      "bounds": [663, 215, 739, 309]
+    },
+    {
+      "eNo": 2,
+      "name": "Banks Peninsula",
+      "slug": "banks-peninsula",
+      "centroid": [495, 1069.3],
+      "bounds": [459, 1047, 521, 1088]
+    },
+    {
+      "eNo": 3,
+      "name": "Botany",
+      "slug": "botany",
+      "centroid": [686.1, 312],
+      "bounds": [676, 306, 697, 319]
+    },
+    {
+      "eNo": 4,
+      "name": "Christchurch Central",
+      "slug": "christchurch-central",
+      "centroid": [480.4, 1045.1],
+      "bounds": [477, 1039, 483, 1051]
+    },
+    {
+      "eNo": 5,
+      "name": "Christchurch East",
+      "slug": "christchurch-east",
+      "centroid": [484.9, 1040.1],
+      "bounds": [480, 1031, 490, 1050]
+    },
+    {
+      "eNo": 6,
+      "name": "Coromandel",
+      "slug": "coromandel",
+      "centroid": [745, 337.9],
+      "bounds": [700, 261, 801, 411]
+    },
+    {
+      "eNo": 7,
+      "name": "Dunedin",
+      "slug": "dunedin",
+      "centroid": [319.9, 1291.1],
+      "bounds": [306, 1270, 335, 1314]
+    },
+    {
+      "eNo": 8,
+      "name": "East Cape",
+      "slug": "east-cape",
+      "centroid": [905.4, 456.3],
+      "bounds": [799, 390, 1000, 531]
+    },
+    {
+      "eNo": 9,
+      "name": "East Coast Bays",
+      "slug": "east-coast-bays",
+      "centroid": [662.4, 287.9],
+      "bounds": [656, 282, 668, 294]
+    },
+    {
+      "eNo": 10,
+      "name": "Epsom",
+      "slug": "epsom",
+      "centroid": [669.1, 305.5],
+      "bounds": [666, 303, 672, 309]
+    },
+    {
+      "eNo": 11,
+      "name": "Glendene",
+      "slug": "glendene",
+      "centroid": [658.3, 305.6],
+      "bounds": [656, 300, 662, 310]
+    },
+    {
+      "eNo": 12,
+      "name": "Hamilton East",
+      "slug": "hamilton-east",
+      "centroid": [712.4, 406],
+      "bounds": [708, 401, 717, 411]
+    },
+    {
+      "eNo": 13,
+      "name": "Hamilton West",
+      "slug": "hamilton-west",
+      "centroid": [708.6, 407.3],
+      "bounds": [703, 398, 715, 415]
+    },
+    {
+      "eNo": 14,
+      "name": "Henderson",
+      "slug": "henderson",
+      "centroid": [653.5, 303.7],
+      "bounds": [649, 300, 657, 309]
+    },
+    {
+      "eNo": 15,
+      "name": "Hutt South",
+      "slug": "hutt-south",
+      "centroid": [673.5, 798],
+      "bounds": [661, 781, 685, 815]
+    },
+    {
+      "eNo": 16,
+      "name": "Ilam",
+      "slug": "ilam",
+      "centroid": [471.1, 1041.1],
+      "bounds": [461, 1036, 480, 1046]
+    },
+    {
+      "eNo": 17,
+      "name": "Invercargill",
+      "slug": "invercargill",
+      "centroid": [116.7, 1364.9],
+      "bounds": [3, 1297, 225, 1479]
+    },
+    {
+      "eNo": 18,
+      "name": "Kaikōura",
+      "slug": "kaikoura",
+      "centroid": [526.6, 895.4],
+      "bounds": [419, 733, 627, 1019]
+    },
+    {
+      "eNo": 19,
+      "name": "Kaipara ki Mahurangi",
+      "slug": "kaipara-ki-mahurangi",
+      "centroid": [646.5, 261.7],
+      "bounds": [614, 221, 679, 305]
+    },
+    {
+      "eNo": 20,
+      "name": "Kapiti",
+      "slug": "kapiti",
+      "centroid": [689.1, 755.8],
+      "bounds": [659, 733, 715, 783]
+    },
+    {
+      "eNo": 21,
+      "name": "Kenepuru",
+      "slug": "kenepuru",
+      "centroid": [661.9, 784.9],
+      "bounds": [654, 776, 669, 793]
+    },
+    {
+      "eNo": 22,
+      "name": "Māngere",
+      "slug": "mangere",
+      "centroid": [670.2, 317.4],
+      "bounds": [664, 312, 675, 323]
+    },
+    {
+      "eNo": 23,
+      "name": "Manurewa",
+      "slug": "manurewa",
+      "centroid": [676.8, 321],
+      "bounds": [674, 317, 680, 326]
+    },
+    {
+      "eNo": 24,
+      "name": "Maungakiekie",
+      "slug": "maungakiekie",
+      "centroid": [671.9, 309.6],
+      "bounds": [667, 307, 677, 313]
+    },
+    {
+      "eNo": 25,
+      "name": "Mt Albert",
+      "slug": "mt-albert",
+      "centroid": [664, 306.3],
+      "bounds": [661, 303, 667, 310]
+    },
+    {
+      "eNo": 26,
+      "name": "Mt Maunganui",
+      "slug": "mt-maunganui",
+      "centroid": [797, 401.5],
+      "bounds": [786, 391, 814, 409]
+    },
+    {
+      "eNo": 27,
+      "name": "Mt Roskill",
+      "slug": "mt-roskill",
+      "centroid": [664, 310.2],
+      "bounds": [661, 308, 668, 313]
+    },
+    {
+      "eNo": 28,
+      "name": "Napier",
+      "slug": "napier",
+      "centroid": [867.5, 544.5],
+      "bounds": [785, 475, 943, 619]
+    },
+    {
+      "eNo": 29,
+      "name": "Nelson",
+      "slug": "nelson",
+      "centroid": [539.7, 794.2],
+      "bounds": [520, 770, 560, 810]
+    },
+    {
+      "eNo": 30,
+      "name": "New Plymouth",
+      "slug": "new-plymouth",
+      "centroid": [594.4, 565.8],
+      "bounds": [575, 540, 619, 593]
+    },
+    {
+      "eNo": 31,
+      "name": "North Shore",
+      "slug": "north-shore",
+      "centroid": [667.7, 295],
+      "bounds": [664, 289, 672, 301]
+    },
+    {
+      "eNo": 32,
+      "name": "Northcote",
+      "slug": "northcote",
+      "centroid": [663.9, 297.1],
+      "bounds": [660, 294, 668, 300]
+    },
+    {
+      "eNo": 33,
+      "name": "Northland",
+      "slug": "northland",
+      "centroid": [577.3, 148.3],
+      "bounds": [430, 0, 656, 251]
+    },
+    {
+      "eNo": 34,
+      "name": "Ōtāhuhu",
+      "slug": "otahuhu",
+      "centroid": [676.1, 315.1],
+      "bounds": [672, 311, 680, 318]
+    },
+    {
+      "eNo": 35,
+      "name": "Pakuranga",
+      "slug": "pakuranga",
+      "centroid": [680.1, 308.4],
+      "bounds": [676, 303, 684, 312]
+    },
+    {
+      "eNo": 36,
+      "name": "Palmerston North",
+      "slug": "palmerston-north",
+      "centroid": [734.9, 696.6],
+      "bounds": [725, 686, 744, 707]
+    },
+    {
+      "eNo": 37,
+      "name": "Papakura",
+      "slug": "papakura",
+      "centroid": [691.8, 327.1],
+      "bounds": [669, 311, 714, 344]
+    },
+    {
+      "eNo": 38,
+      "name": "Port Waikato",
+      "slug": "port-waikato",
+      "centroid": [679.4, 358.1],
+      "bounds": [647, 323, 718, 393]
+    },
+    {
+      "eNo": 39,
+      "name": "Rangitata",
+      "slug": "rangitata",
+      "centroid": [380.3, 1066.7],
+      "bounds": [316, 999, 445, 1147]
+    },
+    {
+      "eNo": 40,
+      "name": "Rangitīkei",
+      "slug": "rangitikei",
+      "centroid": [741.6, 652.2],
+      "bounds": [689, 561, 798, 741]
+    },
+    {
+      "eNo": 41,
+      "name": "Remutaka",
+      "slug": "remutaka",
+      "centroid": [688, 776.5],
+      "bounds": [671, 761, 704, 791]
+    },
+    {
+      "eNo": 42,
+      "name": "Rotorua",
+      "slug": "rotorua",
+      "centroid": [800.3, 452.7],
+      "bounds": [772, 403, 828, 498]
+    },
+    {
+      "eNo": 43,
+      "name": "Selwyn",
+      "slug": "selwyn",
+      "centroid": [418.7, 1021.8],
+      "bounds": [357, 959, 480, 1088]
+    },
+    {
+      "eNo": 44,
+      "name": "Southland",
+      "slug": "southland",
+      "centroid": [143.9, 1266.4],
+      "bounds": [0, 1138, 264, 1399]
+    },
+    {
+      "eNo": 45,
+      "name": "Taieri",
+      "slug": "taieri",
+      "centroid": [273.7, 1310.6],
+      "bounds": [226, 1239, 319, 1371]
+    },
+    {
+      "eNo": 46,
+      "name": "Takanini",
+      "slug": "takanini",
+      "centroid": [680.7, 320.8],
+      "bounds": [676, 316, 684, 326]
+    },
+    {
+      "eNo": 47,
+      "name": "Tāmaki",
+      "slug": "tamaki",
+      "centroid": [674.8, 304.9],
+      "bounds": [670, 302, 679, 308]
+    },
+    {
+      "eNo": 48,
+      "name": "Taranaki-King Country",
+      "slug": "taranaki-king-country",
+      "centroid": [683.5, 493.6],
+      "bounds": [602, 387, 746, 588]
+    },
+    {
+      "eNo": 49,
+      "name": "Taupō",
+      "slug": "taupo",
+      "centroid": [771.7, 507.1],
+      "bounds": [719, 414, 831, 578]
+    },
+    {
+      "eNo": 50,
+      "name": "Tauranga",
+      "slug": "tauranga",
+      "centroid": [777.9, 415.6],
+      "bounds": [766, 394, 791, 437]
+    },
+    {
+      "eNo": 51,
+      "name": "Tukituki",
+      "slug": "tukituki",
+      "centroid": [815.2, 635.1],
+      "bounds": [774, 602, 862, 671]
+    },
+    {
+      "eNo": 52,
+      "name": "Upper Harbour",
+      "slug": "upper-harbour",
+      "centroid": [657.7, 295.6],
+      "bounds": [651, 290, 666, 301]
+    },
+    {
+      "eNo": 53,
+      "name": "Waikato",
+      "slug": "waikato",
+      "centroid": [732.4, 395.4],
+      "bounds": [686, 356, 772, 438]
+    },
+    {
+      "eNo": 54,
+      "name": "Waimakariri",
+      "slug": "waimakariri",
+      "centroid": [452, 1017.1],
+      "bounds": [423, 982, 488, 1041]
+    },
+    {
+      "eNo": 55,
+      "name": "Wairarapa",
+      "slug": "wairarapa",
+      "centroid": [756.4, 738],
+      "bounds": [674, 650, 840, 835]
+    },
+    {
+      "eNo": 56,
+      "name": "Waitākere",
+      "slug": "waitakere",
+      "centroid": [647.7, 311.9],
+      "bounds": [638, 300, 661, 325]
+    },
+    {
+      "eNo": 57,
+      "name": "Waitaki",
+      "slug": "waitaki",
+      "centroid": [283.4, 1161.1],
+      "bounds": [156, 1036, 381, 1283]
+    },
+    {
+      "eNo": 58,
+      "name": "Wellington Bays",
+      "slug": "wellington-bays",
+      "centroid": [657.7, 801.8],
+      "bounds": [652, 798, 664, 805]
+    },
+    {
+      "eNo": 59,
+      "name": "Wellington North",
+      "slug": "wellington-north",
+      "centroid": [652.9, 796.2],
+      "bounds": [645, 789, 662, 804]
+    },
+    {
+      "eNo": 60,
+      "name": "West Coast-Tasman",
+      "slug": "west-coast-tasman",
+      "centroid": [379.9, 921.5],
+      "bounds": [115, 708, 536, 1164]
+    },
+    {
+      "eNo": 61,
+      "name": "Whanganui",
+      "slug": "whanganui",
+      "centroid": [689.7, 594.6],
+      "bounds": [584, 518, 771, 659]
+    },
+    {
+      "eNo": 62,
+      "name": "Whangaparāoa",
+      "slug": "whangaparaoa",
+      "centroid": [660, 280],
+      "bounds": [650, 268, 675, 288]
+    },
+    {
+      "eNo": 63,
+      "name": "Whangārei",
+      "slug": "whangarei",
+      "centroid": [633.6, 175.4],
+      "bounds": [611, 130, 667, 217]
+    },
+    {
+      "eNo": 64,
+      "name": "Wigram",
+      "slug": "wigram",
+      "centroid": [471, 1049.3],
+      "bounds": [464, 1043, 479, 1057]
+    }
+  ],
+  "maori": [
+    {
+      "eNo": 65,
+      "name": "Hauraki-Waikato",
+      "slug": "hauraki-waikato",
+      "centroid": [716.4, 367.2],
+      "bounds": [647, 261, 772, 441]
+    },
+    {
+      "eNo": 66,
+      "name": "Ikaroa-Rāwhiti",
+      "slug": "ikaroa-rawhiti",
+      "centroid": [829.6, 621.4],
+      "bounds": [665, 391, 1000, 835]
+    },
+    {
+      "eNo": 67,
+      "name": "Tāmaki Makaurau",
+      "slug": "tamaki-makaurau",
+      "centroid": [667.8, 310.8],
+      "bounds": [639, 291, 707, 326]
+    },
+    {
+      "eNo": 68,
+      "name": "Te Tai Hauāuru",
+      "slug": "te-tai-hauauru",
+      "centroid": [702, 571.7],
+      "bounds": [575, 422, 798, 787]
+    },
+    {
+      "eNo": 69,
+      "name": "Te Tai Tokerau",
+      "slug": "te-tai-tokerau",
+      "centroid": [598.3, 172.9],
+      "bounds": [480, 27, 739, 309]
+    },
+    {
+      "eNo": 70,
+      "name": "Te Tai Tonga",
+      "slug": "te-tai-tonga",
+      "centroid": [312.2, 1100.8],
+      "bounds": [0, 708, 667, 1479]
+    },
+    {
+      "eNo": 71,
+      "name": "Waiariki",
+      "slug": "waiariki",
+      "centroid": [828.2, 478.1],
+      "bounds": [731, 353, 961, 578]
+    }
+  ],
+  "insets": [
+    {
+      "id": "auckland",
+      "label": "Auckland",
+      "eNos": [
+        3, 9, 10, 11, 14, 22, 23, 24, 25, 27, 31, 32, 34, 35, 37, 46, 47, 52,
+        56, 62
+      ],
+      "viewBox": [646.1, 265.1, 53.8, 63.8]
+    },
+    {
+      "id": "hamilton",
+      "label": "Hamilton",
+      "eNos": [12, 13],
+      "viewBox": [702.2, 397.2, 15.7, 18.7]
+    },
+    {
+      "id": "wellington",
+      "label": "Wellington",
+      "eNos": [15, 21, 41, 58, 59],
+      "viewBox": [642.1, 758.1, 64.9, 59.9]
+    },
+    {
+      "id": "christchurch",
+      "label": "Christchurch",
+      "eNos": [4, 5, 16, 64],
+      "viewBox": [459.6, 1029.6, 31.9, 28.9]
+    }
+  ]
+}

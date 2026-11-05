@@ -1,26 +1,236 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Follow the system colour scheme. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-body);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-live: var(--live);
+  --color-hatch: var(--hatch);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * SixtyOne palette. Party colours are the only saturated colours carrying
+ * data; the chrome is lilac paper, deep indigo ink and a violet accent, chosen
+ * because no major NZ party owns violet.
+ */
+:root {
+  --paper: #f3f2ff;
+  --ink: #1b1a3a;
+  --live: #ff3d7f;
+  --hatch: #d8d6ef;
+  --sticker-shadow: #1b1a3a;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: #5b3df5;
+  --primary-foreground: #ffffff;
+  --secondary: #e7e5ff;
+  --secondary-foreground: var(--ink);
+  --muted: #e9e7fb;
+  --muted-foreground: #5d5b80;
+  --accent: #e3defe;
+  --accent-foreground: var(--ink);
+  --destructive: #d92d20;
+  --border: #d9d6f2;
+  --input: #d9d6f2;
+  --ring: #5b3df5;
+  --chart-1: #5b3df5;
+  --chart-2: #ff3d7f;
+  --chart-3: #14b8a6;
+  --chart-4: #f59e0b;
+  --chart-5: #64748b;
+  --radius: 0.875rem;
+
+  /* Party colours (p_no). See src/lib/parties.ts. */
+  --party-0: #9a98b8;
+  --party-5: #ffd60a;
+  --party-10: #16a34a;
+  --party-13: #e0312b;
+  --party-14: #9f1239;
+  --party-16: #0a58ca;
+  --party-17: #26263a;
+  --party-20: #65a30d;
+  --party-24: #14b8a6;
+  --party-34: #38bdf8;
+  --party-36: #84cc16;
+  --party-52: #db2777;
+  --party-56: #a855f7;
+  --party-66: #64748b;
+  --party-68: #d97706;
+  --party-69: #047857;
+  --party-70: #f97316;
+  --party-71: #b45309;
+  --party-ink-17: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --paper: #14133a;
+    --ink: #f1f0ff;
+    --hatch: #2e2c66;
+    --sticker-shadow: #07061c;
+
+    --card: #1e1d4c;
+    --popover: #24235a;
+    --primary: #9d8aff;
+    --primary-foreground: #14133a;
+    --secondary: #2a2960;
+    --muted: #25245a;
+    --muted-foreground: #aeacd6;
+    --accent: #302e6c;
+    --border: #35337a;
+    --input: #35337a;
+    --ring: #9d8aff;
+    --party-17: #c9c8e0;
+    --party-ink-17: #1b1a3a;
+    --party-0: #8987ad;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
+
+@layer components {
+  /* The house style: chunky ink outline with a hard offset shadow. */
+  .sticker {
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--sticker-shadow);
+    border-radius: var(--radius-2xl);
+    background: var(--card);
+  }
+  @media (prefers-color-scheme: dark) {
+    .sticker {
+      border-color: #4a47a0;
+    }
+  }
+
+  /*
+   * Lining figures for data. (Schibsted's tabular figures also widen commas
+   * and colons, which reads badly inline, so we keep them proportional.)
+   */
+  .num {
+    font-variant-numeric: lining-nums proportional-nums;
+  }
+
+  /* Uncounted / no result yet. */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--hatch) 0 3px,
+      transparent 3px 7px
+    );
+  }
+
+  /* The finish line at 61. */
+  .finish-line {
+    background-image:
+      linear-gradient(45deg, var(--ink) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--ink) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--ink) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--ink) 75%);
+    background-size: 8px 8px;
+    background-position:
+      0 0,
+      0 4px,
+      4px -4px,
+      -4px 0;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0.4) rotate(-12deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15) rotate(4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(-3deg);
+  }
+}
+
+@keyframes confetti {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--live) 60%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+/* biome-ignore-start lint/complexity/noImportantStyles: reduced motion must beat inline animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+/* biome-ignore-end lint/complexity/noImportantStyles: see above */
