@@ -3,8 +3,10 @@ import type { NextRequest } from "next/server";
 import { RESULTS_TAG } from "@/lib/results";
 import { scrapeFeed } from "@/lib/scrape";
 
-// A full cycle is ~75 small requests; usually a few seconds.
-export const maxDuration = 60;
+// A full cycle is ~75 small requests and usually takes a few seconds, but the
+// Commission's origin can slow right down on election night. Leave headroom so
+// a slow run still finishes and revalidates instead of being killed.
+export const maxDuration = 300;
 
 /**
  * Scrapes the Electoral Commission feed. Called by Vercel Cron (see

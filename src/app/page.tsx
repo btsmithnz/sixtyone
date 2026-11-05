@@ -27,10 +27,14 @@ export default function Home() {
 }
 
 async function HomeResults() {
-  const [overview, history] = await Promise.all([
-    getOverview(),
-    getNationalHistory(),
-  ]);
+  const [overview, { version: historyVersion, points: history }] =
+    await Promise.all([getOverview(), getNationalHistory()]);
+  // Two cache entries can be at different versions straight after a scrape;
+  // report the older so the page keeps refreshing until both are current.
+  const version =
+    overview.version && historyVersion
+      ? Math.min(overview.version, historyVersion)
+      : (overview.version ?? historyVersion);
   const { stats, parties } = overview;
 
   const seatParties: SeatParty[] = parties
@@ -74,7 +78,7 @@ async function HomeResults() {
     <div className="space-y-8">
       {/* Count status */}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-2">
-        <LiveStatus updatedAt={overview.updatedAt} version={overview.version} />
+        <LiveStatus updatedAt={overview.updatedAt} version={version} />
         <CountMeter percent={stats?.percentCounted ?? 0} />
         {stats && stats.totalVotesCast > 0 ? (
           <span className="text-sm text-muted-foreground">
@@ -93,10 +97,7 @@ async function HomeResults() {
       <RaceTo61
         parties={seatParties}
         houseSize={overview.houseSize}
-        defaultBlocs={{
-          left: DEFAULT_BLOCS.left.parties,
-          right: DEFAULT_BLOCS.right.parties,
-        }}
+        defaultBlocs={DEFAULT_BLOCS}
         seatsSource={overview.seatsSource}
       />
 

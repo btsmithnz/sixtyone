@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, gt, inArray, max } from "drizzle-orm";
+import { asc, desc, eq, gt, inArray, max } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db, schema } from "@/db";
 import { allocateSeats } from "./seats";
@@ -14,13 +14,6 @@ import { allocateSeats } from "./seats";
 export const RESULTS_TAG = "results";
 
 /* --------------------------------- types --------------------------------- */
-
-export type PartyRef = {
-  pNo: number;
-  abbrev: string;
-  name: string;
-  registered: boolean;
-};
 
 export type CandidateResult = {
   cNo: number;
@@ -294,17 +287,24 @@ export type NationalPoint = {
 };
 
 /** National party vote and seats at each snapshot, oldest first. */
-export async function getNationalHistory(): Promise<NationalPoint[]> {
+export async function getNationalHistory(): Promise<{
+  /** Results version this data was read at; see resultsVersion(). */
+  version: number | null;
+  points: NationalPoint[];
+}> {
   "use cache";
   cacheLife("results");
   cacheTag(RESULTS_TAG);
 
-  const snaps = await db
-    .select()
-    .from(schema.electionSnapshots)
-    .where(gt(schema.electionSnapshots.totalVotesCast, 0))
-    .orderBy(asc(schema.electionSnapshots.feedUpdatedAt));
-  if (!snaps.length) return [];
+  const [snaps, version] = await Promise.all([
+    db
+      .select()
+      .from(schema.electionSnapshots)
+      .where(gt(schema.electionSnapshots.totalVotesCast, 0))
+      .orderBy(asc(schema.electionSnapshots.feedUpdatedAt)),
+    resultsVersion(),
+  ]);
+  if (!snaps.length) return { version, points: [] };
   const rows = await db
     .select()
     .from(schema.electionPartySnapshots)
@@ -317,7 +317,7 @@ export async function getNationalHistory(): Promise<NationalPoint[]> {
   const bySnap = new Map<number, typeof rows>();
   for (const r of rows)
     bySnap.set(r.snapshotId, [...(bySnap.get(r.snapshotId) ?? []), r]);
-  return snaps.map((s) => {
+  const points = snaps.map((s) => {
     const ps = bySnap.get(s.id) ?? [];
     const total = ps.reduce((a, p) => a + p.votes, 0);
     return {
@@ -334,6 +334,7 @@ export async function getNationalHistory(): Promise<NationalPoint[]> {
       ),
     };
   });
+  return { version, points };
 }
 
 export type ElectorateDetail = {
@@ -435,22 +436,6 @@ export async function getElectorateDetail(
         };
       }),
   };
-}
-
-/** Party names for display, cached for longer than results. */
-export async function getParties(): Promise<PartyRef[]> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(RESULTS_TAG);
-  return db
-    .select({
-      pNo: schema.parties.pNo,
-      abbrev: schema.parties.abbrev,
-      name: schema.parties.name,
-      registered: schema.parties.registered,
-    })
-    .from(schema.parties)
-    .where(and(eq(schema.parties.registered, true)));
 }
 
 /**

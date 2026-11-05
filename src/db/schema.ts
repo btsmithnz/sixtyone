@@ -107,10 +107,7 @@ export const electorateSnapshots = pgTable(
   },
   (t) => [
     unique("electorate_snapshots_e_no_updated").on(t.eNo, t.feedUpdatedAt),
-    index("electorate_snapshots_e_no_updated_idx").on(
-      t.eNo,
-      t.feedUpdatedAt.desc(),
-    ),
+    // (The unique constraint's index also serves "latest per electorate".)
     // For the global "latest update" lookup that drives live refresh.
     index("electorate_snapshots_updated_idx").on(t.feedUpdatedAt.desc()),
   ],

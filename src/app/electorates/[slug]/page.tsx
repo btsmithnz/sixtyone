@@ -60,6 +60,8 @@ async function Electorate({
   params,
 }: Pick<PageProps<"/electorates/[slug]">, "params">) {
   const { slug } = await params;
+  // Only the 71 real electorates reach the database and the cache.
+  if (!ALL.some((e) => e.slug === slug)) notFound();
   const detail = await getElectorateDetail(slug);
   if (!detail) notFound();
   const { summary: e, partyVotes, history } = detail;

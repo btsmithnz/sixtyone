@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
+import { majorityOf } from "@/lib/seats";
 import { cn } from "@/lib/utils";
 
 export type SeatParty = {
@@ -52,7 +53,7 @@ export function RaceTo61({
   const sideOf = (pNo: number) => sides[pNo] ?? initial[pNo] ?? "cross";
   const customised = parties.some((p) => sideOf(p.pNo) !== initial[p.pNo]);
 
-  const majority = Math.floor(houseSize / 2) + 1;
+  const majority = majorityOf(houseSize);
   const bySeats = [...parties].sort((a, b) => b.seats - a.seats);
   const left = bySeats.filter((p) => sideOf(p.pNo) === "left");
   const right = bySeats.filter((p) => sideOf(p.pNo) === "right");

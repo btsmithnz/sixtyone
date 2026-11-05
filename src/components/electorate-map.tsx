@@ -67,11 +67,11 @@ export function ElectorateMap({
     roll === "general" ? insets : insets.filter((i) => i.id === "auckland");
   const byENo = new Map([...general, ...maori].map((s) => [s.eNo, s]));
 
-  const fillFor = (eNo: number) => {
+  const fillFor = (eNo: number, hatchId: string) => {
     const r = results[eNo];
     const pNo = mode === "electorate" ? r?.leader?.pNo : r?.partyLeader?.pNo;
     const hasResult = mode === "electorate" ? !!r?.leader : !!r?.partyLeader;
-    if (!r || !hasResult) return { fill: `url(#${patternId})`, opacity: 1 };
+    if (!r || !hasResult) return { fill: `url(#${hatchId})`, opacity: 1 };
     return {
       fill: colors[pNo ?? 0] ?? colors[0],
       opacity: r.complete ? 1 : 0.4 + 0.6 * (r.percentCounted / 100),
@@ -92,9 +92,22 @@ export function ElectorateMap({
   const hovered = hover ? byENo.get(hover.eNo) : undefined;
   const hoveredResult = hover ? results[hover.eNo] : undefined;
 
-  const renderShapes = (strokeWidth: number, interactive: boolean) =>
+  /**
+   * Electorate shapes for one SVG view. The main map and each inset share
+   * this; insets pass a thinner stroke and their own scaled hatch pattern, and
+   * aren't keyboard stops (the main map already is).
+   */
+  const renderShapes = ({
+    strokeWidth,
+    hatchId,
+    interactive,
+  }: {
+    strokeWidth: number;
+    hatchId: string;
+    interactive: boolean;
+  }) =>
     shapes.map((s) => {
-      const { fill, opacity } = fillFor(s.eNo);
+      const { fill, opacity } = fillFor(s.eNo, hatchId);
       const active = hover?.eNo === s.eNo;
       const label = `${s.name}: ${describe(results[s.eNo], mode)}`;
       return (
@@ -107,8 +120,12 @@ export function ElectorateMap({
             e.preventDefault();
             router.push(`/electorates/${s.slug}`);
           }}
-          onFocus={() => setHover({ eNo: s.eNo, x: -1, y: -1 })}
-          onBlur={() => setHover(null)}
+          onFocus={
+            interactive
+              ? () => setHover({ eNo: s.eNo, x: -1, y: -1 })
+              : undefined
+          }
+          onBlur={interactive ? () => setHover(null) : undefined}
           className="outline-none"
         >
           <use
@@ -201,7 +218,11 @@ export function ElectorateMap({
               <rect width="2.5" height="6" fill="var(--hatch)" />
             </pattern>
           </defs>
-          {renderShapes(1, true)}
+          {renderShapes({
+            strokeWidth: 1,
+            hatchId: patternId,
+            interactive: true,
+          })}
           {shownInsets.map((inset) => {
             const [x, y, w, h] = inset.viewBox;
             return (
@@ -275,40 +296,11 @@ export function ElectorateMap({
                       />
                     </pattern>
                   </defs>
-                  {/* Insets use their own hatch pattern, scaled to the zoom. */}
-                  <g>
-                    {shapes.map((s) => {
-                      const { fill, opacity } = fillFor(s.eNo);
-                      const active = hover?.eNo === s.eNo;
-                      const sw = w / 260;
-                      return (
-                        <a
-                          key={s.eNo}
-                          href={`/electorates/${s.slug}`}
-                          aria-label={s.name}
-                          tabIndex={-1}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            router.push(`/electorates/${s.slug}`);
-                          }}
-                        >
-                          <use
-                            href={`${sprite}#e${s.eNo}`}
-                            fill={
-                              fill.startsWith("url(")
-                                ? `url(#${patternId}-${inset.id})`
-                                : fill
-                            }
-                            fillOpacity={opacity}
-                            stroke={active ? "var(--ink)" : "var(--card)"}
-                            strokeWidth={active ? sw * 3 : sw}
-                            strokeLinejoin="round"
-                            className="cursor-pointer transition-[fill,fill-opacity] duration-500"
-                          />
-                        </a>
-                      );
-                    })}
-                  </g>
+                  {renderShapes({
+                    strokeWidth: w / 260,
+                    hatchId: `${patternId}-${inset.id}`,
+                    interactive: false,
+                  })}
                 </svg>
               </figure>
             );

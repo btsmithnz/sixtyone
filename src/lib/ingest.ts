@@ -2,6 +2,7 @@ import "server-only";
 import { sql as dsql } from "drizzle-orm";
 import mapData from "@/data/electorate-map.json";
 import { db, schema } from "@/db";
+import { slugify } from "@/lib/text";
 import type {
   FeedCandidate,
   FeedElection,
@@ -13,14 +14,6 @@ import type {
 const slugByENo = new Map(
   [...mapData.general, ...mapData.maori].map((e) => [e.eNo, e.slug]),
 );
-
-const fallbackSlug = (name: string) =>
-  name
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
 
 export async function upsertReference(ref: {
   parties: FeedParty[];
@@ -48,7 +41,7 @@ export async function upsertReference(ref: {
         .values(
           ref.electorates.map((e) => ({
             ...e,
-            slug: slugByENo.get(e.eNo) ?? fallbackSlug(e.name),
+            slug: slugByENo.get(e.eNo) ?? slugify(e.name),
             kind: e.eNo > 64 ? ("maori" as const) : ("general" as const),
           })),
         )

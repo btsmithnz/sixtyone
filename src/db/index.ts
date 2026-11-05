@@ -11,11 +11,11 @@ function createClient() {
     );
   }
   return postgres(url, {
-    // Serverless functions are short-lived and many run at once: keep each
-    // instance's pool tiny and rely on the provider's pooler (e.g. Neon's
-    // pgbouncer endpoint). Prepared statements don't survive transaction
-    // pooling, so turn them off.
-    max: process.env.VERCEL ? 1 : 5,
+    // Keep each instance's pool small and rely on the provider's pooler
+    // (e.g. Neon's pgbouncer endpoint) for the fan-in. A few connections, not
+    // one, because Vercel's Fluid compute runs concurrent requests in the same
+    // instance. Prepared statements don't survive transaction pooling.
+    max: 5,
     prepare: false,
     idle_timeout: 20,
   });

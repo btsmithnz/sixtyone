@@ -12,7 +12,8 @@
  *   pnpm simulate --until 0.6    # stop when ~60% of the count is in
  *   pnpm simulate --seed 7       # a different (deterministic) night
  *
- * ⚠️ Deletes all stored results. Don't run it against production.
+ * ⚠️ Deletes all stored results. Refuses non-local databases unless you pass
+ * --allow-remote (e.g. for a throwaway preview branch).
  */
 import { parseArgs } from "node:util";
 import { sql } from "drizzle-orm";
@@ -34,13 +35,26 @@ const { values: args } = parseArgs({
     steps: { type: "string", default: "36" },
     until: { type: "string", default: "1" },
     seed: { type: "string", default: "61" },
+    "allow-remote": { type: "boolean", default: false },
   },
 });
 const STEPS = Number(args.steps);
 const UNTIL = Number(args.until);
 
-if (process.env.VERCEL_ENV === "production") {
-  throw new Error("Refusing to simulate against production");
+// This wipes every stored result, so only run it against a local database
+// unless explicitly told otherwise.
+{
+  const host = new URL(process.env.DATABASE_URL ?? "postgres://localhost")
+    .hostname;
+  const local = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(host);
+  if (
+    process.env.VERCEL_ENV === "production" ||
+    (!local && !args["allow-remote"])
+  ) {
+    throw new Error(
+      `Refusing to wipe results on ${host}. simulate only runs against a local database (pass --allow-remote to override).`,
+    );
+  }
 }
 
 /* ------------------------------ randomness ------------------------------ */

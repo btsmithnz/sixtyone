@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
 import { formatInt, formatPct } from "@/lib/format";
+import { foldDiacritics } from "@/lib/text";
 
 export type ElectorateCard = {
   eNo: number;
@@ -19,8 +20,7 @@ export type ElectorateCard = {
   complete: boolean;
 };
 
-const fold = (s: string) =>
-  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const fold = (s: string) => foldDiacritics(s).toLowerCase();
 
 export function ElectorateGrid({
   electorates,

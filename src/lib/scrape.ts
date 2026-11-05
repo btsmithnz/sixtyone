@@ -79,6 +79,12 @@ export async function scrapeFeed({
       });
   }
 
+  // Any single file failing is recorded and skipped, never fatal: its
+  // Last-Modified is left untouched so the next run retries it.
+  const failures: string[] = [];
+  const fail = (path: string, err: unknown) =>
+    failures.push(`${path}: ${err instanceof Error ? err.message : err}`);
+
   try {
     // Reference data: on first run, when forced, or when the feed republishes it.
     const [{ value: partyCount }] = await db
@@ -91,17 +97,23 @@ export async function scrapeFeed({
       ["candidates.xml", "candidates"],
     ] as const;
     const needRef = force || partyCount === 0;
-    const refs = await Promise.all(
+    const fetched = await Promise.all(
       refFiles.map(async ([path, tag]) => {
         requests++;
-        const res = await fetchFeedFile(path, {
-          rootTag: tag,
-          ifModifiedSince: needRef ? null : lastModified.get(path),
-        });
-        if (res.status === "not-modified") notModified++;
-        return [path, res] as const;
+        try {
+          const res = await fetchFeedFile(path, {
+            rootTag: tag,
+            ifModifiedSince: needRef ? null : lastModified.get(path),
+          });
+          if (res.status === "not-modified") notModified++;
+          return [path, res] as const;
+        } catch (err) {
+          fail(path, err);
+          return null;
+        }
       }),
     );
+    const refs = fetched.filter((r) => r !== null);
     if (refs.some(([, r]) => r.status === "ok")) {
       const body = (p: string) => {
         const r = refs.find(([path]) => path === p)?.[1];
@@ -121,17 +133,18 @@ export async function scrapeFeed({
 
     // National results.
     let electionChanged = false;
-    const election = await get("election.xml", "election");
-    if (election.status === "ok") {
-      electionChanged = await storeElection(parseElection(election.body));
+    try {
+      const election = await get("election.xml", "election");
+      if (election.status === "ok") {
+        electionChanged = await storeElection(parseElection(election.body));
+      }
+      await remember("election.xml", election);
+    } catch (err) {
+      fail("election.xml", err);
     }
-    await remember("election.xml", election);
 
     // Electorate results, each with its own If-Modified-Since.
     const eNos = Array.from({ length: ELECTORATE_COUNT }, (_, i) => i + 1);
-    // One bad file shouldn't block the other 70: record the failure and
-    // leave its Last-Modified untouched so the next run retries it.
-    const failures: string[] = [];
     const changed = await mapLimit(eNos, CONCURRENCY, async (eNo) => {
       const path = electoratePath(eNo);
       try {
@@ -143,7 +156,7 @@ export async function scrapeFeed({
         await remember(path, res);
         return stored;
       } catch (err) {
-        failures.push(`${path}: ${err instanceof Error ? err.message : err}`);
+        fail(path, err);
         return false;
       }
     });

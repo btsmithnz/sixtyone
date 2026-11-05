@@ -4,7 +4,8 @@ export const FEED_BASE_URL = (
   process.env.FEED_BASE_URL ?? "https://media.election.net.nz/xml"
 ).replace(/\/$/, "");
 
-const USER_AGENT = "SixtyOne election results (+https://github.com)";
+const USER_AGENT =
+  "SixtyOne election results (+https://github.com/btsmithnz/sixtyone)";
 
 export type FetchResult =
   | { status: "not-modified" }
@@ -39,7 +40,7 @@ export async function fetchFeedFile(
             : {}),
         },
         cache: "no-store",
-        signal: AbortSignal.timeout(15_000),
+        signal: AbortSignal.timeout(10_000),
       });
       if (res.status === 304) return { status: "not-modified" };
       if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);

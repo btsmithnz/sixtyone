@@ -4,6 +4,7 @@ import {
   type ElectorateCard,
   ElectorateGrid,
 } from "@/components/electorate-grid";
+import { LiveStatus } from "@/components/live-status";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   displayCandidateName,
@@ -32,7 +33,7 @@ export default function ElectoratesPage() {
 }
 
 async function Grid() {
-  const { electorates } = await getOverview();
+  const { electorates, version, updatedAt } = await getOverview();
   const cards: ElectorateCard[] = electorates.map((e) => {
     const lead = e.votesCast > 0 ? e.candidates[0] : undefined;
     return {
@@ -49,5 +50,10 @@ async function Grid() {
       complete: e.complete,
     };
   });
-  return <ElectorateGrid electorates={cards} />;
+  return (
+    <>
+      <LiveStatus updatedAt={updatedAt} version={version} />
+      <ElectorateGrid electorates={cards} />
+    </>
+  );
 }

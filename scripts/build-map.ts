@@ -40,6 +40,7 @@ import type {
 } from "geojson";
 // @ts-expect-error mapshaper ships no types
 import mapshaper from "mapshaper";
+import { slugify } from "../src/lib/text";
 
 const ARCGIS =
   "https://services2.arcgis.com/vKb0s8tBIA3bdocZ/ArcGIS/rest/services";
@@ -177,15 +178,6 @@ function rewindForD3(geometry: Polygon | MultiPolygon) {
       for (const ring of rings) ring.reverse();
     }
   }
-}
-
-function slugify(name: string) {
-  return name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
 }
 
 async function main() {

@@ -1,0 +1,1 @@
+DROP INDEX "electorate_snapshots_e_no_updated_idx";

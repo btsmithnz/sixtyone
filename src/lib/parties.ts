@@ -56,8 +56,8 @@ export const partyInkVar = (pNo: number | null | undefined) =>
 
 /** The usual coalition blocs, used as the default in the race to 61. */
 export const DEFAULT_BLOCS = {
-  right: { label: "National-led", parties: [16, 5, 17] },
-  left: { label: "Labour-led", parties: [13, 10, 14] },
+  right: [16, 5, 17], // National, ACT, NZ First
+  left: [13, 10, 14], // Labour, Green, Te Pāti Māori
 };
 
 /**
