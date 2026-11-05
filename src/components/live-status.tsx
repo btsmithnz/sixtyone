@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { formatTime } from "@/lib/format";
 
-const POLL_MS = 30_000;
+const POLL_MS = 60_000;
 
 /**
  * Shows when results last changed and refreshes the page when the scraper

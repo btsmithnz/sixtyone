@@ -61,7 +61,7 @@ Electoral Commission feed ──(Vercel Cron, every 5 min)──▶ /api/cron/sc
   the cached page while a fresh one renders in the background. Postgres sees a handful
   of queries per scrape however many people are watching.
 - **Live updates** (`src/components/live-status.tsx`): each page polls a tiny cached
-  `/api/status` every 30 seconds and refreshes only when the feed has actually changed.
+  `/api/status` every 60 seconds and refreshes only when the feed has actually changed.
 - **Map** (`scripts/build-map.ts`): official 2025 boundaries are clipped to the
   coastline, simplified, projected, and written to a content-hashed SVG sprite in
   `public/map/`. Pages draw electorates with `<use href="/map/electorates.<hash>.svg#e12">`,
@@ -73,21 +73,26 @@ Electoral Commission feed ──(Vercel Cron, every 5 min)──▶ /api/cron/sc
 
 ## Deploying to Vercel
 
-1. **Database.** I recommend **Neon** via the Vercel Marketplace: serverless Postgres
-   that autoscales for a traffic spike, has a built-in pooler, preview-branch databases,
-   and a free tier that easily covers this. Use the **pooled** connection string as
-   `DATABASE_URL`. The client already disables prepared statements and keeps one
-   connection per function for pgbouncer. Supabase would work just as well.
-2. **Env vars.** Set `DATABASE_URL` and `CRON_SECRET` (any long random string).
-3. **Migrate.** Run `pnpm db:migrate` against the production database.
-4. **Cron.** `vercel.json` schedules `/api/cron/scrape` every 5 minutes. Sub-daily crons
-   need a Pro plan. On the night itself, consider tightening it to every minute
-   (`* * * * *`). Unchanged files return `304`, so that's still polite to the Commission.
-5. **Warm-up.** Hit the cron URL once after deploying so reference data is loaded:
-   `curl -H "Authorization: Bearer $CRON_SECRET" https://<site>/api/cron/scrape?force=1`
+1. **Database.** Neon via the Vercel Marketplace: serverless Postgres that autoscales for
+   a traffic spike and has a built-in pooler. The app uses the pooled `DATABASE_URL`;
+   migrations use `DATABASE_URL_UNPOOLED` when it's set. Both come from the Neon
+   integration.
+2. **Neon branches for previews.** Turn on database branching for Preview deployments in
+   the Neon integration. Each preview then gets its own copy-on-write branch of
+   production. This matters because **migrations run during every build**
+   (`pnpm build` is `drizzle-kit migrate && next build`), so without branching a preview
+   build would apply an unmerged migration to the production database. Branching also
+   gives you a safe place for `pnpm simulate --allow-remote`.
+3. **`CRON_SECRET`.** Set it to any long random string, for Production and Preview.
+4. **Cron.** `vercel.json` schedules `/api/cron/scrape` every 5 minutes. Crons that run
+   more than once a day need a Pro plan. Vercel only runs crons on the **production**
+   deployment, so on a preview, call the route yourself. On the night, consider every
+   minute (`* * * * *`). Unchanged files return `304`, so that's still polite.
+5. **Warm-up.** After a deploy, run one scrape so reference data and results load:
+   `curl -H "Authorization: Bearer $CRON_SECRET" https://<deployment>/api/cron/scrape?force=1`
 
-The build reads Postgres to prerender pages, so `DATABASE_URL` must be available at
-build time too.
+The build prerenders pages from Postgres. An empty database builds fine, with empty
+states until the first scrape.
 
 ## Data and licences
 

@@ -8,7 +8,10 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
+    // Schema changes go over a direct connection when one is available
+    // (Neon's integration sets DATABASE_URL_UNPOOLED); the app itself uses
+    // the pooled DATABASE_URL.
     // biome-ignore lint/style/noNonNullAssertion: drizzle-kit fails loudly without it
-    url: process.env.DATABASE_URL!,
+    url: (process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL)!,
   },
 });
