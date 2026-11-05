@@ -14,11 +14,24 @@ import {
   partyStyle,
 } from "@/lib/parties";
 import { getOverview } from "@/lib/results";
+import { shareMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Electorates",
-  description: "All 71 electorates in the 2026 New Zealand election, live.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const title = "All 71 electorates";
+  const description =
+    "Live 2026 New Zealand election results for all 64 general and 7 Māori electorates: who's ahead and by how much.";
+  return {
+    title,
+    description,
+    ...shareMetadata({
+      title: `${title} | NZ election 2026`,
+      description,
+      path: "/electorates",
+      // Same data the share image is drawn from.
+      version: (await getOverview()).version,
+    }),
+  };
+}
 
 export default function ElectoratesPage() {
   return (

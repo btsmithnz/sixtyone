@@ -15,7 +15,8 @@ import {
   partyInkVar,
   partyStyle,
 } from "@/lib/parties";
-import { getElectorateDetail } from "@/lib/results";
+import { type ElectorateDetail, getElectorateDetail } from "@/lib/results";
+import { shareMetadata } from "@/lib/site";
 
 const ALL = [...mapData.general, ...mapData.maori];
 
@@ -29,12 +30,35 @@ export async function generateMetadata({
 }: PageProps<"/electorates/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const e = ALL.find((x) => x.slug === slug);
+  if (!e) return { title: "Electorate not found" };
+  const detail = await getElectorateDetail(slug);
+  const title = `${e.name} results`;
+  const description = electorateDescription(e.name, detail);
   return {
-    title: e ? `${e.name} results` : "Electorate",
-    description: e
-      ? `Live 2026 election results for ${e.name}: who's ahead, by how much, and how the count unfolded.`
-      : undefined,
+    title,
+    description,
+    ...shareMetadata({
+      title: `${title} | NZ election 2026`,
+      description,
+      path: `/electorates/${slug}`,
+      image: `/og/electorates/${slug}`,
+      imageAlt: `2026 election results for ${e.name}`,
+      version: detail?.version ?? null,
+    }),
   };
+}
+
+/** "Chlöe Swarbrick (Green) leads Auckland Central by 1,203 votes…" */
+function electorateDescription(name: string, detail: ElectorateDetail | null) {
+  const s = detail?.summary;
+  const [lead] = s?.candidates ?? [];
+  if (!s || !lead || s.votesCast === 0 || s.margin === null) {
+    return `Live 2026 election results for ${name}: the candidates, the votes, and how the count unfolds.`;
+  }
+  const who = `${displayCandidateName(lead.name)} (${partyStyle(lead.pNo).short})`;
+  return s.complete
+    ? `${who} won ${name} by ${formatInt(s.margin)} votes. Full 2026 election results: candidates, party vote and how the count unfolded.`
+    : `${who} leads ${name} by ${formatInt(s.margin)} votes with ${formatPct(s.percentCounted, 0)} of voting places counted. Live 2026 election results.`;
 }
 
 export default function ElectoratePage({

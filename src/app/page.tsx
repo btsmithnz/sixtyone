@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { LiveStatus } from "@/components/live-status";
 import { MapSection } from "@/components/map-section";
@@ -8,21 +9,75 @@ import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatInt, formatPct } from "@/lib/format";
 import {
+  blocSeats,
   DEFAULT_BLOCS,
   partyColorVar,
   partyInkVar,
   partyStyle,
 } from "@/lib/parties";
-import { getNationalHistory, getOverview } from "@/lib/results";
+import { getNationalHistory, getOverview, type Overview } from "@/lib/results";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL,
+  shareMetadata,
+} from "@/lib/site";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const overview = await getOverview();
+  const title = `${SITE_NAME}: ${SITE_TAGLINE}`;
+  const description = homeDescription(overview);
+  return {
+    title: { absolute: title },
+    description,
+    ...shareMetadata({
+      title,
+      description,
+      path: "/",
+      version: overview.version,
+    }),
+  };
+}
+
+/** A search/share description that reflects the count once it starts. */
+function homeDescription({ parties, stats }: Overview) {
+  const { left, right } = blocSeats(parties);
+  if (!stats || left.seats + right.seats === 0) return SITE_DESCRIPTION;
+  const [ahead, behind] =
+    right.seats >= left.seats ? [right, left] : [left, right];
+  return `${ahead.name} ${ahead.seats} seats, ${behind.name} ${behind.seats}, with ${formatPct(stats.percentCounted)} of voting places counted. Live 2026 NZ election results: the race to 61 and every electorate.`;
+}
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  inLanguage: "en-NZ",
+};
 
 export default function Home() {
   // Results have a short client `stale` time, so they sit outside the App
   // Shell: the shell (prefetched for instant navigation) shows the skeleton,
   // and the cached results stream in.
   return (
-    <Suspense fallback={<HomeSkeleton />}>
-      <HomeResults />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD, `<` escaped
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <h1 className="pt-2 font-display text-2xl font-extrabold tracking-tight [font-stretch:85%] sm:text-3xl">
+        New Zealand election 2026: live results
+      </h1>
+      <Suspense fallback={<HomeSkeleton />}>
+        <HomeResults />
+      </Suspense>
+    </>
   );
 }
 

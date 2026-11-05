@@ -61,6 +61,36 @@ export const DEFAULT_BLOCS = {
 };
 
 /**
+ * Seats per bloc using the default blocs, for share images and page
+ * descriptions. A bloc is named after its largest party ("National-led").
+ */
+export function blocSeats<T extends { pNo: number; totalSeats: number }>(
+  parties: T[],
+) {
+  const seated = parties
+    .filter((p) => p.totalSeats > 0)
+    .sort((a, b) => b.totalSeats - a.totalSeats);
+  const bloc = (members: T[], fallback: string) => ({
+    name: members[0] ? `${partyStyle(members[0].pNo).short}-led` : fallback,
+    seats: members.reduce((n, p) => n + p.totalSeats, 0),
+    parties: members,
+  });
+  const inBloc = (ids: number[]) => seated.filter((p) => ids.includes(p.pNo));
+  return {
+    left: bloc(inBloc(DEFAULT_BLOCS.left), "Labour-led"),
+    right: bloc(inBloc(DEFAULT_BLOCS.right), "National-led"),
+    cross: bloc(
+      seated.filter(
+        (p) =>
+          !DEFAULT_BLOCS.left.includes(p.pNo) &&
+          !DEFAULT_BLOCS.right.includes(p.pNo),
+      ),
+      "Crossbench",
+    ),
+  };
+}
+
+/**
  * "SWARBRICK, Chlöe" → "Chlöe Swarbrick", "MacLEOD, David" → "David MacLeod",
  * "van DONGEN, Yvonne" → "Yvonne van Dongen".
  */

@@ -2,6 +2,12 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
 import Link from "next/link";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL,
+} from "@/lib/site";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -15,13 +21,33 @@ const body = Schibsted_Grotesk({
   subsets: ["latin", "latin-ext"],
 });
 
+/** Site-wide defaults; pages add canonical URLs and live share images. */
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "SixtyOne · NZ election results, live",
-    template: "%s · SixtyOne",
+    default: `${SITE_NAME}: ${SITE_TAGLINE}`,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Live results for the 2026 New Zealand general election: who's getting to 61, every electorate on the map, and how the count unfolded.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  category: "news",
+  keywords: [
+    "NZ election 2026",
+    "New Zealand election results",
+    "election night",
+    "live results",
+    "electorate results",
+    "party vote",
+    "MMP",
+    "Parliament",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_NZ",
+  },
+  twitter: { card: "summary_large_image" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
