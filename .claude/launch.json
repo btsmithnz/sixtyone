@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sixtyone",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--port", "3061"],
+      "port": 3061
+    }
+  ]
+}

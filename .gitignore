@@ -43,3 +43,7 @@ next-env.d.ts
 
 # map build downloads
 /scripts/.cache
+
+# Claude Code: personal settings and app-managed worktrees
+/.claude/settings.local.json
+/.claude/worktrees/
