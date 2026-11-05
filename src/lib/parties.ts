@@ -60,19 +60,30 @@ export const DEFAULT_BLOCS = {
   left: { label: "Labour-led", parties: [13, 10, 14] },
 };
 
-/** "SWARBRICK, Chlöe" → "Chlöe Swarbrick". */
+/**
+ * "SWARBRICK, Chlöe" → "Chlöe Swarbrick", "MacLEOD, David" → "David MacLeod",
+ * "van DONGEN, Yvonne" → "Yvonne van Dongen".
+ */
 export function displayCandidateName(feedName: string) {
   const [surname, given] = feedName.split(",").map((s) => s.trim());
-  if (!given) return titleCase(surname);
-  return `${given} ${titleCase(surname)}`;
+  if (!given) return surnameCase(surname);
+  return `${given} ${surnameCase(surname)}`;
 }
 
-function titleCase(s: string) {
+/**
+ * The feed upper-cases surnames but keeps any lowercase prefix as written
+ * ("MacLEOD", "McANULTY", "van DONGEN"). So keep that prefix and title-case
+ * only the trailing capitals of each part (split on spaces, hyphens and
+ * apostrophes, so "O'BRIEN" becomes "O'Brien").
+ */
+function surnameCase(s: string) {
   return s
-    .toLowerCase()
-    .replace(
-      /(^|[\s'’-])(mc)?(\p{L})/gu,
-      (_m, sep: string, mc: string | undefined, ch: string) =>
-        `${sep}${mc ? mc[0].toUpperCase() + mc.slice(1) : ""}${ch.toUpperCase()}`,
-    );
+    .split(/([\s'’-])/)
+    .map((part) => {
+      const m = part.match(/^(.*?)(\p{Lu}[\p{Lu}\p{M}]*)$/u);
+      if (!m) return part;
+      const [, prefix, caps] = m;
+      return prefix + caps[0] + caps.slice(1).toLowerCase();
+    })
+    .join("");
 }

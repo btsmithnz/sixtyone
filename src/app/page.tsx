@@ -74,7 +74,7 @@ async function HomeResults() {
     <div className="space-y-8">
       {/* Count status */}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-2">
-        <LiveStatus updatedAt={overview.updatedAt} />
+        <LiveStatus updatedAt={overview.updatedAt} version={overview.version} />
         <CountMeter percent={stats?.percentCounted ?? 0} />
         {stats && stats.totalVotesCast > 0 ? (
           <span className="text-sm text-muted-foreground">

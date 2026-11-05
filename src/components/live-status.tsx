@@ -11,14 +11,22 @@ const POLL_MS = 30_000;
  * stores something new. It polls a tiny cached endpoint rather than
  * re-rendering on a timer, so an idle night costs nothing.
  */
-export function LiveStatus({ updatedAt }: { updatedAt: number | null }) {
+export function LiveStatus({
+  updatedAt,
+  version,
+}: {
+  /** When the results shown on this page last changed (for the label). */
+  updatedAt: number | null;
+  /** Results version the page data was read at (same value /api/status reports). */
+  version: number | null;
+}) {
   const router = useRouter();
-  const known = useRef(updatedAt);
+  const known = useRef(version);
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {
-    known.current = updatedAt;
-  }, [updatedAt]);
+    known.current = version;
+  }, [version]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -30,8 +38,11 @@ export function LiveStatus({ updatedAt }: { updatedAt: number | null }) {
           const { updatedAt: latest } = (await res.json()) as {
             updatedAt: number | null;
           };
-          if (latest && latest !== known.current) {
-            known.current = latest;
+          // `known` only advances when a render delivers the new version
+          // (the effect above), so an aborted or stale refresh is retried on
+          // the next poll instead of being forgotten.
+          // Newer, not just different: /api/status can briefly lag a page.
+          if (latest && latest > (known.current ?? 0)) {
             router.refresh();
           }
         } catch {

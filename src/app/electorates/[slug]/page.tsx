@@ -92,7 +92,7 @@ async function Electorate({
             {e.name}
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
-            <LiveStatus updatedAt={e.updatedAt} />
+            <LiveStatus updatedAt={e.updatedAt} version={detail.version} />
             <span className="text-sm text-muted-foreground">
               <span className="num font-semibold text-foreground">
                 {e.placesCounted}

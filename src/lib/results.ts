@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, gt, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, gt, inArray, max } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db, schema } from "@/db";
 import { allocateSeats } from "./seats";
@@ -62,6 +62,8 @@ export type PartyResult = {
 };
 
 export type Overview = {
+  /** Results version this data was read at; see resultsVersion(). */
+  version: number | null;
   updatedAt: number | null;
   stats: {
     votingPlacesCounted: number;
@@ -151,7 +153,7 @@ export async function getOverview(): Promise<Overview> {
   cacheLife("results");
   cacheTag(RESULTS_TAG);
 
-  const [ref, [national], snaps] = await Promise.all([
+  const [ref, [national], snaps, version] = await Promise.all([
     loadReference(),
     db
       .select()
@@ -159,6 +161,7 @@ export async function getOverview(): Promise<Overview> {
       .orderBy(desc(schema.electionSnapshots.feedUpdatedAt))
       .limit(1),
     latestElectorateSnapshots(),
+    resultsVersion(),
   ]);
   const snapIds = snaps.map((s) => s.id);
   const [cVotes, pVotes, nationalParties] = await Promise.all([
@@ -264,6 +267,7 @@ export async function getOverview(): Promise<Overview> {
     .sort((a, b) => b.votes - a.votes || b.totalSeats - a.totalSeats);
 
   return {
+    version,
     updatedAt: national?.feedUpdatedAt.getTime() ?? null,
     stats: national
       ? {
@@ -333,6 +337,8 @@ export async function getNationalHistory(): Promise<NationalPoint[]> {
 }
 
 export type ElectorateDetail = {
+  /** Results version this data was read at; see resultsVersion(). */
+  version: number | null;
   summary: ElectorateSummary;
   partyVotes: { pNo: number; votes: number; percent: number }[];
   history: {
@@ -356,7 +362,7 @@ export async function getElectorateDetail(
     .where(eq(schema.electorates.slug, slug));
   if (!electorate) return null;
 
-  const [snaps, standing] = await Promise.all([
+  const [snaps, standing, version] = await Promise.all([
     db
       .select()
       .from(schema.electorateSnapshots)
@@ -366,6 +372,7 @@ export async function getElectorateDetail(
       .select()
       .from(schema.candidates)
       .where(eq(schema.candidates.eNo, electorate.eNo)),
+    resultsVersion(),
   ]);
   const latest = snaps.at(-1);
   const ids = snaps.map((s) => s.id);
@@ -402,6 +409,7 @@ export async function getElectorateDetail(
     bySnap.set(v.snapshotId, [...(bySnap.get(v.snapshotId) ?? []), v]);
 
   return {
+    version,
     summary,
     partyVotes: pVotes
       .map((p) => ({
@@ -445,15 +453,34 @@ export async function getParties(): Promise<PartyRef[]> {
     .where(and(eq(schema.parties.registered, true)));
 }
 
-/** Last time the feed changed. Polled by browsers to decide when to refresh. */
+/**
+ * The newest feed timestamp across national *and* electorate snapshots: the
+ * "version" of the results. Not cached itself: it's read inside each cached
+ * page-data function, so a page's data and its version always come from the
+ * same cache entry (both fresh or both stale), and by /api/status.
+ */
+async function resultsVersion(): Promise<number | null> {
+  const [election, electorate] = await Promise.all([
+    db
+      .select({ t: max(schema.electionSnapshots.feedUpdatedAt) })
+      .from(schema.electionSnapshots),
+    db
+      .select({ t: max(schema.electorateSnapshots.feedUpdatedAt) })
+      .from(schema.electorateSnapshots),
+  ]);
+  const times = [election[0]?.t, electorate[0]?.t]
+    .filter((t): t is Date => t instanceof Date)
+    .map((t) => t.getTime());
+  return times.length ? Math.max(...times) : null;
+}
+
+/**
+ * Polled by browsers (via /api/status) to decide when to refresh. Cached, so
+ * it runs once per revalidation rather than once per visitor.
+ */
 export async function getLastUpdated(): Promise<number | null> {
   "use cache";
   cacheLife("results");
   cacheTag(RESULTS_TAG);
-  const [row] = await db
-    .select({ t: schema.electionSnapshots.feedUpdatedAt })
-    .from(schema.electionSnapshots)
-    .orderBy(desc(schema.electionSnapshots.feedUpdatedAt))
-    .limit(1);
-  return row?.t.getTime() ?? null;
+  return resultsVersion();
 }

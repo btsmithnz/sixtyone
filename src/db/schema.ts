@@ -111,6 +111,8 @@ export const electorateSnapshots = pgTable(
       t.eNo,
       t.feedUpdatedAt.desc(),
     ),
+    // For the global "latest update" lookup that drives live refresh.
+    index("electorate_snapshots_updated_idx").on(t.feedUpdatedAt.desc()),
   ],
 );
 
