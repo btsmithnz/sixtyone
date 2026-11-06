@@ -209,10 +209,24 @@ export async function getOverview(): Promise<Overview> {
     number,
     { electorateSeats: number; listSeats: number; totalSeats: number }
   >();
+  // Electorate leaders by party. Seats won outside the party vote
+  // (independents, or a party not on the party ballot) aren't in any party's
+  // total but still count towards the size of the House.
+  const partyNos = new Set(nationalParties.map((p) => p.pNo));
+  const wins = new Map<number, number>();
+  let outsideWins = 0;
+  for (const e of electorates) {
+    const lead = e.margin !== null ? e.candidates[0] : undefined;
+    if (!lead) continue;
+    if (lead.pNo && partyNos.has(lead.pNo))
+      wins.set(lead.pNo, (wins.get(lead.pNo) ?? 0) + 1);
+    else outsideWins++;
+  }
   let houseSize = 120;
   if (feedSeats > 0) {
     seatsSource = "feed";
-    houseSize = Math.max(120, feedSeats);
+    // 120 plus any overhang, which the Commission's party totals include.
+    houseSize = Math.max(120, feedSeats + outsideWins);
     seatMap = new Map(
       nationalParties.map((p) => [
         p.pNo,
@@ -225,18 +239,10 @@ export async function getOverview(): Promise<Overview> {
     );
   } else if (totalVotes > 0) {
     seatsSource = "projected";
-    const wins = new Map<number, number>();
-    let independentWins = 0;
-    for (const e of electorates) {
-      const lead = e.margin !== null ? e.candidates[0] : undefined;
-      if (!lead) continue;
-      if (lead.pNo) wins.set(lead.pNo, (wins.get(lead.pNo) ?? 0) + 1);
-      else independentWins++;
-    }
     const alloc = allocateSeats({
       partyVotes: new Map(nationalParties.map((p) => [p.pNo, p.votes])),
       electorateWins: wins,
-      independentWins,
+      independentWins: outsideWins,
     });
     houseSize = alloc.totalSeats;
     seatMap = new Map(alloc.parties.map((p) => [p.pNo, p]));
