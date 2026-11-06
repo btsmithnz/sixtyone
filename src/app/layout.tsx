@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
 import Link from "next/link";
+import { Suspense } from "react";
+import { LiveLogoBadge, LogoBadge } from "@/components/logo-badge";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   SITE_DESCRIPTION,
@@ -84,9 +86,11 @@ function SiteHeader() {
         className="group flex items-center gap-2 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4"
         aria-label="SixtyOne home"
       >
-        <span className="sticker grid size-11 -rotate-6 place-items-center !rounded-xl bg-primary font-display text-2xl leading-none font-extrabold text-primary-foreground transition-transform group-hover:rotate-3 [font-stretch:80%]">
-          61
-        </span>
+        {/* The shell shows "61"; the live badge swaps in "62*" if an
+            overhang raises the bar. */}
+        <Suspense fallback={<LogoBadge />}>
+          <LiveLogoBadge />
+        </Suspense>
         <span className="hidden font-display text-2xl font-extrabold tracking-tight [font-stretch:90%] min-[420px]:inline">
           SixtyOne
         </span>

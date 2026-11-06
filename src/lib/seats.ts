@@ -89,3 +89,21 @@ export function allocateSeats({
 /** Seats needed to govern alone: a majority of the House (61 of 120, more with overhang). */
 export const majorityOf = (totalSeats: number) =>
   Math.floor(Math.max(totalSeats, BASE_SEATS) / 2) + 1;
+
+/**
+ * The majority when the Commission's own allocation has an overhang that
+ * lifts it past 61 (122+ seats), else null. Projections can wobble between
+ * 120 and 122 seats as the count moves, so they don't count. Drives the
+ * "62*" logo.
+ */
+export function raisedMajority({
+  seatsSource,
+  houseSize,
+}: {
+  seatsSource: "feed" | "projected" | "none";
+  houseSize: number;
+}): number | null {
+  if (seatsSource !== "feed") return null;
+  const majority = majorityOf(houseSize);
+  return majority > majorityOf(BASE_SEATS) ? majority : null;
+}
