@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
-import { majorityOf } from "@/lib/seats";
+import { BASE_SEATS, majorityOf, raisedMajority } from "@/lib/seats";
 import { cn } from "@/lib/utils";
 
 export type SeatParty = {
@@ -119,8 +119,16 @@ export function RaceTo61({
             : seatsSource === "feed"
               ? "Seats as allocated by the Electoral Commission so far"
               : null}
-          {houseSize > 120 ? ` (${houseSize}-seat House with overhang)` : null}
         </p>
+        {houseSize > BASE_SEATS ? (
+          <p className="basis-full text-sm font-medium">
+            {/* Matches the "62*" logo, when it shows. */}
+            {raisedMajority({ seatsSource, houseSize }) ? (
+              <span className="font-bold text-live">* </span>
+            ) : null}
+            Overhang: a {houseSize}-seat House, so {majority} to govern.
+          </p>
+        ) : null}
       </div>
 
       {/* Bloc totals */}
