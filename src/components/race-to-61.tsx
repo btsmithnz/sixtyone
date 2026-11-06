@@ -167,7 +167,7 @@ export function RaceTo61({
         {/* One finish line in the middle: a majority is more than half the
             seats, so a bloc governs exactly when it crosses the halfway
             point, whatever the size of the House. */}
-        <FinishLine label={`${majority} to govern`} />
+        <FinishLine />
         {winner ? (
           <div
             key={`${winner}-${leftSeats}-${rightSeats}`}
@@ -292,17 +292,12 @@ function OverTheLine() {
   );
 }
 
-function FinishLine({ label }: { label: string }) {
+function FinishLine() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute -top-2 -bottom-2 left-1/2 w-1.5 -translate-x-1/2 rounded-sm"
-    >
-      <div className="finish-line h-full w-full rounded-sm ring-2 ring-card" />
-      <span className="absolute top-full left-1/2 mt-1 -translate-x-1/2 font-display text-xs font-extrabold whitespace-nowrap">
-        {label}
-      </span>
-    </div>
+      className="finish-line pointer-events-none absolute -top-2 -bottom-2 left-1/2 w-1.5 -translate-x-1/2 rounded-sm ring-2 ring-card"
+    />
   );
 }
 
