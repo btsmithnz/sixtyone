@@ -126,16 +126,8 @@ function Header() {
   );
 }
 
-function Strip({
-  ticks,
-  houseSize,
-  majority,
-}: {
-  ticks: (string | null)[];
-  houseSize: number;
-  majority: number;
-}) {
-  const lines = [majority, houseSize - majority];
+/** The seat strip, with one finish line in the middle (see RaceTo61). */
+function Strip({ ticks }: { ticks: (string | null)[] }) {
   return (
     <div style={{ display: "flex", position: "relative", height: 74 }}>
       <div style={{ display: "flex", width: "100%", height: "100%", gap: 2 }}>
@@ -152,22 +144,19 @@ function Strip({
           />
         ))}
       </div>
-      {lines.map((at) => (
-        <div
-          key={at}
-          style={{
-            display: "flex",
-            position: "absolute",
-            top: -10,
-            bottom: -10,
-            left: `${(at / houseSize) * 100}%`,
-            width: 6,
-            marginLeft: -3,
-            background: INK,
-            borderRadius: 3,
-          }}
-        />
-      ))}
+      <div
+        style={{
+          display: "flex",
+          position: "absolute",
+          top: -10,
+          bottom: -10,
+          left: "50%",
+          width: 6,
+          marginLeft: -3,
+          background: INK,
+          borderRadius: 3,
+        }}
+      />
     </div>
   );
 }
@@ -249,7 +238,7 @@ export async function raceImage(overview: Overview) {
       )}
 
       <div style={{ display: "flex", marginTop: 14, marginBottom: 22 }}>
-        <Strip ticks={ticks} houseSize={houseSize} majority={majority} />
+        <Strip ticks={ticks} />
       </div>
 
       <div
