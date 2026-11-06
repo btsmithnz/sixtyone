@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
 import Link from "next/link";
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <SiteFooter />
         </TooltipProvider>
+        <Analytics />
       </body>
     </html>
   );
