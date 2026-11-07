@@ -127,61 +127,22 @@ function Header() {
 }
 
 /** The seat strip, with one finish line in the middle (see RaceTo61). */
-/** `fill` is the share of voting places counted: each seat fills up with it. */
-function Strip({ ticks, fill }: { ticks: (string | null)[]; fill: number }) {
+function Strip({ ticks }: { ticks: (string | null)[] }) {
   return (
     <div style={{ display: "flex", position: "relative", height: 74 }}>
       <div style={{ display: "flex", width: "100%", height: "100%", gap: 2 }}>
-        {ticks.map((color, i) =>
-          color ? (
-            <div
-              // biome-ignore lint/suspicious/noArrayIndexKey: seats are positional
-              key={i}
-              style={{
-                display: "flex",
-                position: "relative",
-                flex: 1,
-                borderRadius: 3,
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: color,
-                  opacity: 0.28,
-                }}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  height: `${fill}%`,
-                  background: color,
-                }}
-              />
-            </div>
-          ) : (
-            <div
-              // biome-ignore lint/suspicious/noArrayIndexKey: seats are positional
-              key={i}
-              style={{
-                display: "flex",
-                flex: 1,
-                borderRadius: 3,
-                backgroundImage: HATCH,
-              }}
-            />
-          ),
-        )}
+        {ticks.map((color, i) => (
+          <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: seats are positional
+            key={i}
+            style={{
+              display: "flex",
+              flex: 1,
+              borderRadius: 3,
+              ...(color ? { background: color } : { backgroundImage: HATCH }),
+            }}
+          />
+        ))}
       </div>
       <div
         style={{
@@ -280,7 +241,7 @@ export async function raceImage(overview: Overview) {
       )}
 
       <div style={{ display: "flex", marginTop: 14, marginBottom: 22 }}>
-        <Strip ticks={ticks} fill={Math.min(100, Math.max(0, counted))} />
+        <Strip ticks={ticks} />
       </div>
 
       <div

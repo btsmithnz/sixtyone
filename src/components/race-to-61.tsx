@@ -78,8 +78,6 @@ export function RaceTo61({
   const ahead =
     leftSeats >= majority ? "left" : rightSeats >= majority ? "right" : null;
   const countDone = percentCounted >= 100;
-  // How full each seat is drawn: the strip "loads in" as the count does.
-  const fill = Math.min(100, Math.max(0, percentCounted));
   const winner = countDone ? ahead : null;
 
   // One tick per seat: left bloc from the left, right bloc from the right,
@@ -175,33 +173,18 @@ export function RaceTo61({
           role="img"
           aria-label={`${leftName} ${leftSeats} seats, ${rightName} ${rightSeats} seats, crossbench ${crossSeats}, ${majority} needed to govern.`}
         >
-          {ticks.map((p, i) =>
-            p ? (
-              // A pale tint says whose seat it is; the solid part rises with
-              // the share of voting places counted.
-              <span
-                // biome-ignore lint/suspicious/noArrayIndexKey: seats are positional
-                key={i}
-                title={p.short}
-                className="relative overflow-hidden transition-colors duration-500 sm:rounded-[3px]"
-                style={{
-                  background: `color-mix(in srgb, ${p.color} 28%, transparent)`,
-                }}
-              >
-                <span
-                  className="absolute inset-x-0 bottom-0 transition-[height,background-color] duration-1000 ease-out motion-reduce:transition-none"
-                  style={{ height: `${fill}%`, background: p.color }}
-                />
-              </span>
-            ) : (
-              <span
-                // biome-ignore lint/suspicious/noArrayIndexKey: seats are positional
-                key={i}
-                title="Not yet allocated"
-                className="hatch sm:rounded-[3px]"
-              />
-            ),
-          )}
+          {ticks.map((p, i) => (
+            <span
+              // biome-ignore lint/suspicious/noArrayIndexKey: seats are positional
+              key={i}
+              title={p ? p.short : "Not yet allocated"}
+              className={cn(
+                "transition-colors duration-500 sm:rounded-[3px]",
+                !p && "hatch",
+              )}
+              style={p ? { background: p.color } : undefined}
+            />
+          ))}
         </div>
         {/* One finish line in the middle: a majority is more than half the
             seats, so a bloc governs exactly when it crosses the halfway
@@ -232,16 +215,6 @@ export function RaceTo61({
           </div>
         ) : null}
       </div>
-
-      {counted > 0 && !countDone ? (
-        <p className="mt-3 text-sm text-muted-foreground">
-          Seats fill in as the count goes on:{" "}
-          <span className="num font-semibold text-foreground">
-            {formatPct(percentCounted)}
-          </span>{" "}
-          of voting places counted so far.
-        </p>
-      ) : null}
 
       <p className="mt-6 max-w-[60ch] text-lg leading-snug" aria-live="polite">
         {verdict}
