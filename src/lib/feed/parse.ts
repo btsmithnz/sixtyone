@@ -17,6 +17,8 @@ const parser = new XMLParser({
   parseTagValue: false,
   parseAttributeValue: false,
   trimValues: true,
+  // The feed uses numeric references like &#39; (O'NEILL), not just &amp;.
+  htmlEntities: true,
   isArray: (name, jpath) =>
     // Only list elements, not the <electorate> root of eNN.xml.
     ARRAY_TAGS.has(name) && String(jpath).includes("."),

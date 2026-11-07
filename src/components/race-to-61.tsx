@@ -12,6 +12,8 @@ export type SeatParty = {
   color: string;
   ink: string;
   seats: number;
+  /** Share of the party vote. */
+  percent: number;
 };
 
 type Side = "left" | "right" | "cross";
@@ -354,12 +356,21 @@ function Column({
   onMove: (pNo: number, dir: -1 | 1) => void;
   side: Side;
 }) {
+  const partyVote = parties.reduce((a, p) => a + p.percent, 0);
   return (
     <div className="rounded-2xl bg-secondary/60 p-3">
-      <div className="flex items-baseline justify-between px-1">
+      <div className="flex items-baseline justify-between gap-2 px-1">
         <span className="text-sm font-semibold">{title}</span>
-        <span className="num font-display text-lg font-extrabold">{seats}</span>
+        <span className="num font-display text-lg font-extrabold">
+          {seats}
+          <span className="sr-only"> seats</span>
+        </span>
       </div>
+      {parties.length ? (
+        <p className="num px-1 text-xs text-muted-foreground">
+          {formatPct(partyVote)} of the party vote
+        </p>
+      ) : null}
       <ul className="mt-2 flex min-h-11 flex-wrap gap-2">
         {parties.map((p) => (
           <li
@@ -375,7 +386,12 @@ function Column({
               <ArrowLeft className="size-3.5" />
             </MoveButton>
             <span className="px-0.5">
-              {p.short} <span className="num opacity-80">{p.seats}</span>
+              {p.short} <span className="num">{p.seats}</span>
+              <span className="sr-only"> seats,</span>{" "}
+              <span className="num text-xs font-medium opacity-75">
+                {formatPct(p.percent)}
+              </span>
+              <span className="sr-only"> of the party vote</span>
             </span>
             <MoveButton
               label={`Move ${p.short} right`}
