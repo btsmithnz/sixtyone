@@ -39,7 +39,7 @@ Useful scripts:
 ## How it works
 
 ```
-Electoral Commission feed ──(Vercel Cron, every minute)──▶ /api/cron/scrape
+Electoral Commission feed ──(Vercel Cron, every 5 minutes)──▶ /api/cron/scrape
   media.election.net.nz/xml        If-Modified-Since, 75 small requests
                                               │
                                               ▼
@@ -93,10 +93,10 @@ Electoral Commission feed ──(Vercel Cron, every minute)──▶ /api/cron/s
    build would apply an unmerged migration to the production database. Branching also
    gives you a safe place for `pnpm simulate --allow-remote`.
 3. **`CRON_SECRET`.** Set it to any long random string, for Production and Preview.
-4. **Cron.** `vercel.json` schedules `/api/cron/scrape` every minute. Crons that run
+4. **Cron.** `vercel.json` schedules `/api/cron/scrape` every 5 minutes. Crons that run
    more than once a day need a Pro plan. Vercel only runs crons on the **production**
    deployment, so on a preview, call the route yourself. Unchanged files return `304`,
-   so polling every minute is still polite.
+   so polling is polite. On election night itself, set the schedule back to `* * * * *` for faster updates.
 5. **Warm-up.** After a deploy, run one scrape so reference data and results load:
    `curl -H "Authorization: Bearer $CRON_SECRET" https://<deployment>/api/cron/scrape?force=1`
 
