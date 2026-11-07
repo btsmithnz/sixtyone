@@ -1,10 +1,33 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { formatTime } from "@/lib/format";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { formatDay, formatTime, nzDateKey } from "@/lib/format";
 
 const POLL_MS = 60_000;
+
+/**
+ * Today's NZ date, read in the browser only. The page may have been rendered
+ * (and cached) on an earlier day, so the server can't know what "today" is
+ * for the viewer: it renders null and the client fills it in on hydration.
+ * Re-read on every render, so the minute poll picks up midnight.
+ */
+const subscribe = () => () => {};
+function useNzToday() {
+  return useSyncExternalStore(
+    subscribe,
+    () => nzDateKey(Date.now()),
+    () => null,
+  );
+}
+
+/** "4:19pm", or "4:19pm, Fri 6 Nov" when that wasn't today. */
+function updatedLabel(updatedAt: number, today: string | null) {
+  const time = formatTime(updatedAt);
+  return today && nzDateKey(updatedAt) !== today
+    ? `${time}, ${formatDay(updatedAt)}`
+    : time;
+}
 
 /**
  * Shows when results last changed and refreshes the page when the scraper
@@ -21,6 +44,7 @@ export function LiveStatus({
   version: number | null;
 }) {
   const router = useRouter();
+  const today = useNzToday();
   const known = useRef(version);
   const [checking, setChecking] = useState(false);
 
@@ -76,7 +100,7 @@ export function LiveStatus({
       />
       {updatedAt ? (
         <span>
-          Updated <span className="num">{formatTime(updatedAt)}</span>
+          Updated <span className="num">{updatedLabel(updatedAt, today)}</span>
           <span className="sr-only">
             {checking ? ", checking for news" : ""}
           </span>
