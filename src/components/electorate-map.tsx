@@ -1,10 +1,54 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { formatPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
+
+type Box = [number, number, number, number];
+
+const ZOOM_MS = 650;
+const ease = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+
+/**
+ * Tweens an SVG viewBox towards `target`. CSS can't animate viewBox, so this
+ * steps it with requestAnimationFrame (or jumps, with reduced motion).
+ */
+function useAnimatedBox(target: Box): Box {
+  const [box, setBox] = useState(target);
+  const current = useRef(target);
+  const [tx, ty, tw, th] = target;
+  useEffect(() => {
+    const to: Box = [tx, ty, tw, th];
+    const from = current.current;
+    const jump = (b: Box) => {
+      current.current = b;
+      setBox(b);
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      jump(to);
+      return;
+    }
+    const start = performance.now();
+    let frame = requestAnimationFrame(function step(now) {
+      const t = ease(Math.min(1, (now - start) / ZOOM_MS));
+      jump(from.map((v, i) => v + (to[i] - v) * t) as Box);
+      if (t < 1) frame = requestAnimationFrame(step);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [tx, ty, tw, th]);
+  return box;
+}
+
+/** Grow a box by `pad` (a fraction of its size) on every side. */
+const padBox = ([x, y, w, h]: number[], pad: number): Box => [
+  x - w * pad,
+  y - h * pad,
+  w * (1 + 2 * pad),
+  h * (1 + 2 * pad),
+];
 
 export type MapShape = {
   eNo: number;
@@ -62,9 +106,20 @@ export function ElectorateMap({
   const router = useRouter();
   const patternId = useId().replace(/:/g, "");
 
+  const [focus, setFocus] = useState("all");
+
   const shapes = roll === "general" ? general : maori;
   const shownInsets =
     roll === "general" ? insets : insets.filter((i) => i.id === "auckland");
+  const focused = shownInsets.find((i) => i.id === focus);
+  const box = useAnimatedBox(
+    focused ? padBox(focused.viewBox, 0.06) : [0, 0, width, height],
+  );
+  // How far in we are (1 = whole country). Strokes and the hatch scale with
+  // it so they stay the same size on screen, and thicken a touch when zoomed
+  // so small city electorates read clearly.
+  const zoom = Math.max(box[2] / width, box[3] / height);
+  const stroke = zoom * (2 - zoom);
   const byENo = new Map([...general, ...maori].map((s) => [s.eNo, s]));
 
   const fillFor = (eNo: number, hatchId: string) => {
@@ -91,71 +146,6 @@ export function ElectorateMap({
 
   const hovered = hover ? byENo.get(hover.eNo) : undefined;
   const hoveredResult = hover ? results[hover.eNo] : undefined;
-
-  /**
-   * Electorate shapes for one SVG view. The main map and each inset share
-   * this; insets pass a thinner stroke and their own scaled hatch pattern, and
-   * aren't keyboard stops (the main map already is).
-   */
-  const renderShapes = ({
-    strokeWidth,
-    hatchId,
-    interactive,
-  }: {
-    strokeWidth: number;
-    hatchId: string;
-    interactive: boolean;
-  }) => (
-    <>
-      {shapes.map((s) => {
-        const { fill, opacity } = fillFor(s.eNo, hatchId);
-        const label = `${s.name}: ${describe(results[s.eNo], mode)}`;
-        return (
-          <a
-            key={s.eNo}
-            href={`/electorates/${s.slug}`}
-            aria-label={label}
-            tabIndex={interactive ? 0 : -1}
-            onClick={(e) => {
-              e.preventDefault();
-              router.push(`/electorates/${s.slug}`);
-            }}
-            onFocus={
-              interactive
-                ? () => setHover({ eNo: s.eNo, x: -1, y: -1 })
-                : undefined
-            }
-            onBlur={interactive ? () => setHover(null) : undefined}
-            className="outline-none"
-          >
-            <use
-              href={`${sprite}#e${s.eNo}`}
-              fill={fill}
-              fillOpacity={opacity}
-              stroke="var(--card)"
-              strokeWidth={strokeWidth}
-              strokeLinejoin="round"
-              className="cursor-pointer transition-[fill,fill-opacity] duration-500"
-            />
-          </a>
-        );
-      })}
-      {/* The hover outline goes on top of every shape. Drawn on the shape
-          itself, neighbours later in the document would paint over the
-          outer half of its stroke on some sides but not others. */}
-      {hover ? (
-        <use
-          href={`${sprite}#e${hover.eNo}`}
-          aria-hidden
-          fill="none"
-          stroke="var(--ink)"
-          strokeWidth={strokeWidth * 3}
-          strokeLinejoin="round"
-          className="pointer-events-none"
-        />
-      ) : null}
-    </>
-  );
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const target = (e.target as Element).closest("a");
@@ -184,7 +174,13 @@ export function ElectorateMap({
         <div className="flex flex-wrap gap-2">
           <ToggleGroup
             value={[roll]}
-            onValueChange={(v) => v[0] && setRoll(v[0] as Roll)}
+            onValueChange={(v) => {
+              const next = v[0] as Roll | undefined;
+              if (!next) return;
+              setRoll(next);
+              // The Māori roll only has an Auckland close-up.
+              if (next === "maori" && focus !== "auckland") setFocus("all");
+            }}
             variant="outline"
             size="sm"
             spacing={0}
@@ -212,116 +208,137 @@ export function ElectorateMap({
           : "Coloured by the party winning the party vote there."}
       </p>
 
+      <ToggleGroup
+        value={[focused?.id ?? "all"]}
+        onValueChange={(v) => v[0] && setFocus(v[0])}
+        variant="outline"
+        size="sm"
+        spacing={1}
+        aria-label="Zoom to"
+        className="mt-4 flex-wrap"
+      >
+        <ToggleGroupItem value="all">All NZ</ToggleGroupItem>
+        {shownInsets.map((inset) => (
+          <ToggleGroupItem key={inset.id} value={inset.id}>
+            {inset.label}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+
       <div
-        className="relative mt-4 grid gap-4 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]"
+        className="relative mt-3"
         onPointerMove={onMove}
         onPointerLeave={() => setHover(null)}
       >
         <svg
-          viewBox={`0 0 ${width} ${height}`}
-          className="mx-auto h-auto max-h-[680px] w-full"
-          aria-label={`Map of ${roll === "general" ? "general" : "Māori"} electorates`}
+          viewBox={box.join(" ")}
+          className="block h-[min(640px,135vw)] w-full rounded-2xl bg-secondary/50"
+          aria-label={`Map of ${roll === "general" ? "general" : "Māori"} electorates${
+            focused ? `, zoomed to ${focused.label}` : ""
+          }`}
         >
           <defs>
             <pattern
               id={patternId}
-              width="6"
-              height="6"
+              width={6 * zoom}
+              height={6 * zoom}
               patternUnits="userSpaceOnUse"
               patternTransform="rotate(45)"
             >
-              <rect width="6" height="6" fill="var(--card)" />
-              <rect width="2.5" height="6" fill="var(--hatch)" />
+              <rect width={6 * zoom} height={6 * zoom} fill="var(--card)" />
+              <rect width={2.5 * zoom} height={6 * zoom} fill="var(--hatch)" />
             </pattern>
           </defs>
-          {renderShapes({
-            strokeWidth: 1,
-            hatchId: patternId,
-            interactive: true,
-          })}
-          {shownInsets.map((inset) => {
-            const [x, y, w, h] = inset.viewBox;
+          {shapes.map((s) => {
+            const { fill, opacity } = fillFor(s.eNo, patternId);
+            const label = `${s.name}: ${describe(results[s.eNo], mode)}`;
             return (
-              <g key={inset.id} aria-hidden className="pointer-events-none">
-                <rect
-                  x={x}
-                  y={y}
-                  width={w}
-                  height={h}
-                  fill="none"
-                  stroke="var(--ink)"
-                  strokeWidth={2}
-                  strokeDasharray="5 4"
-                  rx={4}
-                />
-                <text
-                  x={x + w + 8}
-                  y={y + h / 2}
-                  dominantBaseline="middle"
-                  className="fill-foreground font-display text-[22px] font-bold"
-                >
-                  {inset.label}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-
-        <div
-          className={cn(
-            "grid content-start gap-3",
-            shownInsets.length > 1 ? "grid-cols-2" : "grid-cols-1",
-          )}
-        >
-          {shownInsets.map((inset) => {
-            const [, , w] = inset.viewBox;
-            return (
-              <figure
-                key={inset.id}
-                className={cn(
-                  "overflow-hidden rounded-2xl bg-secondary/50 p-2",
-                  inset.id === "auckland" &&
-                    shownInsets.length > 1 &&
-                    "col-span-2",
-                )}
+              <a
+                key={s.eNo}
+                href={`/electorates/${s.slug}`}
+                aria-label={label}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/electorates/${s.slug}`);
+                }}
+                onFocus={() => setHover({ eNo: s.eNo, x: -1, y: -1 })}
+                onBlur={() => setHover(null)}
+                className="outline-none"
               >
-                <figcaption className="px-1 text-sm font-semibold">
-                  {inset.label}
-                </figcaption>
-                <svg
-                  viewBox={inset.viewBox.join(" ")}
-                  className={cn(
-                    "h-auto w-full",
-                    inset.id === "auckland" ? "max-h-[420px]" : "max-h-[200px]",
-                  )}
-                  aria-label={`${inset.label} close-up`}
-                >
-                  <defs>
-                    <pattern
-                      id={`${patternId}-${inset.id}`}
-                      width={w / 80}
-                      height={w / 80}
-                      patternUnits="userSpaceOnUse"
-                      patternTransform="rotate(45)"
-                    >
-                      <rect width={w / 80} height={w / 80} fill="var(--card)" />
-                      <rect
-                        width={w / 200}
-                        height={w / 80}
-                        fill="var(--hatch)"
-                      />
-                    </pattern>
-                  </defs>
-                  {renderShapes({
-                    strokeWidth: w / 260,
-                    hatchId: `${patternId}-${inset.id}`,
-                    interactive: false,
-                  })}
-                </svg>
-              </figure>
+                <use
+                  href={`${sprite}#e${s.eNo}`}
+                  fill={fill}
+                  fillOpacity={opacity}
+                  stroke="var(--card)"
+                  strokeWidth={stroke}
+                  strokeLinejoin="round"
+                  className="cursor-pointer transition-[fill,fill-opacity] duration-500"
+                />
+              </a>
             );
           })}
-        </div>
+          {/* The hover outline goes on top of every shape. Drawn on the shape
+              itself, neighbours later in the document would paint over the
+              outer half of its stroke on some sides but not others. */}
+          {hover ? (
+            <use
+              href={`${sprite}#e${hover.eNo}`}
+              aria-hidden
+              fill="none"
+              stroke="var(--ink)"
+              strokeWidth={stroke * 3}
+              strokeLinejoin="round"
+              className="pointer-events-none"
+            />
+          ) : null}
+          {/* City boxes on the whole-country view; the label zooms in. The
+              tabs above are the keyboard route, so these stay out of the tab
+              order. */}
+          <g
+            aria-hidden
+            className={cn(
+              "transition-opacity duration-300",
+              focused && "pointer-events-none opacity-0",
+            )}
+          >
+            {shownInsets.map((inset) => {
+              const [x, y, w, h] = inset.viewBox;
+              return (
+                // biome-ignore lint/a11y/useSemanticElements: SVG has no <button>.
+                <g
+                  key={inset.id}
+                  role="button"
+                  tabIndex={-1}
+                  className="cursor-zoom-in"
+                  onClick={() => setFocus(inset.id)}
+                  onKeyDown={(e) => e.key === "Enter" && setFocus(inset.id)}
+                >
+                  <rect
+                    x={x}
+                    y={y}
+                    width={w}
+                    height={h}
+                    fill="none"
+                    stroke="var(--ink)"
+                    strokeWidth={2 * zoom}
+                    strokeDasharray={`${5 * zoom} ${4 * zoom}`}
+                    rx={4 * zoom}
+                    className="pointer-events-none"
+                  />
+                  <text
+                    x={x + w + 8 * zoom}
+                    y={y + h / 2}
+                    dominantBaseline="middle"
+                    fontSize={22 * zoom}
+                    className="fill-foreground font-display font-bold underline-offset-4 hover:underline"
+                  >
+                    {inset.label}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+        </svg>
 
         {hovered ? (
           <MapTooltip
