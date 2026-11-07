@@ -1,5 +1,5 @@
 import "server-only";
-import { asc, desc, eq, gt, inArray, max } from "drizzle-orm";
+import { and, asc, desc, eq, gt, inArray, max, sql } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db, schema } from "@/db";
 import { allocateSeats } from "./seats";
@@ -302,17 +302,32 @@ export async function getNationalHistory(): Promise<{
   cacheLife("results");
   cacheTag(RESULTS_TAG);
 
+  const s = schema.electionSnapshots;
   const [snaps, version] = await Promise.all([
-    db
-      .select()
-      .from(schema.electionSnapshots)
-      .where(gt(schema.electionSnapshots.totalVotesCast, 0))
-      .orderBy(asc(schema.electionSnapshots.feedUpdatedAt)),
+    chartPoints(
+      db
+        .selectDistinctOn([countedBucket(s.percentVotingPlacesCounted)], {
+          id: s.id,
+          feedUpdatedAt: s.feedUpdatedAt,
+          percentVotingPlacesCounted: s.percentVotingPlacesCounted,
+        })
+        .from(s)
+        .where(gt(s.totalVotesCast, 0))
+        .orderBy(
+          countedBucket(s.percentVotingPlacesCounted),
+          desc(s.feedUpdatedAt),
+        ),
+    ),
     resultsVersion(),
   ]);
   if (!snaps.length) return { version, points: [] };
   const rows = await db
-    .select()
+    .select({
+      snapshotId: schema.electionPartySnapshots.snapshotId,
+      pNo: schema.electionPartySnapshots.pNo,
+      votes: schema.electionPartySnapshots.votes,
+      totalSeats: schema.electionPartySnapshots.totalSeats,
+    })
     .from(schema.electionPartySnapshots)
     .where(
       inArray(
@@ -369,24 +384,46 @@ export async function getElectorateDetail(
     .where(eq(schema.electorates.slug, slug));
   if (!electorate) return null;
 
-  const [snaps, standing, version] = await Promise.all([
+  const s = schema.electorateSnapshots;
+  const [[latest], snaps, standing, version] = await Promise.all([
     db
       .select()
-      .from(schema.electorateSnapshots)
-      .where(eq(schema.electorateSnapshots.eNo, electorate.eNo))
-      .orderBy(asc(schema.electorateSnapshots.feedUpdatedAt)),
+      .from(s)
+      .where(eq(s.eNo, electorate.eNo))
+      .orderBy(desc(s.feedUpdatedAt))
+      .limit(1),
+    chartPoints(
+      db
+        .selectDistinctOn([countedBucket(s.percentVotingPlacesCounted)], {
+          id: s.id,
+          feedUpdatedAt: s.feedUpdatedAt,
+          percentVotingPlacesCounted: s.percentVotingPlacesCounted,
+        })
+        .from(s)
+        .where(and(eq(s.eNo, electorate.eNo), gt(s.totalVotesCast, 0)))
+        .orderBy(
+          countedBucket(s.percentVotingPlacesCounted),
+          desc(s.feedUpdatedAt),
+        ),
+    ),
     db
       .select()
       .from(schema.candidates)
       .where(eq(schema.candidates.eNo, electorate.eNo)),
     resultsVersion(),
   ]);
-  const latest = snaps.at(-1);
-  const ids = snaps.map((s) => s.id);
+  // The latest snapshot is normally a chart point too; it's needed either way.
+  const ids = [
+    ...new Set([...snaps.map((s) => s.id), ...(latest ? [latest.id] : [])]),
+  ];
   const [cVotes, pVotes] = await Promise.all([
     ids.length
       ? db
-          .select()
+          .select({
+            snapshotId: schema.electorateCandidateVotes.snapshotId,
+            cNo: schema.electorateCandidateVotes.cNo,
+            votes: schema.electorateCandidateVotes.votes,
+          })
           .from(schema.electorateCandidateVotes)
           .where(inArray(schema.electorateCandidateVotes.snapshotId, ids))
       : [],
@@ -425,23 +462,42 @@ export async function getElectorateDetail(
         percent: partyTotal ? (p.votes / partyTotal) * 100 : 0,
       }))
       .sort((a, b) => b.votes - a.votes),
-    history: snaps
-      .filter((s) => s.totalVotesCast > 0)
-      .map((s) => {
-        const vs = bySnap.get(s.id) ?? [];
-        const total = vs.reduce((a, v) => a + v.votes, 0);
-        return {
-          t: s.feedUpdatedAt.getTime(),
-          counted: s.percentVotingPlacesCounted,
-          candidates: Object.fromEntries(
-            vs.map((v) => [
-              v.cNo,
-              total ? Math.round((v.votes / total) * 10000) / 100 : 0,
-            ]),
-          ),
-        };
-      }),
+    history: snaps.map((s) => {
+      const vs = bySnap.get(s.id) ?? [];
+      const total = vs.reduce((a, v) => a + v.votes, 0);
+      return {
+        t: s.feedUpdatedAt.getTime(),
+        counted: s.percentVotingPlacesCounted,
+        candidates: Object.fromEntries(
+          vs.map((v) => [
+            v.cNo,
+            total ? Math.round((v.votes / total) * 10000) / 100 : 0,
+          ]),
+        ),
+      };
+    }),
   };
+}
+
+/**
+ * Charts get one point per whole percent of voting places counted (the latest
+ * snapshot in each), so a history is at most ~101 points however often the
+ * feed updates. Without this, every page rebuild re-read every snapshot ever
+ * stored, and that grew all night.
+ */
+const countedBucket = (
+  col:
+    | typeof schema.electionSnapshots.percentVotingPlacesCounted
+    | typeof schema.electorateSnapshots.percentVotingPlacesCounted,
+) => sql`floor(${col})`;
+
+/** DISTINCT ON returns rows in bucket order; charts want time order. */
+async function chartPoints<T extends { feedUpdatedAt: Date }>(
+  rows: Promise<T[]>,
+) {
+  return (await rows).sort(
+    (a, b) => a.feedUpdatedAt.getTime() - b.feedUpdatedAt.getTime(),
+  );
 }
 
 /**
