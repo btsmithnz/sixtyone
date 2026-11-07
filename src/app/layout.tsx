@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
+import { Star } from "lucide-react";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
 import Link from "next/link";
@@ -100,6 +101,15 @@ function SiteHeader() {
       <nav className="flex items-center gap-1 text-sm font-medium">
         <NavLink href="/">Results</NavLink>
         <NavLink href="/electorates">Electorates</NavLink>
+        <Link
+          href="/favourites"
+          title="Your electorates"
+          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:px-3"
+        >
+          <Star className="size-4" aria-hidden />
+          {/* Icon only on narrow phones, where four words don't fit. */}
+          <span className="sr-only sm:not-sr-only">Favourites</span>
+        </Link>
         <NavLink href="/about">About</NavLink>
       </nav>
     </header>

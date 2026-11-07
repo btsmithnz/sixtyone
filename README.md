@@ -10,6 +10,9 @@ how the night unfolded.
 - **Trends**: party vote and seats over the night, and each electorate's candidate race
   over time.
 - **Nail-biters**: the closest electorate races right now.
+- **Your electorates**: star electorates to follow them side by side on `/favourites`.
+  Favourites live in the browser (localStorage), so the page is one cached page for
+  everyone and costs nothing extra per visitor.
 
 ## Getting started
 

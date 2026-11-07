@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { FavouriteButton } from "@/components/favourite-button";
 import { LiveStatus } from "@/components/live-status";
 import { LocatorMap } from "@/components/locator-map";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
@@ -114,9 +115,12 @@ async function Electorate({
     <>
       <header className="grid items-end gap-6 md:grid-cols-[minmax(0,1fr)_220px]">
         <div>
-          <span className="sticker inline-block -rotate-2 !rounded-full bg-secondary px-3 py-0.5 text-sm font-semibold">
-            {e.kind === "maori" ? "Māori electorate" : "General electorate"}
-          </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="sticker inline-block -rotate-2 !rounded-full bg-secondary px-3 py-0.5 text-sm font-semibold">
+              {e.kind === "maori" ? "Māori electorate" : "General electorate"}
+            </span>
+            <FavouriteButton eNo={e.eNo} name={e.name} labelled />
+          </div>
           <h1 className="mt-3 font-display text-5xl leading-[0.95] font-extrabold tracking-tight [font-stretch:80%] sm:text-7xl">
             {e.name}
           </h1>
@@ -285,9 +289,12 @@ function NoResultsYet({ eNo, name }: { eNo: number; name: string }) {
   return (
     <header className="grid items-end gap-6 md:grid-cols-[minmax(0,1fr)_220px]">
       <div>
-        <span className="sticker inline-block -rotate-2 !rounded-full bg-secondary px-3 py-0.5 text-sm font-semibold">
-          {eNo > 64 ? "Māori electorate" : "General electorate"}
-        </span>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="sticker inline-block -rotate-2 !rounded-full bg-secondary px-3 py-0.5 text-sm font-semibold">
+            {eNo > 64 ? "Māori electorate" : "General electorate"}
+          </span>
+          <FavouriteButton eNo={eNo} name={name} labelled />
+        </div>
         <h1 className="mt-3 font-display text-5xl leading-[0.95] font-extrabold tracking-tight [font-stretch:80%] sm:text-7xl">
           {name}
         </h1>
