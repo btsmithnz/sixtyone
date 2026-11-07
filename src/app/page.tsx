@@ -154,6 +154,7 @@ async function HomeResults() {
         houseSize={overview.houseSize}
         defaultBlocs={DEFAULT_BLOCS}
         seatsSource={overview.seatsSource}
+        percentCounted={stats?.percentCounted ?? 0}
       />
 
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">

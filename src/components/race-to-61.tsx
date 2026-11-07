@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
+import { formatPct } from "@/lib/format";
 import { BASE_SEATS, majorityOf, raisedMajority } from "@/lib/seats";
 import { cn } from "@/lib/utils";
 
@@ -32,11 +33,14 @@ export function RaceTo61({
   houseSize,
   defaultBlocs,
   seatsSource,
+  percentCounted,
 }: {
   parties: SeatParty[];
   houseSize: number;
   defaultBlocs: { left: number[]; right: number[] };
   seatsSource: "feed" | "projected" | "none";
+  /** Share of voting places counted. Nobody is "over the line" until it's 100. */
+  percentCounted: number;
 }) {
   const initial = useMemo(() => {
     const m: Record<number, Side> = {};
@@ -68,8 +72,13 @@ export function RaceTo61({
     ps[0] ? `${ps[0].short}-led` : fallback;
   const leftName = blocName(left, "Left bloc");
   const rightName = blocName(right, "Right bloc");
-  const winner =
+  // A bloc can reach the majority on the first few votes counted (the
+  // Commission allocates seats from the start), so it's only a win once every
+  // voting place is in. Until then it's "enough so far".
+  const ahead =
     leftSeats >= majority ? "left" : rightSeats >= majority ? "right" : null;
+  const countDone = percentCounted >= 100;
+  const winner = countDone ? ahead : null;
 
   // One tick per seat: left bloc from the left, right bloc from the right,
   // crossbench next to the right bloc, empty (uncounted) seats in the middle.
@@ -89,6 +98,11 @@ export function RaceTo61({
       return `${leftName} government is over the line with ${leftSeats} seats.`;
     if (winner === "right")
       return `${rightName} government is over the line with ${rightSeats} seats.`;
+    if (ahead) {
+      const [name, seats] =
+        ahead === "left" ? [leftName, leftSeats] : [rightName, rightSeats];
+      return `${name} has ${seats} seats on the count so far, enough to govern. With ${formatPct(percentCounted)} of voting places counted, that can still change.`;
+    }
     const lead = leftSeats >= rightSeats ? "left" : "right";
     const leadName = lead === "left" ? leftName : rightName;
     const short = majority - Math.max(leftSeats, rightSeats);
@@ -137,14 +151,14 @@ export function RaceTo61({
           name={leftName}
           seats={leftSeats}
           majority={majority}
-          won={winner === "left"}
+          state={ahead === "left" ? (countDone ? "won" : "ahead") : null}
           align="left"
         />
         <BlocTotal
           name={rightName}
           seats={rightSeats}
           majority={majority}
-          won={winner === "right"}
+          state={ahead === "right" ? (countDone ? "won" : "ahead") : null}
           align="right"
         />
       </div>
@@ -261,29 +275,38 @@ function BlocTotal({
   name,
   seats,
   majority,
-  won,
+  state,
   align,
 }: {
   name: string;
   seats: number;
   majority: number;
-  won: boolean;
+  /** "won" once the count is done; "ahead" when at the majority mid-count. */
+  state: "won" | "ahead" | null;
   align: "left" | "right";
 }) {
+  const badge =
+    state === "won" ? (
+      <OverTheLine />
+    ) : state === "ahead" ? (
+      <EnoughSoFar />
+    ) : null;
   return (
     <div className={cn("relative", align === "right" && "text-right")}>
       <div className="text-sm font-medium text-muted-foreground">{name}</div>
       <div className="flex items-center gap-3">
-        {align === "right" && won ? <OverTheLine /> : null}
+        {align === "right" ? badge : null}
         <span className="num font-display text-6xl leading-none font-extrabold tracking-tight [font-stretch:75%] sm:text-7xl">
           {seats}
         </span>
-        {align === "left" && won ? <OverTheLine /> : null}
+        {align === "left" ? badge : null}
       </div>
       <span className="sr-only">
-        {won
+        {state === "won"
           ? "Has a majority"
-          : `${Math.max(0, majority - seats)} short of a majority`}
+          : state === "ahead"
+            ? "Enough for a majority on the count so far"
+            : `${Math.max(0, majority - seats)} short of a majority`}
       </span>
     </div>
   );
@@ -296,6 +319,15 @@ function OverTheLine() {
       style={{ animation: "pop-in 600ms cubic-bezier(.2,.9,.3,1.3) both" }}
     >
       Over the line!
+    </span>
+  );
+}
+
+/** At the majority mid-count: worth flagging, not celebrating. */
+function EnoughSoFar() {
+  return (
+    <span className="inline-block rounded-full border-2 border-dashed border-border px-3 py-1 font-display text-sm font-bold whitespace-nowrap text-muted-foreground [font-stretch:90%]">
+      Enough so far
     </span>
   );
 }
