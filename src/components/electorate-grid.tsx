@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useDeferredValue, useState } from "react";
 import { formatInt, formatPct } from "@/lib/format";
 import { foldDiacritics } from "@/lib/text";
+import { FavouriteButton } from "./favourite-button";
 
 export type ElectorateCard = {
   eNo: number;
@@ -67,7 +68,7 @@ export function ElectorateGrid({
             </h2>
             <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {g.items.map((e) => (
-                <li key={e.eNo}>
+                <li key={e.eNo} className="relative">
                   <Link
                     href={`/electorates/${e.slug}`}
                     className="group flex h-full overflow-hidden rounded-2xl border-2 border-ink bg-card shadow-[3px_3px_0_var(--sticker-shadow)] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-[#4a47a0]"
@@ -88,7 +89,7 @@ export function ElectorateGrid({
                           : undefined
                       }
                     />
-                    <span className="min-w-0 flex-1 p-3">
+                    <span className="min-w-0 flex-1 p-3 pr-11">
                       <span className="block truncate font-display text-lg leading-tight font-extrabold [font-stretch:90%]">
                         {e.name}
                       </span>
@@ -113,6 +114,12 @@ export function ElectorateGrid({
                       )}
                     </span>
                   </Link>
+                  {/* Beside the link, not inside it: a button can't sit in an <a>. */}
+                  <FavouriteButton
+                    eNo={e.eNo}
+                    name={e.name}
+                    className="absolute top-1.5 right-1.5"
+                  />
                 </li>
               ))}
             </ul>
