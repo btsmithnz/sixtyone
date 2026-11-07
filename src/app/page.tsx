@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import { type ReactNode, Suspense } from "react";
 import { LiveStatus } from "@/components/live-status";
 import { MapSection } from "@/components/map-section";
 import { NailBiters } from "@/components/nail-biters";
@@ -131,22 +131,23 @@ async function HomeResults() {
 
   return (
     <div className="space-y-8">
-      {/* Count status */}
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-2">
+      {/* Count status: how much is counted frames every number below it. */}
+      <div className="space-y-3 pt-2">
         <LiveStatus updatedAt={overview.updatedAt} version={version} />
-        <CountMeter percent={stats?.percentCounted ?? 0} />
-        {stats && stats.totalVotesCast > 0 ? (
-          <span className="text-sm text-muted-foreground">
-            <span className="num font-semibold text-foreground">
-              {formatInt(stats.totalVotesCast)}
-            </span>{" "}
-            votes counted,{" "}
-            <span className="num font-semibold text-foreground">
-              {stats.electoratesComplete}
-            </span>{" "}
-            of 71 electorates fully counted
-          </span>
-        ) : null}
+        <CountMeter percent={stats?.percentCounted ?? 0}>
+          {stats && stats.totalVotesCast > 0 ? (
+            <>
+              <span className="num font-semibold text-foreground">
+                {formatInt(stats.totalVotesCast)}
+              </span>{" "}
+              votes,{" "}
+              <span className="num font-semibold text-foreground">
+                {stats.electoratesComplete}
+              </span>{" "}
+              of 71 electorates fully counted
+            </>
+          ) : null}
+        </CountMeter>
       </div>
 
       <RaceTo61
@@ -154,6 +155,7 @@ async function HomeResults() {
         houseSize={overview.houseSize}
         defaultBlocs={DEFAULT_BLOCS}
         seatsSource={overview.seatsSource}
+        percentCounted={stats?.percentCounted ?? 0}
       />
 
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
@@ -204,11 +206,31 @@ async function HomeResults() {
   );
 }
 
-function CountMeter({ percent }: { percent: number }) {
+function CountMeter({
+  percent,
+  children,
+}: {
+  percent: number;
+  /** Extra detail on the right: votes and electorates counted. */
+  children?: ReactNode;
+}) {
   return (
-    <div className="flex items-center gap-3">
+    <div>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+        <p className="flex items-baseline gap-2">
+          <span className="num font-display text-4xl leading-none font-extrabold tracking-tight [font-stretch:80%] sm:text-5xl">
+            {formatPct(percent)}
+          </span>
+          <span className="text-base font-medium">
+            of voting places counted
+          </span>
+        </p>
+        {children ? (
+          <p className="text-sm text-muted-foreground">{children}</p>
+        ) : null}
+      </div>
       <div
-        className="h-3 w-40 overflow-hidden rounded-full border-2 border-ink bg-card dark:border-[#4a47a0]"
+        className="mt-2 h-4 overflow-hidden rounded-full border-2 border-ink bg-card dark:border-[#4a47a0]"
         role="progressbar"
         aria-valuenow={Math.round(percent)}
         aria-valuemin={0}
@@ -220,10 +242,6 @@ function CountMeter({ percent }: { percent: number }) {
           style={{ width: `${percent}%` }}
         />
       </div>
-      <span className="text-sm">
-        <span className="num font-semibold">{formatPct(percent)}</span>{" "}
-        <span className="text-muted-foreground">of voting places counted</span>
-      </span>
     </div>
   );
 }

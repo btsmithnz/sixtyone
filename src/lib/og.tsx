@@ -181,12 +181,15 @@ export async function raceImage(overview: Overview) {
   push([...blocs.cross.parties].reverse());
   push([...blocs.right.parties].reverse());
 
-  const winner =
+  // Same rule as the page: "over the line" only once the count is done.
+  const ahead =
     blocs.left.seats >= majority
       ? "left"
       : blocs.right.seats >= majority
         ? "right"
         : null;
+  const stateOf = (side: "left" | "right") =>
+    ahead === side ? (counted >= 100 ? "won" : "ahead") : null;
   const top = parties.filter((p) => p.percent > 0).slice(0, 5);
 
   return render(
@@ -214,12 +217,12 @@ export async function raceImage(overview: Overview) {
           <BlocTotal
             name={blocs.left.name}
             seats={blocs.left.seats}
-            won={winner === "left"}
+            state={stateOf("left")}
           />
           <BlocTotal
             name={blocs.right.name}
             seats={blocs.right.seats}
-            won={winner === "right"}
+            state={stateOf("right")}
             align="right"
           />
         </div>
@@ -308,12 +311,12 @@ export async function raceImage(overview: Overview) {
 function BlocTotal({
   name,
   seats,
-  won,
+  state,
   align = "left",
 }: {
   name: string;
   seats: number;
-  won: boolean;
+  state: "won" | "ahead" | null;
   align?: "left" | "right";
 }) {
   return (
@@ -343,7 +346,7 @@ function BlocTotal({
         >
           {String(seats)}
         </div>
-        {won ? (
+        {state === "won" ? (
           <div
             style={{
               display: "flex",
@@ -358,6 +361,20 @@ function BlocTotal({
             }}
           >
             Over the line!
+          </div>
+        ) : state === "ahead" ? (
+          <div
+            style={{
+              display: "flex",
+              padding: "6px 16px",
+              border: `3px dashed ${MUTED}`,
+              borderRadius: 999,
+              color: MUTED,
+              fontFamily: "Display",
+              fontSize: 26,
+            }}
+          >
+            Enough so far
           </div>
         ) : null}
       </div>
