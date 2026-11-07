@@ -100,6 +100,7 @@ async function HomeResults() {
       color: partyColorVar(p.pNo),
       ink: partyInkVar(p.pNo),
       seats: p.totalSeats,
+      percent: p.percent,
     }));
 
   // Chart the parties that matter: anyone who's polled 1.5%+ at some point.
