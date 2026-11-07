@@ -17,11 +17,17 @@ export const formatTime = (ms: number) =>
 
 const day = new Intl.DateTimeFormat("en-NZ", {
   timeZone: NZ_TIME_ZONE,
+  weekday: "short",
   day: "numeric",
   month: "short",
 });
-/** "6 Nov" in NZ time. */
-export const formatDay = (ms: number) => day.format(ms);
+/** "Fri 6 Nov" in NZ time. Built from parts: en-NZ adds a comma after the weekday. */
+export const formatDay = (ms: number) => {
+  const p = Object.fromEntries(
+    day.formatToParts(ms).map(({ type, value }) => [type, value]),
+  );
+  return `${p.weekday} ${p.day} ${p.month}`;
+};
 
 const dateKey = new Intl.DateTimeFormat("en-CA", {
   timeZone: NZ_TIME_ZONE,

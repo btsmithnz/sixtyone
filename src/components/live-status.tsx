@@ -21,11 +21,11 @@ function useNzToday() {
   );
 }
 
-/** "4:19pm", or "6 Nov, 4:19pm" when that wasn't today. */
+/** "4:19pm", or "4:19pm, Fri 6 Nov" when that wasn't today. */
 function updatedLabel(updatedAt: number, today: string | null) {
   const time = formatTime(updatedAt);
   return today && nzDateKey(updatedAt) !== today
-    ? `${formatDay(updatedAt)}, ${time}`
+    ? `${time}, ${formatDay(updatedAt)}`
     : time;
 }
 
