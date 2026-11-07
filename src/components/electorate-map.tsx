@@ -105,41 +105,57 @@ export function ElectorateMap({
     strokeWidth: number;
     hatchId: string;
     interactive: boolean;
-  }) =>
-    shapes.map((s) => {
-      const { fill, opacity } = fillFor(s.eNo, hatchId);
-      const active = hover?.eNo === s.eNo;
-      const label = `${s.name}: ${describe(results[s.eNo], mode)}`;
-      return (
-        <a
-          key={s.eNo}
-          href={`/electorates/${s.slug}`}
-          aria-label={label}
-          tabIndex={interactive ? 0 : -1}
-          onClick={(e) => {
-            e.preventDefault();
-            router.push(`/electorates/${s.slug}`);
-          }}
-          onFocus={
-            interactive
-              ? () => setHover({ eNo: s.eNo, x: -1, y: -1 })
-              : undefined
-          }
-          onBlur={interactive ? () => setHover(null) : undefined}
-          className="outline-none"
-        >
-          <use
-            href={`${sprite}#e${s.eNo}`}
-            fill={fill}
-            fillOpacity={opacity}
-            stroke={active ? "var(--ink)" : "var(--card)"}
-            strokeWidth={active ? strokeWidth * 3 : strokeWidth}
-            strokeLinejoin="round"
-            className="cursor-pointer transition-[fill,fill-opacity] duration-500"
-          />
-        </a>
-      );
-    });
+  }) => (
+    <>
+      {shapes.map((s) => {
+        const { fill, opacity } = fillFor(s.eNo, hatchId);
+        const label = `${s.name}: ${describe(results[s.eNo], mode)}`;
+        return (
+          <a
+            key={s.eNo}
+            href={`/electorates/${s.slug}`}
+            aria-label={label}
+            tabIndex={interactive ? 0 : -1}
+            onClick={(e) => {
+              e.preventDefault();
+              router.push(`/electorates/${s.slug}`);
+            }}
+            onFocus={
+              interactive
+                ? () => setHover({ eNo: s.eNo, x: -1, y: -1 })
+                : undefined
+            }
+            onBlur={interactive ? () => setHover(null) : undefined}
+            className="outline-none"
+          >
+            <use
+              href={`${sprite}#e${s.eNo}`}
+              fill={fill}
+              fillOpacity={opacity}
+              stroke="var(--card)"
+              strokeWidth={strokeWidth}
+              strokeLinejoin="round"
+              className="cursor-pointer transition-[fill,fill-opacity] duration-500"
+            />
+          </a>
+        );
+      })}
+      {/* The hover outline goes on top of every shape. Drawn on the shape
+          itself, neighbours later in the document would paint over the
+          outer half of its stroke on some sides but not others. */}
+      {hover ? (
+        <use
+          href={`${sprite}#e${hover.eNo}`}
+          aria-hidden
+          fill="none"
+          stroke="var(--ink)"
+          strokeWidth={strokeWidth * 3}
+          strokeLinejoin="round"
+          className="pointer-events-none"
+        />
+      ) : null}
+    </>
+  );
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const target = (e.target as Element).closest("a");
