@@ -13,10 +13,11 @@ const nextConfig: NextConfig = {
      * Election results. The scraper revalidates the "results" tag as soon as
      * new data arrives, so this is only a safety net:
      *  - stale: browsers reuse a prefetched page for 30s
-     *  - revalidate: regenerate in the background at most every 2 minutes
+     *  - revalidate: regenerate in the background at most hourly. Each rebuild
+     *    re-reads the database, so keep this long and let the tag do the work
      *  - expire: after a day with no traffic, regenerate before serving
      */
-    results: { stale: 30, revalidate: 120, expire: 86_400 },
+    results: { stale: 30, revalidate: 3600, expire: 86_400 },
   },
   async headers() {
     return [
