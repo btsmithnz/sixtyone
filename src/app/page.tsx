@@ -5,6 +5,7 @@ import { MapSection } from "@/components/map-section";
 import { NailBiters } from "@/components/nail-biters";
 import { PartyVote } from "@/components/party-vote";
 import { RaceTo61, type SeatParty } from "@/components/race-to-61";
+import { SplitVotes } from "@/components/split-votes";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatInt, formatPct } from "@/lib/format";
@@ -203,6 +204,8 @@ async function HomeResults() {
       </section>
 
       <NailBiters electorates={overview.electorates} />
+
+      <SplitVotes electorates={overview.electorates} />
     </div>
   );
 }

@@ -41,6 +41,11 @@ export type ElectorateSummary = {
   margin: number | null;
   marginPoints: number | null;
   partyVoteLeader: { pNo: number; percent: number } | null;
+  /**
+   * Party vote share here of the leading candidate's own party: compare with
+   * the candidate's share for their personal vote. Null without a party.
+   */
+  leaderPartyPercent: number | null;
 };
 
 export type PartyResult = {
@@ -120,6 +125,11 @@ function summarise(
   const hasVotes = total > 0;
   const partyTotal = partyVotes.reduce((a, p) => a + p.votes, 0);
   const topParty = [...partyVotes].sort((a, b) => b.votes - a.votes)[0];
+  // A candidate's party may not be on the party ballot; then there's no comparison.
+  const leaderParty =
+    hasVotes && first?.pNo
+      ? partyVotes.find((p) => p.pNo === first.pNo)
+      : undefined;
   return {
     ...e,
     updatedAt: snap?.feedUpdatedAt.getTime() ?? null,
@@ -138,6 +148,8 @@ function summarise(
       partyTotal && topParty
         ? { pNo: topParty.pNo, percent: (topParty.votes / partyTotal) * 100 }
         : null,
+    leaderPartyPercent:
+      partyTotal && leaderParty ? (leaderParty.votes / partyTotal) * 100 : null,
   };
 }
 
