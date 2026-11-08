@@ -143,6 +143,16 @@ function SiteFooter() {
         2025 (CC BY 4.0). SixtyOne is an independent project, not affiliated
         with the Electoral Commission.
       </p>
+      <p className="mt-3">
+        Made by{" "}
+        <a
+          className="underline underline-offset-2 hover:text-foreground"
+          href="https://www.btsmith.nz/"
+        >
+          Ben Smith
+        </a>
+        .
+      </p>
     </footer>
   );
 }
