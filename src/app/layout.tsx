@@ -1,5 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
-import { Star } from "lucide-react";
+import { Landmark, Star } from "lucide-react";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
 import Link from "next/link";
@@ -83,7 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
 function SiteHeader() {
   return (
-    <header className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 pt-5 pb-4 sm:px-6">
+    <header className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-4 pt-5 pb-4 min-[400px]:gap-4 sm:px-6">
       <Link
         href="/"
         className="group flex items-center gap-2 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4"
@@ -98,17 +98,25 @@ function SiteHeader() {
           SixtyOne
         </span>
       </Link>
-      <nav className="flex items-center gap-1 text-sm font-medium">
+      <nav className="flex items-center text-sm font-medium min-[400px]:gap-1">
         <NavLink href="/">Results</NavLink>
         <NavLink href="/electorates">Electorates</NavLink>
         <Link
           href="/favourites"
           title="Your electorates"
-          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:px-3"
+          className="inline-flex items-center gap-1.5 rounded-full px-1.5 py-1.5 text-muted-foreground min-[400px]:px-2.5 transition-colors hover:bg-secondary hover:text-foreground sm:px-3"
         >
           <Star className="size-4" aria-hidden />
           {/* Icon only on narrow phones, where four words don't fit. */}
           <span className="sr-only sm:not-sr-only">Favourites</span>
+        </Link>
+        <Link
+          href="/parliament"
+          title="Your new Parliament"
+          className="inline-flex items-center gap-1.5 rounded-full px-1.5 py-1.5 text-muted-foreground min-[400px]:px-2.5 transition-colors hover:bg-secondary hover:text-foreground sm:px-3"
+        >
+          <Landmark className="size-4" aria-hidden />
+          <span className="sr-only sm:not-sr-only">Parliament</span>
         </Link>
         <NavLink href="/about">About</NavLink>
       </nav>
@@ -120,7 +128,7 @@ function NavLink({ href, children }: { href: string; children: string }) {
   return (
     <Link
       href={href}
-      className="rounded-full px-2.5 py-1.5 text-muted-foreground sm:px-3 transition-colors hover:bg-secondary hover:text-foreground"
+      className="rounded-full px-1.5 py-1.5 text-muted-foreground min-[400px]:px-2.5 sm:px-3 transition-colors hover:bg-secondary hover:text-foreground"
     >
       {children}
     </Link>

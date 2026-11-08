@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     page("/", 1, "always"),
     page("/electorates", 0.8, "always"),
+    page("/parliament", 0.7, "hourly"),
     ...[...mapData.general, ...mapData.maori].map((e) =>
       page(`/electorates/${e.slug}`, 0.6, "hourly"),
     ),

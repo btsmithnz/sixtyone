@@ -13,6 +13,7 @@ import { SplitVotes } from "@/components/split-votes";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatInt, formatPct } from "@/lib/format";
+import { buildParliament } from "@/lib/parliament";
 import {
   blocSeats,
   DEFAULT_BLOCS,
@@ -233,7 +234,11 @@ async function HomeResults() {
  * electorate seats, plus the closest seats (worked out here, once per
  * rebuild, rather than in every browser).
  */
-function specialsData({ parties, electorates }: Overview) {
+function specialsData(overview: Overview) {
+  const { parties, electorates } = overview;
+  // Who's on the bubble: each party's list, in order, past the current cut.
+  const { queues, listSeats } = buildParliament(overview);
+  const nextOnList = (pNo: number, i: number) => queues.get(pNo)?.[i] ?? null;
   const onBallot = new Set(parties.map((p) => p.pNo));
   const outsideWins = electorates.filter((e) => {
     const lead = e.margin !== null ? e.candidates[0] : undefined;
@@ -248,6 +253,11 @@ function specialsData({ parties, electorates }: Overview) {
       votes: p.votes,
       seats: p.totalSeats,
       electorateSeats: p.electorateSeats,
+      // Enough of the list for any shift the what-if can make.
+      listQueue: (queues.get(p.pNo) ?? []).slice(
+        0,
+        (listSeats.get(p.pNo) ?? 0) + 8,
+      ),
     }));
   const edges = knifeEdges(
     new Map(whatIfParties.map((p) => [p.pNo, p.votes])),
@@ -257,7 +267,21 @@ function specialsData({ parties, electorates }: Overview) {
         .map((p) => [p.pNo, p.electorateSeats]),
     ),
     outsideWins,
-  ).slice(0, 5);
+  )
+    .slice(0, 5)
+    .map((e) => {
+      const filled = listSeats.get(e.pNo) ?? 0;
+      return {
+        ...e,
+        // Gaining a seat brings in the next on the list; losing one drops the last in.
+        person:
+          e.kind === "gain"
+            ? nextOnList(e.pNo, filled)
+            : filled > 0
+              ? nextOnList(e.pNo, filled - 1)
+              : null,
+      };
+    });
   return { parties: whatIfParties, outsideWins, knifeEdges: edges };
 }
 

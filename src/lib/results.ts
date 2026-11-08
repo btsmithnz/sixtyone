@@ -75,6 +75,14 @@ export type Overview = {
   seatsSource: "feed" | "projected" | "none";
   houseSize: number;
   electorates: ElectorateSummary[];
+  /** Every candidate, for working out who's elected (see lib/parliament.ts). */
+  candidates: {
+    cNo: number;
+    name: string;
+    eNo: number | null;
+    pNo: number | null;
+    listNo: number | null;
+  }[];
 };
 
 /* ------------------------------- reference ------------------------------- */
@@ -293,6 +301,13 @@ export async function getOverview(): Promise<Overview> {
     seatsSource,
     houseSize,
     electorates,
+    candidates: ref.candidates.map(({ cNo, name, eNo, pNo, listNo }) => ({
+      cNo,
+      name,
+      eNo,
+      pNo,
+      listNo,
+    })),
   };
 }
 

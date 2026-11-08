@@ -10,6 +10,10 @@ how the night unfolded.
 - **Trends**: party vote and seats over the night, and each electorate's candidate race
   over time.
 - **Nail-biters**: the closest electorate races right now.
+- **Your new Parliament** (`/parliament`, `src/lib/parliament.ts`): every MP worked out
+  from electorate winners and party lists, marked new or returning against the outgoing
+  Parliament (`src/data/outgoing-mps.ts`), plus who's leaving. The special votes what-if
+  and knife-edge seats name who'd come in or drop out.
 - **Split votes**: electorates where the candidate and party votes went different ways, and
   the winners with the biggest personal vote over their party.
 - **Your electorates**: star electorates to follow them side by side on `/favourites`.
