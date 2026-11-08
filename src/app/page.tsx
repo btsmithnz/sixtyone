@@ -5,6 +5,10 @@ import { MapSection } from "@/components/map-section";
 import { NailBiters } from "@/components/nail-biters";
 import { PartyVote } from "@/components/party-vote";
 import { RaceTo61, type SeatParty } from "@/components/race-to-61";
+import {
+  SpecialsWhatIf,
+  type WhatIfParty,
+} from "@/components/specials-what-if";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatInt, formatPct } from "@/lib/format";
@@ -23,6 +27,7 @@ import {
   SITE_URL,
   shareMetadata,
 } from "@/lib/site";
+import { knifeEdges } from "@/lib/specials";
 
 export async function generateMetadata(): Promise<Metadata> {
   const overview = await getOverview();
@@ -103,6 +108,10 @@ async function HomeResults() {
       percent: p.percent,
     }));
 
+  // Once election night's count is complete: what the special votes could do.
+  const whatIf =
+    stats && stats.percentCounted >= 100 ? specialsData(overview) : null;
+
   // Chart the parties that matter: anyone who's polled 1.5%+ at some point.
   const charted = parties
     .filter((p) => history.some((h) => (h.parties[p.pNo]?.percent ?? 0) >= 1.5))
@@ -159,6 +168,15 @@ async function HomeResults() {
         percentCounted={stats?.percentCounted ?? 0}
       />
 
+      {whatIf ? (
+        <SpecialsWhatIf
+          parties={whatIf.parties}
+          outsideWins={whatIf.outsideWins}
+          blocs={DEFAULT_BLOCS}
+          knifeEdges={whatIf.knifeEdges}
+        />
+      ) : null}
+
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <MapSection electorates={overview.electorates} />
         <PartyVote parties={parties} seatsSource={overview.seatsSource} />
@@ -205,6 +223,39 @@ async function HomeResults() {
       <NailBiters electorates={overview.electorates} />
     </div>
   );
+}
+
+/**
+ * Inputs for the special votes what-if: every party's preliminary votes and
+ * electorate seats, plus the closest seats (worked out here, once per
+ * rebuild, rather than in every browser).
+ */
+function specialsData({ parties, electorates }: Overview) {
+  const onBallot = new Set(parties.map((p) => p.pNo));
+  const outsideWins = electorates.filter((e) => {
+    const lead = e.margin !== null ? e.candidates[0] : undefined;
+    return lead && !(lead.pNo && onBallot.has(lead.pNo));
+  }).length;
+  const whatIfParties: WhatIfParty[] = parties
+    .filter((p) => p.votes > 0)
+    .map((p) => ({
+      pNo: p.pNo,
+      short: partyStyle(p.pNo, p.name).short,
+      color: partyColorVar(p.pNo),
+      votes: p.votes,
+      seats: p.totalSeats,
+      electorateSeats: p.electorateSeats,
+    }));
+  const edges = knifeEdges(
+    new Map(whatIfParties.map((p) => [p.pNo, p.votes])),
+    new Map(
+      whatIfParties
+        .filter((p) => p.electorateSeats > 0)
+        .map((p) => [p.pNo, p.electorateSeats]),
+    ),
+    outsideWins,
+  ).slice(0, 5);
+  return { parties: whatIfParties, outsideWins, knifeEdges: edges };
 }
 
 function CountMeter({
