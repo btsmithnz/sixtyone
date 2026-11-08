@@ -13,6 +13,9 @@ how the night unfolded.
 - **Split votes**: electorates where the candidate and party votes went different ways, and
   the winners with the biggest personal vote over their party.
 - **Your electorates**: star electorates to follow them side by side on `/favourites`.
+- **Special votes what-if** (`src/lib/specials.ts`): once election night's count is done, apply
+  how special votes leaned in 2017, 2020 or 2023 to project the official result, plus the
+  seats that are closest to changing hands. Remove it when the official results land.
   Favourites live in the browser (localStorage), so the page is one cached page for
   everyone and costs nothing extra per visitor.
 
