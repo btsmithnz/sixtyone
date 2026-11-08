@@ -97,6 +97,11 @@ async function ParliamentResults() {
         <Stat label="Leaving" value={leaving.length} />
       </dl>
 
+      <p className="-mt-4 text-xs text-muted-foreground">
+        “New” means they weren’t in the outgoing Parliament. A few have been MPs
+        before.
+      </p>
+
       {houseSize > mps.length ? (
         <p className="max-w-[65ch] text-sm text-muted-foreground">
           {houseSize - mps.length} of the {houseSize} seats can’t be filled: a
@@ -127,7 +132,8 @@ async function ParliamentResults() {
           Who’s out
         </h2>
         <p className="max-w-[65ch] text-sm text-muted-foreground">
-          Members of the outgoing Parliament who aren’t coming back.
+          Members of the outgoing Parliament who aren’t coming back, with the
+          party they were elected for.
         </p>
         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
           <LeavingCard
@@ -306,8 +312,11 @@ function LeavingCard({
   people: LeavingMp[];
   empty: string;
 }) {
-  const sorted = [...people].sort((a, b) =>
-    surname(a.name).localeCompare(surname(b.name)),
+  // By 2026 list position (highest-ranked first, no list last), then name.
+  const sorted = [...people].sort(
+    (a, b) =>
+      (a.stood?.listNo ?? Number.POSITIVE_INFINITY) -
+        (b.stood?.listNo ?? Number.POSITIVE_INFINITY) || byName(a.name, b.name),
   );
   return (
     <div className="sticker p-5">
@@ -364,3 +373,8 @@ function stoodText({ pNo, stood }: LeavingMp) {
 }
 
 const surname = (name: string) => name.split(" ").at(-1) ?? name;
+
+/** Surname, then given names; ignores case and macrons ("Ō" sorts as "O"). */
+const byName = (a: string, b: string) =>
+  surname(a).localeCompare(surname(b), "en-NZ", { sensitivity: "base" }) ||
+  a.localeCompare(b, "en-NZ", { sensitivity: "base" });

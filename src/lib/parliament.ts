@@ -23,7 +23,7 @@ export type Mp = {
 
 export type LeavingMp = {
   name: string;
-  /** Party they sat for. */
+  /** Party they were elected for (mid-term switches aside). */
   pNo: number;
   /** "lost": stood again and wasn't elected. "retired": didn't stand. */
   reason: "lost" | "retired";
