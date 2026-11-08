@@ -9,6 +9,7 @@ import {
   SpecialsWhatIf,
   type WhatIfParty,
 } from "@/components/specials-what-if";
+import { SplitVotes } from "@/components/split-votes";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatInt, formatPct } from "@/lib/format";
@@ -221,6 +222,8 @@ async function HomeResults() {
       </section>
 
       <NailBiters electorates={overview.electorates} />
+
+      <SplitVotes electorates={overview.electorates} />
     </div>
   );
 }
