@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { LiveStatus } from "@/components/live-status";
+import {
+  ListSortControls,
+  ListSortProvider,
+  SortedList,
+} from "@/components/sortable-lists";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPct } from "@/lib/format";
 import {
@@ -110,44 +115,56 @@ async function ParliamentResults() {
         </p>
       ) : null}
 
-      <section aria-labelledby="in-heading" className="space-y-4">
-        <h2
-          id="in-heading"
-          className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
-        >
-          Who’s in
-        </h2>
-        <div className="space-y-6">
-          {groups.map((g) => (
-            <PartyCard key={g.pNo ?? "ind"} group={g} parliament={parliament} />
-          ))}
-        </div>
-      </section>
+      <ListSortProvider>
+        <section aria-labelledby="in-heading" className="space-y-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2
+              id="in-heading"
+              className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
+            >
+              Who’s in
+            </h2>
+            <ListSortControls />
+          </div>
+          <div className="space-y-6">
+            {groups.map((g) => (
+              <PartyCard
+                key={g.pNo ?? "ind"}
+                group={g}
+                parliament={parliament}
+              />
+            ))}
+          </div>
+        </section>
 
-      <section aria-labelledby="out-heading" className="space-y-4">
-        <h2
-          id="out-heading"
-          className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
-        >
-          Who’s out
-        </h2>
-        <p className="max-w-[65ch] text-sm text-muted-foreground">
-          Members of the outgoing Parliament who aren’t coming back, with the
-          party they were elected for.
-        </p>
-        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
-          <LeavingCard
-            title="Stood again, not elected"
-            people={lost}
-            empty="Everyone who stood again is back."
-          />
-          <LeavingCard
-            title="Didn’t stand again"
-            people={retired}
-            empty="Every MP stood again."
-          />
-        </div>
-      </section>
+        <section aria-labelledby="out-heading" className="space-y-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2
+              id="out-heading"
+              className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
+            >
+              Who’s out
+            </h2>
+            <ListSortControls />
+          </div>
+          <p className="max-w-[65ch] text-sm text-muted-foreground">
+            Members of the outgoing Parliament who aren’t coming back, with the
+            party they were elected for.
+          </p>
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+            <LeavingCard
+              title="Stood again, not elected"
+              people={lost}
+              empty="Everyone who stood again is back."
+            />
+            <LeavingCard
+              title="Didn’t stand again"
+              people={retired}
+              empty="Every MP stood again."
+            />
+          </div>
+        </section>
+      </ListSortProvider>
     </div>
   );
 }
@@ -177,12 +194,6 @@ function groupByParty(mps: Mp[], parties: { pNo: number; name: string }[]) {
       groups.set(key, g);
     }
     (m.electorate ? g.electorateMps : g.listMps).push(m);
-  }
-  for (const g of groups.values()) {
-    g.electorateMps.sort((a, b) =>
-      (a.electorate?.name ?? "").localeCompare(b.electorate?.name ?? ""),
-    );
-    g.listMps.sort((a, b) => (a.listNo ?? 0) - (b.listNo ?? 0));
   }
   const size = (g: Group) => g.electorateMps.length + g.listMps.length;
   return [...groups.values()].sort((a, b) => size(b) - size(a));
@@ -239,35 +250,41 @@ function PartyCard({
           </p>
         </div>
 
-        <ul className="mt-3 grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-          {[...g.electorateMps, ...g.listMps].map((m) => (
-            <li
-              key={m.cNo}
-              className="flex items-baseline justify-between gap-3 border-b border-border py-1.5 text-sm"
-            >
-              <span className="min-w-0">
-                <span className="font-medium">{m.name}</span>
-                {!m.returning ? (
-                  <span className="ml-2 rounded-full bg-primary px-1.5 py-0.5 align-[1px] text-[0.7rem] font-semibold text-primary-foreground">
-                    New
-                  </span>
-                ) : null}
-              </span>
-              <span className="shrink-0 text-xs text-muted-foreground">
-                {m.electorate ? (
-                  <Link
-                    href={`/electorates/${m.electorate.slug}`}
-                    className="hover:text-foreground hover:underline"
-                  >
-                    {m.electorate.name}
-                  </Link>
-                ) : (
-                  <span className="num">List #{m.listNo}</span>
-                )}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <SortedList
+          // Flows down each column, like a printed list.
+          className="mt-3 gap-x-8 sm:columns-2 lg:columns-3"
+          itemClassName="flex break-inside-avoid items-baseline justify-between gap-3 border-b border-border py-1.5 text-sm"
+          items={[...g.electorateMps, ...g.listMps].map((m) => ({
+            key: String(m.cNo),
+            rank: m.listNo,
+            sortName: m.sortName,
+            content: (
+              <>
+                <span className="min-w-0">
+                  <span className="font-medium">{m.name}</span>
+                  {!m.returning ? (
+                    <span className="ml-2 rounded-full bg-primary px-1.5 py-0.5 align-[1px] text-[0.7rem] font-semibold text-primary-foreground">
+                      New
+                    </span>
+                  ) : null}
+                </span>
+                <span className="shrink-0 text-right text-xs text-muted-foreground">
+                  {m.electorate ? (
+                    <Link
+                      href={`/electorates/${m.electorate.slug}`}
+                      className="hover:text-foreground hover:underline"
+                    >
+                      {m.electorate.name}
+                    </Link>
+                  ) : (
+                    "List"
+                  )}
+                  {m.listNo ? <span className="num"> #{m.listNo}</span> : null}
+                </span>
+              </>
+            ),
+          }))}
+        />
 
         {unfilled ? (
           <p className="mt-3 text-xs text-muted-foreground">
@@ -312,44 +329,43 @@ function LeavingCard({
   people: LeavingMp[];
   empty: string;
 }) {
-  // By 2026 list position (highest-ranked first, no list last), then name.
-  const sorted = [...people].sort(
-    (a, b) =>
-      (a.stood?.listNo ?? Number.POSITIVE_INFINITY) -
-        (b.stood?.listNo ?? Number.POSITIVE_INFINITY) || byName(a.name, b.name),
-  );
   return (
     <div className="sticker p-5">
       <h3 className="font-display text-2xl font-extrabold [font-stretch:90%]">
         {title}{" "}
         <span className="num text-muted-foreground">{people.length}</span>
       </h3>
-      {sorted.length ? (
-        <ul className="mt-3">
-          {sorted.map((m) => (
-            <li
-              key={m.name}
-              className="flex items-start gap-2.5 border-b border-border py-2 text-sm"
-            >
-              <span
-                aria-hidden
-                className="mt-1 size-3 shrink-0 rounded-full"
-                style={{ background: partyColorVar(m.pNo) }}
-              />
-              <span className="min-w-0">
-                <span className="font-medium">{m.name}</span>{" "}
-                <span className="text-muted-foreground">
-                  {partyStyle(m.pNo).short}
-                </span>
-                {m.stood ? (
-                  <span className="block text-xs text-muted-foreground">
-                    {stoodText(m)}
+      {people.length ? (
+        <SortedList
+          className="mt-3"
+          itemClassName="flex items-start gap-2.5 border-b border-border py-2 text-sm"
+          items={people.map((m) => ({
+            key: m.sortName,
+            // Their 2026 list position.
+            rank: m.stood?.listNo ?? null,
+            sortName: m.sortName,
+            content: (
+              <>
+                <span
+                  aria-hidden
+                  className="mt-1 size-3 shrink-0 rounded-full"
+                  style={{ background: partyColorVar(m.pNo) }}
+                />
+                <span className="min-w-0">
+                  <span className="font-medium">{m.name}</span>{" "}
+                  <span className="text-muted-foreground">
+                    {partyStyle(m.pNo).short}
                   </span>
-                ) : null}
-              </span>
-            </li>
-          ))}
-        </ul>
+                  {m.stood ? (
+                    <span className="block text-xs text-muted-foreground">
+                      {stoodText(m)}
+                    </span>
+                  ) : null}
+                </span>
+              </>
+            ),
+          }))}
+        />
       ) : (
         <p className="mt-3 text-sm text-muted-foreground">{empty}</p>
       )}
@@ -371,10 +387,3 @@ function stoodText({ pNo, stood }: LeavingMp) {
   }
   return text[0].toUpperCase() + text.slice(1);
 }
-
-const surname = (name: string) => name.split(" ").at(-1) ?? name;
-
-/** Surname, then given names; ignores case and macrons ("Ō" sorts as "O"). */
-const byName = (a: string, b: string) =>
-  surname(a).localeCompare(surname(b), "en-NZ", { sensitivity: "base" }) ||
-  a.localeCompare(b, "en-NZ", { sensitivity: "base" });

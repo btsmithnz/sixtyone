@@ -14,6 +14,8 @@ import type { Overview } from "./results";
 export type Mp = {
   cNo: number;
   name: string;
+  /** "SURNAME, Given", as the feed has it, for sorting A–Z. */
+  sortName: string;
   pNo: number | null;
   /** Electorate MPs: where they won. List MPs: null. */
   electorate: { name: string; slug: string } | null;
@@ -23,6 +25,8 @@ export type Mp = {
 
 export type LeavingMp = {
   name: string;
+  /** "Surname, Given", for sorting A–Z. */
+  sortName: string;
   /** Party they were elected for (mid-term switches aside). */
   pNo: number;
   /** "lost": stood again and wasn't elected. "retired": didn't stand. */
@@ -63,6 +67,7 @@ export function buildParliament({
     mps.push({
       cNo: lead.cNo,
       name: displayCandidateName(lead.name),
+      sortName: lead.name,
       pNo: lead.pNo,
       electorate: { name: e.name, slug: e.slug },
       listNo: byCNo.get(lead.cNo)?.listNo ?? null,
@@ -90,6 +95,7 @@ export function buildParliament({
       mps.push({
         cNo: c.cNo,
         name: displayCandidateName(c.name),
+        sortName: c.name,
         pNo: c.pNo,
         electorate: null,
         listNo: c.listNo,
@@ -105,6 +111,7 @@ export function buildParliament({
     const c = m.cNo !== null ? byCNo.get(m.cNo) : undefined;
     return {
       name: m.name,
+      sortName: c ? c.name : surnameFirst(m.name),
       pNo: m.pNo,
       reason: c ? "lost" : "retired",
       stood: c
@@ -119,4 +126,15 @@ export function buildParliament({
   });
 
   return { mps, leaving, listSeats, queues };
+}
+
+/**
+ * "Brooke van Velden" → "van Velden, Brooke": the last word, plus any
+ * lowercase particles before it. For people who aren't in the feed.
+ */
+function surnameFirst(name: string) {
+  const words = name.split(" ");
+  let i = words.length - 1;
+  while (i > 1 && /^\p{Ll}/u.test(words[i - 1])) i--;
+  return `${words.slice(i).join(" ")}, ${words.slice(0, i).join(" ")}`;
 }
