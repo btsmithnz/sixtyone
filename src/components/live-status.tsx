@@ -4,13 +4,19 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { formatDay, formatTime, nzDateKey } from "@/lib/format";
 
-const POLL_MS = 60_000;
+/**
+ * How often an open page asks /api/status whether there's anything new. The
+ * scrape cron (vercel.json) runs hourly between counts, so this only needs to
+ * be a small fraction of that; returning to the tab also checks straight away.
+ * On a results day, drop both to a minute.
+ */
+const POLL_MS = 5 * 60_000;
 
 /**
  * Today's NZ date, read in the browser only. The page may have been rendered
  * (and cached) on an earlier day, so the server can't know what "today" is
  * for the viewer: it renders null and the client fills it in on hydration.
- * Re-read on every render, so the minute poll picks up midnight.
+ * Re-read on every render, so the poll picks up midnight.
  */
 const subscribe = () => () => {};
 function useNzToday() {
