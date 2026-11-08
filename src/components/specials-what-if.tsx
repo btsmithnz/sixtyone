@@ -1,9 +1,11 @@
 "use client";
 
 import { RotateCcw } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { formatInt, formatPct } from "@/lib/format";
+import { type ListQueue, listChange } from "@/lib/list-queue";
 import {
   type Blocs,
   type KnifeEdge,
@@ -27,6 +29,13 @@ export type WhatIfParty = {
   /** Seats on the preliminary count, as the Commission allocated them. */
   seats: number;
   electorateSeats: number;
+  /** The party's list, in order, without its electorate winners. */
+  listQueue: ListQueue;
+};
+
+/** A knife-edge seat with the person it would bring in or drop. */
+export type NamedKnifeEdge = KnifeEdge & {
+  person: { name: string; listNo: number } | null;
 };
 
 const PRESETS: { value: Preset; label: string }[] = [
@@ -52,7 +61,7 @@ export function SpecialsWhatIf({
   outsideWins: number;
   blocs: Blocs;
   /** Closest seats on the preliminary count, nearest first. */
-  knifeEdges: KnifeEdge[];
+  knifeEdges: NamedKnifeEdge[];
 }) {
   const [preset, setPreset] = useState<Preset>("average");
   const [shift, setShift] = useState(0);
@@ -133,6 +142,23 @@ export function SpecialsWhatIf({
       newSeats: seats.byParty.get(p.pNo) ?? 0,
     }))
     .sort((a, b) => b.newSeats - a.newSeats || b.pct - a.pct);
+
+  // Named list MPs who'd come in or drop out. Electorate seats are fixed, so
+  // every change is at the bottom of a party list.
+  const people = rows.flatMap((r) => {
+    const list = (n: number) => Math.max(0, n - r.electorateSeats);
+    const { in: inn, out } = listChange(
+      r.listQueue,
+      list(r.nightSeats),
+      list(r.newSeats),
+    );
+    return [
+      ...inn.map((m) => ({ ...m, party: r, dir: "in" as const })),
+      ...out.map((m) => ({ ...m, party: r, dir: "out" as const })),
+    ];
+  });
+  const comingIn = people.filter((p) => p.dir === "in");
+  const goingOut = people.filter((p) => p.dir === "out");
 
   const blocTotal = (ids: number[], s: Seats) =>
     ids.reduce((a, p) => a + (s.byParty.get(p) ?? 0), 0);
@@ -375,6 +401,12 @@ export function SpecialsWhatIf({
             })}
           </tbody>
         </table>
+        {comingIn.length || goingOut.length ? (
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <PeopleList title="Would come in" people={comingIn} />
+            <PeopleList title="Would drop out" people={goingOut} />
+          </div>
+        ) : null}
         <p className="mt-4 text-xs text-muted-foreground">
           A what-if, not a forecast. It keeps every electorate with its
           election-night winner, and uses the Electoral Commission’s estimate of
@@ -440,11 +472,53 @@ function BlocResult({
   );
 }
 
+function PeopleList({
+  title,
+  people,
+}: {
+  title: string;
+  people: {
+    name: string;
+    listNo: number;
+    party: { short: string; color: string };
+  }[];
+}) {
+  return (
+    <div>
+      <h3 className="text-sm font-semibold">{title}</h3>
+      {people.length ? (
+        <ul className="mt-1.5 space-y-1">
+          {people.map((p) => (
+            <li
+              key={`${p.party.short}-${p.listNo}`}
+              className="flex items-center gap-2 text-sm"
+            >
+              <span
+                aria-hidden
+                className="size-3 shrink-0 rounded-full"
+                style={{ background: p.party.color }}
+              />
+              <span>
+                {p.name}{" "}
+                <span className="text-muted-foreground">
+                  {p.party.short} #{p.listNo}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-1.5 text-sm text-muted-foreground">Nobody</p>
+      )}
+    </div>
+  );
+}
+
 function KnifeEdges({
   edges,
   byNo,
 }: {
-  edges: KnifeEdge[];
+  edges: NamedKnifeEdge[];
   byNo: Map<number, WhatIfParty>;
 }) {
   return (
@@ -476,6 +550,15 @@ function KnifeEdges({
                 <strong className="num">{formatInt(e.votes)}</strong>{" "}
                 {e.kind === "gain" ? "votes short" : "votes to spare"}
               </div>
+              {e.person ? (
+                <div className="text-sm">
+                  {e.kind === "gain" ? "Would bring in " : "Held by "}
+                  <span className="font-medium">{e.person.name}</span>{" "}
+                  <span className="num text-muted-foreground">
+                    (list #{e.person.listNo})
+                  </span>
+                </div>
+              ) : null}
               <div className="text-xs text-muted-foreground">
                 {e.kind === "gain"
                   ? other
@@ -489,6 +572,15 @@ function KnifeEdges({
           );
         })}
       </ol>
+      <p className="mt-4 text-sm">
+        <Link
+          href="/parliament"
+          className="font-medium underline underline-offset-2"
+        >
+          See who’s in and who’s out
+        </Link>{" "}
+        <span className="text-muted-foreground">in the new Parliament.</span>
+      </p>
     </div>
   );
 }
