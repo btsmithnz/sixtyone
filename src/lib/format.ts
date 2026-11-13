@@ -37,3 +37,7 @@ const dateKey = new Intl.DateTimeFormat("en-CA", {
 });
 /** "2026-11-07": the NZ calendar date, for same-day comparisons. */
 export const nzDateKey = (ms: number) => dateKey.format(ms);
+
+/** "Labour 34.2%, National 31.0%, Green 11.1%" */
+export const formatShares = (items: { label: string; percent: number }[]) =>
+  items.map((i) => `${i.label} ${formatPct(i.percent)}`).join(", ");

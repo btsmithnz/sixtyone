@@ -6,9 +6,11 @@ import { BoothExplorer } from "./booth-explorer";
 export async function BoothSection({
   eNo,
   name,
+  slug,
 }: {
   eNo: number;
   name: string;
+  slug: string;
 }) {
   const data = await getBoothResults(eNo);
   if (!data?.places.length) return null;
@@ -16,6 +18,7 @@ export async function BoothSection({
     <BoothExplorer
       data={data}
       electorate={name}
+      slug={slug}
       boundaryUrl={`${mapData.boundaries}/${eNo}.json`}
     />
   );

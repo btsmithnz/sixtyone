@@ -1,7 +1,10 @@
 import "server-only";
 import { and, eq } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
+import mapData from "@/data/electorate-map.json";
 import { db, schema } from "@/db";
+
+const ALL_ELECTORATES = [...mapData.general, ...mapData.maori];
 
 /**
  * Booth (voting place) results for one electorate, from the Commission's
@@ -207,4 +210,29 @@ export function splitName(name: string) {
   const [area, venue, ...rest] = name.split(",").map((s) => s.trim());
   if (!venue) return { venue: area, area: "", address: "" };
   return { venue, area, address: rest.join(", ") };
+}
+
+/**
+ * One voting place's results, for its share page and image: the place, its
+ * electorate's results it's part of, and the electorate. Null if there's no
+ * such electorate or place (or no votes there for that electorate).
+ */
+export async function findBooth(slug: string, id: string) {
+  const electorate = ALL_ELECTORATES.find((e) => e.slug === slug);
+  const placeId = Number(id);
+  if (!electorate || !Number.isSafeInteger(placeId)) return null;
+  const data = await getBoothResults(electorate.eNo);
+  const place = data?.places.find((p) => p.id === placeId);
+  return data && place ? { electorate, data, place } : null;
+}
+
+/**
+ * A voting place to prerender, for routes under /booths/[id]: Cache
+ * Components needs at least one to check the route at build. Any place will
+ * do; with no booth data yet, a made-up id stands in.
+ */
+export async function boothSample() {
+  const [first] = ALL_ELECTORATES;
+  const data = await getBoothResults(first.eNo);
+  return { slug: first.slug, id: String(data?.places[0]?.id ?? 0) };
 }

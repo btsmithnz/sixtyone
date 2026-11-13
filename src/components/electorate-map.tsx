@@ -178,6 +178,7 @@ export function ElectorateMap({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <SectionHeading
           id="map"
+          share="/#map"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           The map

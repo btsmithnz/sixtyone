@@ -19,6 +19,7 @@ export function NailBiters({
     <section aria-labelledby="nail-biters">
       <SectionHeading
         id="nail-biters"
+        share="/nail-biters"
         className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
       >
         Nail-biters

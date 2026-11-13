@@ -174,8 +174,8 @@
 
   /*
    * A section heading that links to itself. The "#" is decoration (its alt
-   * text is empty, so it isn't read out): it shows on hover or focus, and
-   * faintly all the time on touch screens, where there's no hover.
+   * text is empty, so it isn't read out): it shows on hover or focus. Touch
+   * screens never show it; they have the share button.
    */
   .heading-link {
     border-radius: var(--radius-sm);
@@ -195,11 +195,6 @@
   .heading-link:hover::after,
   .heading-link:focus-visible::after {
     opacity: 1;
-  }
-  @media (hover: none) {
-    .heading-link::after {
-      opacity: 0.4;
-    }
   }
 
   /* The finish line at 61. */

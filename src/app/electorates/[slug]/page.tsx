@@ -159,6 +159,7 @@ async function Electorate({
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <SectionHeading
             id="candidate-race"
+            share={`/electorates/${e.slug}`}
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             The candidate race
@@ -229,6 +230,7 @@ async function Electorate({
         >
           <SectionHeading
             id="how-the-lead-moved"
+            share={`/electorates/${e.slug}#how-the-lead-moved`}
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             How the lead moved
@@ -242,6 +244,7 @@ async function Electorate({
         <section className="sticker p-5 sm:p-7" aria-labelledby="party-vote">
           <SectionHeading
             id="party-vote"
+            share={`/electorates/${e.slug}/party-vote`}
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             Party vote here
@@ -289,7 +292,7 @@ async function Electorate({
 
       {/* Its own boundary: booth data is a separate, heavier query. */}
       <Suspense fallback={null}>
-        <BoothSection eNo={e.eNo} name={e.name} />
+        <BoothSection eNo={e.eNo} name={e.name} slug={e.slug} />
       </Suspense>
     </>
   );

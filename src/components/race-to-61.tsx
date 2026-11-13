@@ -126,9 +126,10 @@ export function RaceTo61({
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <SectionHeading
           id="race-to-61"
+          share="/"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
         >
-          Who’s getting to {majority}?
+          {`Who’s getting to ${majority}?`}
         </SectionHeading>
         <p className="text-sm text-muted-foreground">
           {seatsSource === "projected"
