@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Who’s out";
   const names = lost.slice(0, 3).map((m) => m.name);
   const description = lost.length
-    ? `${lost.length === 1 ? "1 MP" : `${lost.length} MPs`} lost their seats, including ${names.join(", ")}. Who's in and who's out in the 2026 NZ election.`
+    ? `${lost.length === 1 ? `${names[0]} lost their seat` : `${lost.length} MPs lost their seats, including ${names.join(", ")}`}. Who's in and who's out in the 2026 NZ election.`
     : "The MPs leaving Parliament after the 2026 New Zealand election.";
   return {
     title,

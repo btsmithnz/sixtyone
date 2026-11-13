@@ -3,8 +3,9 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { ReactNode } from "react";
-import type { BoothPlace, BoothResults } from "./booths";
+import { type BoothPlace, type BoothResults, boothTop } from "./booths";
 import { formatInt, formatPct, formatTime } from "./format";
+import { closestRaces } from "./nail-biters";
 import type { LeavingMp } from "./parliament";
 import { blocSeats, displayCandidateName, partyStyle } from "./parties";
 import type { ElectorateDetail, Overview } from "./results";
@@ -762,10 +763,7 @@ export async function nailBitersImage({
   stats,
   updatedAt,
 }: Overview) {
-  const close = electorates
-    .filter((e) => e.marginPoints !== null && e.votesCast > 0)
-    .sort((a, b) => (a.marginPoints ?? 0) - (b.marginPoints ?? 0))
-    .slice(0, 3);
+  const close = closestRaces(electorates).slice(0, 3);
   return render(
     <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
       <Title sub="The tightest electorate races right now">Nail-biters</Title>
@@ -1028,31 +1026,24 @@ function BoothColumn({
 /** Lines shown per vote on the voting place card. */
 const BOOTH_LINES = 4;
 
-/** The top few in one vote at a place, as shares of its votes. */
-function boothTop<T>(votes: number[], choices: T[]) {
-  const total = votes.reduce((a, n) => a + n, 0);
-  return votes
-    .map((n, i) => ({ n, i, choice: choices[i] }))
-    .filter((v) => v.n > 0 && v.choice)
-    .sort((a, b) => b.n - a.n)
-    .slice(0, BOOTH_LINES)
-    .map((v) => ({ ...v, percent: total ? (v.n / total) * 100 : 0 }));
-}
-
 /** /electorates/[slug]/booths/[id]: how one voting place voted. */
 export async function boothImage(
   electorate: string,
   data: BoothResults,
   place: BoothPlace,
 ) {
-  const candidates = boothTop(place.candidate, data.candidates).map((v) => ({
+  const candidates = boothTop(
+    place.candidate,
+    data.candidates,
+    BOOTH_LINES,
+  ).map((v) => ({
     key: v.i,
     label: displayCandidateName(v.choice.name),
     party: partyStyle(v.choice.pNo).short,
     pNo: v.choice.pNo,
     percent: v.percent,
   }));
-  const parties = boothTop(place.party, data.parties).map((v) => ({
+  const parties = boothTop(place.party, data.parties, BOOTH_LINES).map((v) => ({
     key: v.i,
     label: partyStyle(v.choice.pNo, v.choice.name).short,
     pNo: v.choice.pNo,

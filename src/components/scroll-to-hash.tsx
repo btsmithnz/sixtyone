@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /** How long to keep lining up a linked section while the page settles. */
 const SETTLE_MS = 5000;
@@ -11,9 +11,10 @@ const SETTLE_MS = 5000;
  * element already on the page when it looks: a section that streams in a
  * moment later is missed, and one can move when content above it streams in.
  * So this lines it up as the page changes, and stops when the reader
- * scrolls, taps or types, or after a few seconds. Returns the stop function.
+ * scrolls, taps or types, or after a few seconds; then `onSettled` runs.
+ * Returns a function that stops it early (without `onSettled`).
  */
-export function settleScroll(id: string) {
+export function settleScroll(id: string, onSettled?: () => void) {
   let frame = 0;
   const align = () => {
     frame = 0;
@@ -36,10 +37,14 @@ export function settleScroll(id: string) {
     observer.disconnect();
     cancelAnimationFrame(frame);
     clearTimeout(timer);
-    for (const e of takeover) removeEventListener(e, stop);
+    for (const e of takeover) removeEventListener(e, settled);
   };
-  const timer = setTimeout(stop, SETTLE_MS);
-  for (const e of takeover) addEventListener(e, stop, { passive: true });
+  const settled = () => {
+    stop();
+    onSettled?.();
+  };
+  const timer = setTimeout(settled, SETTLE_MS);
+  for (const e of takeover) addEventListener(e, settled, { passive: true });
   return stop;
 }
 
@@ -56,8 +61,21 @@ export function ScrollToHash() {
   return null;
 }
 
-/** Opens a share page (like /party-vote) at its section. */
+/**
+ * Opens a share page (like /party-vote) at its section, once per visit. The
+ * page stays mounted (hidden) when you navigate away and its effects run
+ * again when you come back, which would undo where you'd scrolled to; a ref
+ * survives that. It's set once the scroll settles, not when it starts, as
+ * dev mode runs effects twice. A #link wins (ScrollToHash handles it), so
+ * the two don't fight.
+ */
 export function ScrollToSection({ id }: { id: string }) {
-  useEffect(() => settleScroll(id), [id]);
+  const settled = useRef(false);
+  useEffect(() => {
+    if (settled.current || location.hash) return;
+    return settleScroll(id, () => {
+      settled.current = true;
+    });
+  }, [id]);
   return null;
 }

@@ -86,12 +86,19 @@ export function BoothExplorer({
   // …and in the vote it was shared from (?vote=party), scrolled to: the
   // whole section on wide screens, the place's details (below the map) on
   // phones. Read in an effect: the page is the same static HTML for any
-  // query string.
+  // query string. Once per visit, and not over a #link (see ScrollToSection).
+  const landed = useRef(false);
   useEffect(() => {
-    if (linked === null) return;
+    if (linked === null || landed.current) return;
     if (new URLSearchParams(location.search).get("vote") === "party")
       setMode("party");
-    return settleScroll(isWide() ? "booth-by-booth" : "booth-detail");
+    if (location.hash) {
+      landed.current = true;
+      return;
+    }
+    return settleScroll(isWide() ? "booth-by-booth" : "booth-detail", () => {
+      landed.current = true;
+    });
   }, [linked]);
 
   // Load MapLibre only when the map is about to scroll into view.
@@ -185,6 +192,7 @@ export function BoothExplorer({
         <SectionHeading
           id="booth-by-booth"
           share={`/electorates/${slug}#booth-by-booth`}
+          shareTitle={`${electorate}: booth by booth`}
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           Booth by booth

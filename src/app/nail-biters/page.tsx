@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ScrollToSection } from "@/components/scroll-to-hash";
 import { formatInt } from "@/lib/format";
+import { closestRaces } from "@/lib/nail-biters";
 import { displayCandidateName } from "@/lib/parties";
 import { getOverview } from "@/lib/results";
 import { shareMetadata } from "@/lib/site";
@@ -9,9 +10,7 @@ import Home from "../page";
 /** The nail-biters' share page (see /party-vote). */
 export async function generateMetadata(): Promise<Metadata> {
   const { electorates, version } = await getOverview();
-  const [closest] = electorates
-    .filter((e) => e.marginPoints !== null && e.votesCast > 0)
-    .sort((a, b) => (a.marginPoints ?? 0) - (b.marginPoints ?? 0));
+  const [closest] = closestRaces(electorates);
   const [a, b] = closest?.candidates ?? [];
   const title = "Nail-biters";
   const description =

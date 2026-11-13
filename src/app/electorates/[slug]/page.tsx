@@ -160,6 +160,7 @@ async function Electorate({
           <SectionHeading
             id="candidate-race"
             share={`/electorates/${e.slug}`}
+            shareTitle={`${e.name}: the candidate race`}
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             The candidate race
@@ -231,6 +232,7 @@ async function Electorate({
           <SectionHeading
             id="how-the-lead-moved"
             share={`/electorates/${e.slug}#how-the-lead-moved`}
+            shareTitle={`${e.name}: how the lead moved`}
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             How the lead moved
@@ -245,6 +247,7 @@ async function Electorate({
           <SectionHeading
             id="party-vote"
             share={`/electorates/${e.slug}/party-vote`}
+            shareTitle={`${e.name}: party vote`}
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             Party vote here

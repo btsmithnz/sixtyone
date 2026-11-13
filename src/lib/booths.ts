@@ -219,8 +219,9 @@ export function splitName(name: string) {
  */
 export async function findBooth(slug: string, id: string) {
   const electorate = ALL_ELECTORATES.find((e) => e.slug === slug);
+  // Only an id as we write it ("16", not "016" or "0x10"): one page per place.
   const placeId = Number(id);
-  if (!electorate || !Number.isSafeInteger(placeId)) return null;
+  if (!electorate || String(placeId) !== id) return null;
   const data = await getBoothResults(electorate.eNo);
   const place = data?.places.find((p) => p.id === placeId);
   return data && place ? { electorate, data, place } : null;
@@ -235,4 +236,18 @@ export async function boothSample() {
   const [first] = ALL_ELECTORATES;
   const data = await getBoothResults(first.eNo);
   return { slug: first.slug, id: String(data?.places[0]?.id ?? 0) };
+}
+
+export const isElectorateSlug = (slug: string) =>
+  ALL_ELECTORATES.some((e) => e.slug === slug);
+
+/** The top `n` in one vote at a place (`votes`, in `choices` order), with shares. */
+export function boothTop<T>(votes: number[], choices: T[], n: number) {
+  const total = votes.reduce((a, v) => a + v, 0);
+  return votes
+    .map((v, i) => ({ votes: v, i, choice: choices[i] }))
+    .filter((v): v is typeof v & { choice: T } => v.votes > 0 && !!v.choice)
+    .sort((a, b) => b.votes - a.votes)
+    .slice(0, n)
+    .map((v) => ({ ...v, percent: total ? (v.votes / total) * 100 : 0 }));
 }
