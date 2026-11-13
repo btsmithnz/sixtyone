@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
+import { SectionHeading } from "@/components/section-heading";
 import { formatPct } from "@/lib/format";
 import { BASE_SEATS, majorityOf, raisedMajority } from "@/lib/seats";
 import { cn } from "@/lib/utils";
@@ -121,14 +122,14 @@ export function RaceTo61({
   };
 
   return (
-    <section aria-labelledby="race-heading" className="sticker p-5 sm:p-7">
+    <section aria-labelledby="race-to-61" className="sticker p-5 sm:p-7">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <h2
-          id="race-heading"
+        <SectionHeading
+          id="race-to-61"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
         >
           Who’s getting to {majority}?
-        </h2>
+        </SectionHeading>
         <p className="text-sm text-muted-foreground">
           {seatsSource === "projected"
             ? "Our seat projection from the count so far"

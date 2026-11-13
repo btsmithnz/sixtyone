@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
+import { SectionHeading } from "@/components/section-heading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { formatPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -173,14 +174,14 @@ export function ElectorateMap({
   };
 
   return (
-    <section aria-labelledby="map-heading" className="sticker p-5 sm:p-7">
+    <section aria-labelledby="map" className="sticker p-5 sm:p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2
-          id="map-heading"
+        <SectionHeading
+          id="map"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           The map
-        </h2>
+        </SectionHeading>
         <div className="flex flex-wrap gap-2">
           <ToggleGroup
             value={[roll]}

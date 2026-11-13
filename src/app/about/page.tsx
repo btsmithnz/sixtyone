@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SectionHeading } from "@/components/section-heading";
 import { shareMetadata } from "@/lib/site";
 
 const description =
@@ -27,9 +28,12 @@ export default function AboutPage() {
         election night and keeps asking one question: who can get there?
       </p>
 
-      <h2 className="pt-4 font-display text-3xl font-extrabold [font-stretch:85%]">
+      <SectionHeading
+        id="where-the-numbers-come-from"
+        className="pt-4 font-display text-3xl font-extrabold [font-stretch:85%]"
+      >
         Where the numbers come from
-      </h2>
+      </SectionHeading>
       <p>
         Every few minutes we check the Electoral Commission’s public results
         feed and keep a copy of each update. That history is what powers the
@@ -42,9 +46,12 @@ export default function AboutPage() {
         electorates and the last seat or two.
       </p>
 
-      <h2 className="pt-4 font-display text-3xl font-extrabold [font-stretch:85%]">
+      <SectionHeading
+        id="how-seats-are-worked-out"
+        className="pt-4 font-display text-3xl font-extrabold [font-stretch:85%]"
+      >
         How seats are worked out
-      </h2>
+      </SectionHeading>
       <p>
         When the Commission publishes its own seat allocation, we show that. If
         it hasn’t yet, we project seats ourselves the same way: parties with 5%
@@ -60,9 +67,12 @@ export default function AboutPage() {
         try any other combination.
       </p>
 
-      <h2 className="pt-4 font-display text-3xl font-extrabold [font-stretch:85%]">
+      <SectionHeading
+        id="credits"
+        className="pt-4 font-display text-3xl font-extrabold [font-stretch:85%]"
+      >
         Credits
-      </h2>
+      </SectionHeading>
       <p>
         Results: Electoral Commission. Electorate boundaries: Stats NZ and the
         Representation Commission (2025 boundaries), used under CC BY 4.0.

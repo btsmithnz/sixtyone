@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SectionHeading } from "@/components/section-heading";
 import { formatPct } from "@/lib/format";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
 import type { ElectorateSummary } from "@/lib/results";
@@ -40,16 +41,16 @@ export function SplitVotes({
 
   return (
     <section
-      aria-labelledby="split-heading"
+      aria-labelledby="split-votes"
       className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2"
     >
       <div className="sticker p-5 sm:p-7">
-        <h2
-          id="split-heading"
+        <SectionHeading
+          id="split-votes"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           Split votes
-        </h2>
+        </SectionHeading>
         <p className="mt-1 text-sm text-muted-foreground">
           Everyone gets two votes. In these electorates, the candidate vote and
           the party vote went to different parties.
@@ -120,9 +121,12 @@ export function SplitVotes({
       </div>
 
       <div className="sticker p-5 sm:p-7">
-        <h2 className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]">
+        <SectionHeading
+          id="personal-votes"
+          className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
+        >
           Biggest personal votes
-        </h2>
+        </SectionHeading>
         <p className="mt-1 text-sm text-muted-foreground">
           Winners who ran furthest ahead of their own party’s vote in the same
           electorate.
