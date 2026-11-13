@@ -44,6 +44,10 @@ next-env.d.ts
 # map build downloads
 /scripts/.cache
 
+# Source data that's too big (or not ours) to commit: Electoral Commission
+# voting place spreadsheets, LINZ NZ Addresses, and what we build from them.
+/data
+
 # Claude Code: personal settings and app-managed worktrees
 /.claude/settings.local.json
 /.claude/worktrees/

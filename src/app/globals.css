@@ -188,6 +188,34 @@
   }
 }
 
+/*
+ * MapLibre's controls on the booth map, in the site's colours. Unlayered and
+ * scoped to .booth-map, to beat maplibre-gl.css (also unlayered, and loaded
+ * later with the map).
+ */
+.booth-map .maplibregl-ctrl.maplibregl-ctrl-group,
+.booth-map .maplibregl-ctrl.maplibregl-ctrl-attrib {
+  background-color: var(--card);
+  color: var(--foreground);
+}
+.booth-map .maplibregl-ctrl.maplibregl-ctrl-group {
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+.booth-map .maplibregl-ctrl-group button + button {
+  border-top-color: var(--border);
+}
+.booth-map .maplibregl-ctrl-attrib a {
+  color: var(--muted-foreground);
+}
+@media (prefers-color-scheme: dark) {
+  .booth-map .maplibregl-ctrl-icon,
+  .booth-map .maplibregl-ctrl-attrib-button {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
+
 @keyframes pop-in {
   0% {
     transform: scale(0.4) rotate(-12deg);

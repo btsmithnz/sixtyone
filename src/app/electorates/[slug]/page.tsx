@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { BoothSection } from "@/components/booth-section";
 import { FavouriteButton } from "@/components/favourite-button";
 import { LiveStatus } from "@/components/live-status";
 import { LocatorMap } from "@/components/locator-map";
@@ -281,6 +282,11 @@ async function Electorate({
           )}
         </section>
       </div>
+
+      {/* Its own boundary: booth data is a separate, heavier query. */}
+      <Suspense fallback={null}>
+        <BoothSection eNo={e.eNo} name={e.name} />
+      </Suspense>
     </>
   );
 }

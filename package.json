@@ -14,6 +14,8 @@
     "db:studio": "drizzle-kit studio",
     "map:build": "tsx scripts/build-map.ts",
     "icons:build": "tsx scripts/build-icons.ts",
+    "booths:build": "tsx scripts/build-booths.ts",
+    "booths:import": "tsx --env-file-if-exists=.env.local scripts/import-booths.ts",
     "scrape": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/scrape.ts",
     "simulate": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/simulate.ts"
   },
@@ -25,6 +27,7 @@
     "drizzle-orm": "^0.45.4",
     "fast-xml-parser": "^5.12.0",
     "lucide-react": "^1.68.0",
+    "maplibre-gl": "6.16.0",
     "next": "16.4.5",
     "postgres": "^3.4.9",
     "react": "19.3.0",

@@ -66,8 +66,10 @@ export default function AboutPage() {
       <p>
         Results: Electoral Commission. Electorate boundaries: Stats NZ and the
         Representation Commission (2025 boundaries), used under CC BY 4.0.
-        SixtyOne is independent and isn’t affiliated with the Electoral
-        Commission or any party.
+        Voting places are located using LINZ’s NZ Addresses, used under CC BY
+        4.0. Booth maps: OpenFreeMap, © OpenMapTiles, © OpenStreetMap
+        contributors. SixtyOne is independent and isn’t affiliated with the
+        Electoral Commission or any party.
       </p>
     </article>
   );

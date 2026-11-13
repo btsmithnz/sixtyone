@@ -1,5 +1,6 @@
 import {
   boolean,
+  doublePrecision,
   index,
   integer,
   pgTable,
@@ -135,6 +136,73 @@ export const electoratePartyVotes = pgTable(
     votes: integer("votes").notNull(),
   },
   (t) => [primaryKey({ columns: [t.snapshotId, t.pNo] })],
+);
+
+/* ------------------------------------------------------------------ */
+/* Booth (voting place) results, from the Commission's per-electorate */
+/* voting place statistics. Loaded by scripts/import-booths.ts.        */
+/* ------------------------------------------------------------------ */
+
+export const votingPlaces = pgTable("voting_places", {
+  id: serial("id").primaryKey(),
+  /** As published: "Ponsonby, Ponsonby Primary School, 44 Curran Street". */
+  name: text("name").notNull().unique(),
+  /** null when the place can't be mapped (mobile teams, care homes). */
+  lat: doublePrecision("lat"),
+  lon: doublePrecision("lon"),
+  /** How it was geocoded: manual, address, nearby, corner, road, locality or mobile. */
+  geoPrecision: text("geo_precision"),
+});
+
+export const boothResults = pgTable(
+  "booth_results",
+  {
+    id: serial("id").primaryKey(),
+    /** e.g. "2026-preliminary", "2026-official". */
+    stage: text("stage").notNull(),
+    /** The electorate whose votes these are (not where the place is). */
+    eNo: integer("e_no").notNull(),
+    votingPlaceId: integer("voting_place_id")
+      .notNull()
+      .references(() => votingPlaces.id),
+    section: text("section", { enum: ["advance", "election_day"] }).notNull(),
+    partyInformals: integer("party_informals").notNull(),
+    candidateInformals: integer("candidate_informals").notNull(),
+  },
+  (t) => [
+    // e_no first: pages read one electorate's results at a time.
+    unique("booth_results_place").on(
+      t.eNo,
+      t.stage,
+      t.votingPlaceId,
+      t.section,
+    ),
+  ],
+);
+
+/** Places with fewer than 6 votes are published as all zeros, for secrecy. */
+export const boothPartyVotes = pgTable(
+  "booth_party_votes",
+  {
+    boothResultId: integer("booth_result_id")
+      .notNull()
+      .references(() => boothResults.id, { onDelete: "cascade" }),
+    pNo: integer("p_no").notNull(),
+    votes: integer("votes").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.boothResultId, t.pNo] })],
+);
+
+export const boothCandidateVotes = pgTable(
+  "booth_candidate_votes",
+  {
+    boothResultId: integer("booth_result_id")
+      .notNull()
+      .references(() => boothResults.id, { onDelete: "cascade" }),
+    cNo: integer("c_no").notNull(),
+    votes: integer("votes").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.boothResultId, t.cNo] })],
 );
 
 /* ------------------------------------------------------------------ */

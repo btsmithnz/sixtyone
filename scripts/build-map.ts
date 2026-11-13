@@ -14,8 +14,10 @@
  *    <use href="/map/electorates.<hash>.svg#e12" fill="…">, so the geometry is
  *    downloaded once, cached immutably by the browser/CDN, and never inlined
  *    into HTML or RSC payloads. No map library or tiles are needed at runtime.
- *  - src/data/electorate-map.json: small metadata (sprite URL, view boxes,
- *    centroids, insets).
+ *  - public/map/boundaries.<hash>/<eNo>.json: each electorate as more
+ *    detailed longitude/latitude GeoJSON, for the booth map on its page.
+ *  - src/data/electorate-map.json: small metadata (sprite and boundary URLs,
+ *    view boxes, centroids, insets).
  *
  *   pnpm map:build            # uses cached downloads in scripts/.cache
  *   pnpm map:build --refresh  # re-downloads boundaries
@@ -137,7 +139,20 @@ async function download(kind: keyof typeof SOURCES, refresh: boolean) {
   return file;
 }
 
-async function simplify(file: string, landFile: string, keep: string) {
+/**
+ * Clips to land, drops islets and simplifies. `simplify` is mapshaper's
+ * -simplify options. The sprite is projected by d3, so it's rewound for d3;
+ * the boundary files keep RFC 7946 winding for MapLibre.
+ */
+async function simplify(
+  file: string,
+  landFile: string,
+  {
+    simplify,
+    minIsland,
+    forD3,
+  }: { simplify: string; minIsland: string; forD3: boolean },
+) {
   const [input, land] = await Promise.all([
     readFile(file, "utf8"),
     readFile(landFile, "utf8"),
@@ -148,12 +163,10 @@ async function simplify(file: string, landFile: string, keep: string) {
       `-clip bbox=${CLIP_BBOX.join(",")}`,
       "-clip land.json",
       // Remove tiny islets that add bytes but no meaning at this scale.
-      "-filter-islands min-area=2km2 remove-empty",
-      // Variable simplification: city electorates appear in zoomed insets, so
-      // keep far more detail there than in large rural electorates.
-      `-simplify visvalingam weighted variable percentage="LAND_AREA_SQ_KM < 400 ? 0.45 : LAND_AREA_SQ_KM < 3000 ? ${keep} * 2 : ${keep}" keep-shapes`,
+      `-filter-islands min-area=${minIsland} remove-empty`,
+      `-simplify ${simplify} keep-shapes`,
       "-clean",
-      "-o output.json format=geojson",
+      `-o output.json format=geojson${forD3 ? "" : " rfc7946 precision=0.00001"}`,
     ].join(" "),
     { "input.json": input, "land.json": land },
   );
@@ -161,7 +174,7 @@ async function simplify(file: string, landFile: string, keep: string) {
     Polygon | MultiPolygon,
     Props
   >;
-  for (const f of fc.features) rewindForD3(f.geometry);
+  if (forD3) for (const f of fc.features) rewindForD3(f.geometry);
   return fc;
 }
 
@@ -187,9 +200,25 @@ async function main() {
     download("maori", refresh),
     download("land", refresh),
   ]);
-  const [general, maori] = await Promise.all([
-    simplify(generalFile, landFile, "0.06"),
-    simplify(maoriFile, landFile, "0.04"),
+  // Variable simplification: city electorates appear in zoomed insets, so
+  // keep far more detail there than in large rural electorates.
+  const forSprite = (keep: string) => ({
+    simplify: `visvalingam weighted variable percentage="LAND_AREA_SQ_KM < 400 ? 0.45 : LAND_AREA_SQ_KM < 3000 ? ${keep} * 2 : ${keep}"`,
+    minIsland: "2km2",
+    forD3: true,
+  });
+  // The booth map zooms right in, so it keeps detail to a few tens of metres
+  // in cities and coarser outlines for big rural electorates.
+  const forBoothMap = {
+    simplify: `visvalingam weighted variable interval="LAND_AREA_SQ_KM < 400 ? 12 : LAND_AREA_SQ_KM < 3000 ? 30 : 90"`,
+    minIsland: "0.2km2",
+    forD3: false,
+  };
+  const [general, maori, generalDetail, maoriDetail] = await Promise.all([
+    simplify(generalFile, landFile, forSprite("0.06")),
+    simplify(maoriFile, landFile, forSprite("0.04")),
+    simplify(generalFile, landFile, forBoothMap),
+    simplify(maoriFile, landFile, forBoothMap),
   ]);
 
   const projection = geoTransverseMercator()
@@ -287,11 +316,44 @@ async function main() {
   const spriteName = `electorates.${hash}.svg`;
   await writeFile(path.join(SPRITE_DIR, spriteName), sprite);
 
+  // Boundaries: one small file per electorate, under a shared content hash.
+  const boundaries = new Map<number, string>();
+  for (const [fc, field, offset] of [
+    [generalDetail, "GED2025_V1_00", 0],
+    [maoriDetail, "MED2025_V1_00", MAORI_OFFSET],
+  ] as const) {
+    for (const f of fc.features) {
+      boundaries.set(
+        offset + Number(f.properties[field]),
+        JSON.stringify({
+          type: "Feature",
+          properties: {},
+          geometry: f.geometry,
+        }),
+      );
+    }
+  }
+  if (boundaries.size !== 71) {
+    throw new Error(`Expected 71 boundaries, got ${boundaries.size}`);
+  }
+  const boundaryHash = createHash("sha256")
+    .update([...boundaries.entries()].sort(([a], [b]) => a - b).join("\n"))
+    .digest("hex")
+    .slice(0, 10);
+  const boundaryDir = `boundaries.${boundaryHash}`;
+  await mkdir(path.join(SPRITE_DIR, boundaryDir));
+  let boundaryBytes = 0;
+  for (const [eNo, json] of boundaries) {
+    boundaryBytes += json.length;
+    await writeFile(path.join(SPRITE_DIR, boundaryDir, `${eNo}.json`), json);
+  }
+
   const meta = ({ d: _d, geoBounds: _g, ...s }: (typeof generalShapes)[0]) => s;
   const out = {
     source:
       "Stats NZ / Representation Commission, 2025 electorate boundaries (CC BY 4.0)",
     sprite: `/map/${spriteName}`,
+    boundaries: `/map/${boundaryDir}`,
     width: WIDTH,
     height,
     general: generalShapes.map(meta),
@@ -303,6 +365,9 @@ async function main() {
   await writeFile(OUT, json);
   console.log(
     `Wrote public/map/${spriteName} (${(sprite.length / 1024).toFixed(0)} KB) and ${path.relative(ROOT, OUT)} (${(json.length / 1024).toFixed(0)} KB), ${WIDTH}×${height}`,
+  );
+  console.log(
+    `Wrote public/map/${boundaryDir}/ (${boundaries.size} files, ${(boundaryBytes / 1024).toFixed(0)} KB)`,
   );
   for (const i of insets)
     console.log(

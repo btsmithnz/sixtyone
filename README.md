@@ -10,6 +10,10 @@ how the night unfolded.
 - **Trends**: party vote and seats over the night, and each electorate's candidate race
   over time.
 - **Nail-biters**: the closest electorate races right now.
+- **Booth by booth** (`src/components/booth-explorer.tsx`): each electorate page maps
+  every voting place that took its votes, sized by votes and coloured by who came first,
+  or shaded by one candidate's or party's share. Hidden until booth results are imported
+  (`pnpm booths:import`).
 - **Your new Parliament** (`/parliament`, `src/lib/parliament.ts`): every MP worked out
   from electorate winners and party lists, marked new or returning against the outgoing
   Parliament (`src/data/outgoing-mps.ts`), plus who's leaving. The special votes what-if
@@ -40,6 +44,8 @@ Useful scripts:
 | `pnpm scrape` | One scrape of the live feed (add `--force` to ignore If-Modified-Since) |
 | `pnpm simulate` | Wipes stored results and simulates a whole night (`--until 0.5`, `--seed 7`, `--steps 20`) |
 | `pnpm map:build` | Rebuilds the electorate map from Stats NZ boundaries (`--refresh` to re-download) |
+| `pnpm booths:build` | Parses and geocodes booth results from the files in `data/` (see the script's header) |
+| `pnpm booths:import` | Loads `data/booths-*.csv` into Postgres (a dry run until you add `--write`) |
 | `pnpm db:generate` / `db:migrate` | Drizzle migrations after editing `src/db/schema.ts` |
 
 ⚠️ `pnpm simulate` deletes all stored results. It refuses to run when
@@ -78,7 +84,12 @@ Electoral Commission feed ──(Vercel Cron, currently off)──▶ /api/cron/
   coastline, simplified, projected, and written to a content-hashed SVG sprite in
   `public/map/`. Pages draw electorates with `<use href="/map/electorates.<hash>.svg#e12">`,
   so the geometry is downloaded once and cached immutably, without any map library,
-  tiles or paid service.
+  tiles or paid service. It also writes each electorate's outline as GeoJSON for the
+  booth map.
+- **Booth map** (`src/components/booth-map-canvas.tsx`): MapLibre GL over
+  [OpenFreeMap](https://openfreemap.org/) vector tiles (free, no API key), recoloured to
+  the site palette. MapLibre only downloads when the map is about to scroll into view;
+  the list of voting places beside it is server-rendered.
 - **Sharing and SEO** (`src/lib/site.ts`, `src/lib/og.tsx`): every page has a canonical
   URL, a live description ("National-led 63 seats, Labour-led 57…") and a share image
   rendered from the current results (`/og`, `/og/electorates/<slug>`). The image URLs
@@ -121,6 +132,11 @@ states until the first scrape.
 ## Data and licences
 
 - Results: [Electoral Commission media feed](https://media.election.net.nz/xml/).
+- Booth results: the Electoral Commission's per-electorate voting place statistics,
+  geocoded with [LINZ NZ Addresses](https://data.linz.govt.nz/layer/105689-nz-addresses/)
+  (CC BY 4.0). Both live in the gitignored `data/` directory.
+- Booth map tiles: [OpenFreeMap](https://openfreemap.org/), © OpenMapTiles, ©
+  OpenStreetMap contributors (ODbL).
 - Electorate boundaries: Stats NZ / Representation Commission 2025, via Stats NZ's
   ArcGIS services, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The
   coastline comes from Stats NZ's clipped SA3 2023 layer.
