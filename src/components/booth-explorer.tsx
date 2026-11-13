@@ -19,7 +19,7 @@ import type { BoothPlace, BoothResults } from "@/lib/booths";
 import { formatInt, formatPct } from "@/lib/format";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
 import { OFFICIAL_RESULTS_DATE } from "@/lib/specials";
-import type { Standout } from "@/lib/standouts";
+import type { Standout, Vote } from "@/lib/standouts";
 import { cn } from "@/lib/utils";
 import type { BoothHover, BoothPoint } from "./booth-map-canvas";
 
@@ -53,6 +53,8 @@ const MIN_SHADE = 0.08;
  * rendering them all would bloat every page.
  */
 const COLLAPSED = 8;
+/** …and with the standouts above them, so the list stays about map height. */
+const COLLAPSED_UNDER_STANDOUTS = 5;
 /** Names shown in the hover card. */
 const HOVER_LINES = 3;
 
@@ -67,8 +69,11 @@ export function BoothExplorer({
   electorate: string;
   /** The electorate's slug, for share links. */
   slug: string;
-  /** Places where someone did far better than across the electorate. */
-  standouts: Standout[];
+  /**
+   * Places where someone did far better than across the electorate, in
+   * each vote: listed first while nobody's picked.
+   */
+  standouts: Record<Vote, Standout[]>;
   boundaryUrl: string;
 }) {
   // A voting place's share page (/electorates/[slug]/booths/[id]) opens
@@ -87,6 +92,8 @@ export function BoothExplorer({
   const mapBox = useRef<HTMLDivElement>(null);
   const detailBox = useRef<HTMLDivElement>(null);
   const listBox = useRef<HTMLDivElement>(null);
+  // Which row to go back to from a place's details, if not its list row.
+  const backTo = useRef<string | null>(null);
 
   // …and in the vote it was shared from (?vote=party), scrolled to: the
   // whole section on wide screens, the place's details (below the map) on
@@ -143,6 +150,8 @@ export function BoothExplorer({
   const selectedRow = counted.find((r) => r.place.id === selected);
   const hovered = hover ? rows.find((r) => r.place.id === hover.id) : undefined;
   const unmapped = counted.length - points.length;
+  const showStandouts = focus === null && standouts[mode].length > 0;
+  const collapsed = showStandouts ? COLLAPSED_UNDER_STANDOUTS : COLLAPSED;
 
   const pick = (id: number, from: "map" | "list") => {
     setSelected(id);
@@ -269,67 +278,6 @@ export function BoothExplorer({
 
       {headline ? <p className="mt-4 text-base">{headline}</p> : null}
 
-      {standouts.length ? (
-        <div className="mt-4">
-          <h3 className="text-sm font-semibold">Standouts</h3>
-          <p className="text-xs text-muted-foreground">
-            Where someone did far better than across {electorate}. Pick one to
-            see it on the map.
-            {data.stage === "preliminary"
-              ? ` Preliminary counts can include recording slips; the official count on ${OFFICIAL_RESULTS_DATE} checks every voting place.`
-              : ""}
-          </p>
-          <ul className="mt-2 grid gap-2 sm:grid-cols-3">
-            {standouts.map((s) => {
-              const place = data.places.find((p) => p.id === s.placeId);
-              const c = choicesFor(data, s.vote)[s.choice];
-              if (!place || !c) return null;
-              const on =
-                selected === s.placeId && mode === s.vote && focus === s.choice;
-              return (
-                <li key={s.placeId}>
-                  <button
-                    type="button"
-                    aria-pressed={on}
-                    onClick={() => {
-                      // Show the place coloured by who stood out there.
-                      setMode(s.vote);
-                      setFocus(s.choice);
-                      pick(s.placeId, "list");
-                    }}
-                    className={cn(
-                      "h-full w-full rounded-xl border-2 px-3 py-2 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
-                      on
-                        ? "border-ink bg-secondary"
-                        : "border-border bg-card hover:border-ink/40",
-                    )}
-                  >
-                    <span className="block truncate font-semibold">
-                      {place.venue}
-                    </span>
-                    <span className="mt-0.5 flex items-center gap-1.5">
-                      <span
-                        aria-hidden
-                        className="size-3 shrink-0 rounded-full border border-ink/20"
-                        style={{ background: partyColorVar(c.pNo) }}
-                      />
-                      <span className="min-w-0 truncate">{c.label}</span>
-                      <span className="num ml-auto shrink-0 font-semibold">
-                        {formatPct(s.share)}
-                      </span>
-                    </span>
-                    <span className="num block text-xs text-muted-foreground">
-                      {formatPct(s.electorateShare)} across the electorate,{" "}
-                      {s.vote} vote
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : null}
-
       <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <div>
           <div
@@ -354,9 +302,11 @@ export function BoothExplorer({
                       selected={selected}
                       flyTo={flyTo}
                       label={`Map of voting places for ${electorate}`}
-                      onSelect={(id) =>
-                        id === null ? setSelected(null) : pick(id, "map")
-                      }
+                      onSelect={(id) => {
+                        backTo.current = null;
+                        if (id === null) setSelected(null);
+                        else pick(id, "map");
+                      }}
                       onHover={setHover}
                       onError={() => setMapState("failed")}
                     />
@@ -402,12 +352,12 @@ export function BoothExplorer({
                 onBack={() => {
                   setSelected(null);
                   // Keyboard users go back to the row they came from.
-                  const id = selectedRow.place.id;
+                  const row =
+                    backTo.current ?? `[data-place="${selectedRow.place.id}"]`;
                   requestAnimationFrame(() =>
                     (
-                      listBox.current?.querySelector<HTMLElement>(
-                        `[data-place="${id}"]`,
-                      ) ?? listBox.current?.querySelector("h3")
+                      listBox.current?.querySelector<HTMLElement>(row) ??
+                      listBox.current?.querySelector("h3")
                     )?.focus(),
                   );
                 }}
@@ -415,6 +365,37 @@ export function BoothExplorer({
             </div>
           ) : null}
           <div ref={listBox} className={cn(selectedRow && "hidden")}>
+            {showStandouts ? (
+              <div className="mb-5">
+                <div className="flex items-baseline justify-between gap-3 px-1.5">
+                  <h3 className="text-sm font-semibold">Standouts</h3>
+                  <span
+                    aria-hidden
+                    className="shrink-0 text-xs text-muted-foreground"
+                  >
+                    Here, and across the electorate
+                  </span>
+                </div>
+                <p className="px-1.5 text-xs text-muted-foreground">
+                  Where someone did far better than across {electorate}.
+                </p>
+                <ol className="mt-2 divide-y divide-border">
+                  {standouts[mode].map((s) => (
+                    <li key={s.placeId}>
+                      <StandoutRow
+                        standout={s}
+                        data={data}
+                        choices={choices}
+                        onClick={() => {
+                          backTo.current = `[data-standout="${s.placeId}"]`;
+                          pick(s.placeId, "list");
+                        }}
+                      />
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ) : null}
             <div className="flex items-baseline justify-between gap-3 px-1.5">
               <h3 tabIndex={-1} className="text-sm font-semibold outline-none">
                 {focus === null
@@ -430,18 +411,21 @@ export function BoothExplorer({
               </span>
             </div>
             <ol className="mt-2 divide-y divide-border lg:max-h-[528px] lg:overflow-y-auto lg:pr-1">
-              {(expanded ? sorted : sorted.slice(0, COLLAPSED)).map((r) => (
+              {(expanded ? sorted : sorted.slice(0, collapsed)).map((r) => (
                 <li key={r.place.id}>
                   <BoothRow
                     row={r}
                     choices={choices}
                     focus={focus}
-                    onClick={() => pick(r.place.id, "list")}
+                    onClick={() => {
+                      backTo.current = null;
+                      pick(r.place.id, "list");
+                    }}
                   />
                 </li>
               ))}
             </ol>
-            {!expanded && sorted.length > COLLAPSED ? (
+            {!expanded && sorted.length > collapsed ? (
               <button
                 type="button"
                 onClick={() => setExpanded(true)}
@@ -456,6 +440,9 @@ export function BoothExplorer({
 
       <p className="mt-5 text-xs text-muted-foreground">
         Special votes aren’t counted by voting place, so they’re not here.
+        {data.stage === "preliminary"
+          ? ` Preliminary counts can include recording slips; the official count on ${OFFICIAL_RESULTS_DATE} checks every voting place.`
+          : ""}
         {data.suppressed === 1
           ? " One place took fewer than 6 votes, so it’s left out for secrecy."
           : data.suppressed
@@ -643,6 +630,51 @@ function BoothRow({
         </span>
         <span className="num block text-xs text-muted-foreground">
           {formatInt(row.total)} votes
+        </span>
+      </span>
+    </button>
+  );
+}
+
+/** A standout place: who stood out there, their share here and overall. */
+function StandoutRow({
+  standout: s,
+  data,
+  choices,
+  onClick,
+}: {
+  standout: Standout;
+  data: BoothResults;
+  choices: Choice[];
+  onClick: () => void;
+}) {
+  const place = data.places.find((p) => p.id === s.placeId);
+  const c = choices[s.choice];
+  if (!place || !c) return null;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      data-standout={s.placeId}
+      className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 rounded-lg px-1.5 py-2 text-left text-sm hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
+    >
+      <span
+        aria-hidden
+        className="size-3 rounded-full border border-ink/30"
+        style={{ background: partyColorVar(c.pNo) }}
+      />
+      <span className="min-w-0">
+        <span className="block truncate font-semibold">{place.venue}</span>
+        <span className="block truncate text-muted-foreground">{c.label}</span>
+      </span>
+      <span className="text-right">
+        <span className="num block font-semibold">
+          {formatPct(s.share)}
+          <span className="sr-only"> for {c.label} here,</span>
+        </span>
+        <span className="num block text-xs text-muted-foreground">
+          {formatPct(s.electorateShare)}
+          <span className="sr-only"> across the electorate</span>
         </span>
       </span>
     </button>

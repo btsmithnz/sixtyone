@@ -69,15 +69,16 @@ export function electorateShares(data: BoothResults, vote: Vote) {
 
 /**
  * An electorate's standout places, biggest gap first: one per place, its
- * biggest gap in either vote. `home` is the places it's the home electorate
- * of (see getHomePlaces).
+ * biggest gap in `votes` (both, unless you say). `home` is the places it's
+ * the home electorate of (see getHomePlaces).
  */
 export function findStandouts(
   data: BoothResults,
   home: Iterable<number>,
+  votes: readonly Vote[] = ["candidate", "party"],
 ): Standout[] {
   const best = new Map<number, Standout>();
-  for (const vote of ["candidate", "party"] as const) {
+  for (const vote of votes) {
     const overall = electorateShares(data, vote);
     for (const place of eligiblePlaces(data, home, vote)) {
       const votes = votesIn(place, vote);
