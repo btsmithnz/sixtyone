@@ -10,14 +10,19 @@ import {
   useState,
 } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { formatPct } from "@/lib/format";
+import type { ElectorateResult } from "@/lib/parliament";
 import { cn } from "@/lib/utils";
 
 /**
  * One sort setting for every list on a page: by ranking (party list
- * position; people without one go last) or A–Z by surname, either way
- * reversible. Lists render on the server in the default order.
+ * position), A–Z by surname, or how people did in the electorate they stood
+ * in (candidate vote, or their party's party vote there; best first). Any
+ * order can be reversed; people without a value (no list place, didn't
+ * stand in an electorate) always go last. Lists render on the server in the
+ * default order.
  */
-type SortBy = "rank" | "name";
+type SortBy = "rank" | "name" | "candidate" | "party";
 type SortState = {
   by: SortBy;
   reversed: boolean;
@@ -61,6 +66,8 @@ export function ListSortControls({ className }: { className?: string }) {
       >
         <ToggleGroupItem value="rank">Ranking</ToggleGroupItem>
         <ToggleGroupItem value="name">A–Z</ToggleGroupItem>
+        <ToggleGroupItem value="candidate">Candidate vote</ToggleGroupItem>
+        <ToggleGroupItem value="party">Party vote</ToggleGroupItem>
       </ToggleGroup>
       <button
         type="button"
@@ -81,38 +88,108 @@ export type SortableItem = {
   rank: number | null;
   /** "Surname, Given" for A–Z. */
   sortName: string;
+  /** How they did in the electorate they stood in, if they did. */
+  result: ElectorateResult | null;
   content: ReactNode;
 };
 
 const byName = (a: SortableItem, b: SortableItem) =>
   a.sortName.localeCompare(b.sortName, "en-NZ", { sensitivity: "base" });
 
+/** What each order sorts on; null goes last. A–Z is by name alone. */
+const keyOf = (item: SortableItem, by: SortBy): number | null =>
+  by === "rank"
+    ? item.rank
+    : by === "candidate"
+      ? (item.result?.candidate ?? null)
+      : by === "party"
+        ? (item.result?.party ?? null)
+        : 0;
+
+/** Votes sort best first; rankings and names from the top. */
+const DESCENDING: Record<SortBy, boolean> = {
+  rank: false,
+  name: false,
+  candidate: true,
+  party: true,
+};
+
 export function SortedList({
   items,
   className,
   itemClassName,
+  rowClassName,
+  resultClassName,
 }: {
   items: SortableItem[];
   className?: string;
+  /** Each list item: the row, and under it the result line when sorting by votes. */
   itemClassName?: string;
+  /** The row holding each item's content. */
+  rowClassName?: string;
+  resultClassName?: string;
 }) {
   const { by, reversed } = useSort();
   const sorted = useMemo(() => {
-    const list = [...items].sort((a, b) =>
-      by === "rank"
-        ? (a.rank ?? Number.POSITIVE_INFINITY) -
-            (b.rank ?? Number.POSITIVE_INFINITY) || byName(a, b)
-        : byName(a, b),
-    );
-    return reversed ? list.reverse() : list;
+    const flip = reversed ? -1 : 1;
+    const dir = (DESCENDING[by] ? -1 : 1) * flip;
+    return [...items].sort((a, b) => {
+      const ka = keyOf(a, by);
+      const kb = keyOf(b, by);
+      if (ka === null || kb === null)
+        return ka === kb ? byName(a, b) : ka === null ? 1 : -1;
+      return (ka - kb) * dir || byName(a, b) * flip;
+    });
   }, [items, by, reversed]);
+  const showResults = by === "candidate" || by === "party";
   return (
     <ul className={className}>
       {sorted.map((item) => (
         <li key={item.key} className={itemClassName}>
-          {item.content}
+          <div className={rowClassName}>{item.content}</div>
+          {showResults && item.result ? (
+            <ResultLine
+              result={item.result}
+              by={by}
+              className={resultClassName}
+            />
+          ) : null}
         </li>
       ))}
     </ul>
+  );
+}
+
+/** "Hutt South: 41.2% candidate vote, 35.0% party vote", the sorted one bold. */
+function ResultLine({
+  result: r,
+  by,
+  className,
+}: {
+  result: ElectorateResult;
+  by: SortBy;
+  className?: string;
+}) {
+  const strong = "font-semibold text-foreground";
+  return (
+    <span
+      className={cn(
+        "num mt-0.5 block text-xs text-muted-foreground",
+        className,
+      )}
+    >
+      {r.electorate}:{" "}
+      <span className={cn(by === "candidate" && strong)}>
+        {formatPct(r.candidate)} candidate vote
+      </span>
+      {r.party !== null ? (
+        <>
+          ,{" "}
+          <span className={cn(by === "party" && strong)}>
+            {formatPct(r.party)} party vote
+          </span>
+        </>
+      ) : null}
+    </span>
   );
 }
