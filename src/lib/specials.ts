@@ -27,6 +27,17 @@ import { allocateSeats, majorityOf } from "./seats";
 export const SPECIALS_ESTIMATE = 399_365;
 export const OFFICIAL_RESULTS_DATE = "Friday 27 November";
 
+/**
+ * The start of that day, NZ time. The feed doesn't change between election
+ * night and the official results, so anything updated from then on is the
+ * official count.
+ */
+const OFFICIAL_RESULTS_FROM = Date.parse("2026-11-27T00:00:00+13:00");
+
+/** Which count results last updated at `updatedAt` come from. */
+export const countStage = (updatedAt: number) =>
+  updatedAt >= OFFICIAL_RESULTS_FROM ? "official" : "preliminary";
+
 /** Parties tracked across elections. Everyone else is grouped as "other". */
 type PartyKey =
   | "national"

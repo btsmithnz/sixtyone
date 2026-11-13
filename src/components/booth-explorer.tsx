@@ -159,17 +159,12 @@ export function BoothExplorer({
   return (
     <section aria-labelledby="booths-heading" className="sticker p-5 sm:p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <h2
-            id="booths-heading"
-            className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
-          >
-            Booth by booth
-          </h2>
-          <span className="sticker inline-block -rotate-2 !rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold">
-            {data.stage === "official" ? "Official count" : "Preliminary count"}
-          </span>
-        </div>
+        <h2
+          id="booths-heading"
+          className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
+        >
+          Booth by booth
+        </h2>
         <ToggleGroup
           value={[mode]}
           onValueChange={(v) => {
