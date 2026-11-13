@@ -11,6 +11,7 @@ import {
   type WhatIfParty,
 } from "@/components/specials-what-if";
 import { SplitVotes } from "@/components/split-votes";
+import { StandoutPlaces } from "@/components/standout-places";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatInt, formatPct } from "@/lib/format";
@@ -231,6 +232,11 @@ async function HomeResults() {
       <NailBiters electorates={overview.electorates} />
 
       <SplitVotes electorates={overview.electorates} />
+
+      {/* Its own boundary: booth data is separate, and loaded later. */}
+      <Suspense fallback={null}>
+        <StandoutPlaces parties={parties} />
+      </Suspense>
     </div>
   );
 }

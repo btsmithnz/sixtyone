@@ -1,8 +1,15 @@
 import "server-only";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import mapData from "@/data/electorate-map.json";
 import { db, schema } from "@/db";
+import { displayCandidateName, partyStyle } from "./parties";
+import {
+  eligiblePlaces,
+  findStandouts,
+  gapOf,
+  type Standout,
+} from "./standouts";
 
 const ALL_ELECTORATES = [...mapData.general, ...mapData.maori];
 
@@ -207,7 +214,11 @@ function locatedOf(place: {
  * just "Taken in Wellington Hospital" or similar, so that's the venue.
  */
 export function splitName(name: string) {
-  const [area, venue, ...rest] = name.split(",").map((s) => s.trim());
+  // A few have an empty part ("Flaxmere,, Flaxmere College Hall, …").
+  const [area, venue, ...rest] = name
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   if (!venue) return { venue: area, area: "", address: "" };
   return { venue, area, address: rest.join(", ") };
 }
@@ -250,4 +261,166 @@ export function boothTop<T>(votes: number[], choices: T[], n: number) {
     .sort((a, b) => b.votes - a.votes)
     .slice(0, n)
     .map((v) => ({ ...v, percent: total ? (v.votes / total) * 100 : 0 }));
+}
+
+/**
+ * Each electorate's home voting places: the places it took the most votes
+ * for, among general electorates or among Māori electorates (every place
+ * takes votes for both kinds, and Māori electorate votes are always the
+ * smaller share). Standouts only count a place for its home electorates.
+ */
+export async function getHomePlaces(): Promise<Record<number, number[]>> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(BOOTHS_TAG);
+
+  const r = schema.boothResults;
+  const rows = await db
+    .select({
+      placeId: r.votingPlaceId,
+      eNo: r.eNo,
+      stage: r.stage,
+      votes: sql<number>`sum(${schema.boothPartyVotes.votes})::int`,
+    })
+    .from(r)
+    .innerJoin(
+      schema.boothPartyVotes,
+      eq(schema.boothPartyVotes.boothResultId, r.id),
+    )
+    .groupBy(r.votingPlaceId, r.eNo, r.stage);
+
+  // Each electorate's results come from one stage, as in getBoothResults.
+  const official = new Set(
+    rows.filter((x) => x.stage === STAGES.official).map((x) => x.eNo),
+  );
+  const top = new Map<string, { eNo: number; votes: number }>();
+  for (const x of rows) {
+    const stage = official.has(x.eNo) ? STAGES.official : STAGES.preliminary;
+    if (x.stage !== stage) continue;
+    const key = `${x.placeId}:${x.eNo > MAORI_FROM ? "maori" : "general"}`;
+    const current = top.get(key);
+    if (!current || x.votes > current.votes)
+      top.set(key, { eNo: x.eNo, votes: x.votes });
+  }
+  const homes: Record<number, number[]> = {};
+  for (const [key, { eNo }] of top) {
+    const placeId = Number(key.split(":")[0]);
+    const list = homes[eNo] ?? [];
+    list.push(placeId);
+    homes[eNo] = list;
+  }
+  return homes;
+}
+
+/** Electorate numbers above this are Māori electorates. */
+const MAORI_FROM = 64;
+
+/** How many standout places the nationwide list shows. */
+const NATIONAL_STANDOUTS = 6;
+
+type PlaceRef = {
+  placeId: number;
+  venue: string;
+  area: string;
+  electorate: string;
+  slug: string;
+};
+
+export type NationalStandout = Standout &
+  PlaceRef & { label: string; pNo: number | null };
+
+export type BestPlace = PlaceRef & {
+  pNo: number;
+  label: string;
+  share: number;
+  votes: number;
+};
+
+/**
+ * Standout voting places across the country (one per electorate, biggest
+ * gap first), and every party's best voting place for the party vote. Null
+ * before any booth results are loaded.
+ */
+export async function getNationalStandouts(): Promise<{
+  stage: BoothResults["stage"];
+  standouts: NationalStandout[];
+  best: BestPlace[];
+} | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(BOOTHS_TAG);
+
+  const [homes, all] = await Promise.all([
+    getHomePlaces(),
+    Promise.all(
+      ALL_ELECTORATES.map(async (e) => ({
+        e,
+        data: await getBoothResults(e.eNo),
+      })),
+    ),
+  ]);
+  const loaded = all.flatMap(({ e, data }) => (data ? [{ e, data }] : []));
+  if (!loaded.length) return null;
+
+  const ref = (e: (typeof ALL_ELECTORATES)[number], place: BoothPlace) => ({
+    placeId: place.id,
+    venue: place.venue,
+    area: place.area,
+    electorate: e.name,
+    slug: e.slug,
+  });
+
+  // The biggest standout in each electorate, then the biggest of those. A
+  // place can be home to two electorates (general and Māori): once is enough.
+  const standouts: NationalStandout[] = [];
+  const seen = new Set<number>();
+  const firsts = loaded
+    .flatMap(({ e, data }) => {
+      const [s] = findStandouts(data, homes[e.eNo] ?? []);
+      return s ? [{ e, data, s }] : [];
+    })
+    .sort((a, b) => gapOf(b.s) - gapOf(a.s));
+  for (const { e, data, s } of firsts) {
+    if (standouts.length === NATIONAL_STANDOUTS) break;
+    if (seen.has(s.placeId)) continue;
+    seen.add(s.placeId);
+    const place = data.places.find((p) => p.id === s.placeId);
+    if (!place) continue;
+    const c =
+      s.vote === "candidate"
+        ? data.candidates[s.choice]
+        : data.parties[s.choice];
+    standouts.push({
+      ...s,
+      ...ref(e, place),
+      label:
+        s.vote === "candidate"
+          ? displayCandidateName(c?.name ?? "")
+          : partyStyle(c?.pNo, c?.name).short,
+      pNo: c?.pNo ?? null,
+    });
+  }
+
+  // Each party's best place.
+  const best = new Map<number, BestPlace>();
+  for (const { e, data } of loaded) {
+    for (const place of eligiblePlaces(data, homes[e.eNo] ?? [], "party")) {
+      const total = place.party.reduce((a, n) => a + n, 0);
+      place.party.forEach((n, i) => {
+        const party = data.parties[i];
+        if (!party) return;
+        const share = (n / total) * 100;
+        const current = best.get(party.pNo);
+        if (current && current.share >= share) return;
+        best.set(party.pNo, {
+          ...ref(e, place),
+          pNo: party.pNo,
+          label: partyStyle(party.pNo, party.name).short,
+          share,
+          votes: total,
+        });
+      });
+    }
+  }
+  return { stage: loaded[0].data.stage, standouts, best: [...best.values()] };
 }

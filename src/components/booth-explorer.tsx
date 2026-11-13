@@ -18,6 +18,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { BoothPlace, BoothResults } from "@/lib/booths";
 import { formatInt, formatPct } from "@/lib/format";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
+import { OFFICIAL_RESULTS_DATE } from "@/lib/specials";
+import type { Standout } from "@/lib/standouts";
 import { cn } from "@/lib/utils";
 import type { BoothHover, BoothPoint } from "./booth-map-canvas";
 
@@ -58,12 +60,15 @@ export function BoothExplorer({
   data,
   electorate,
   slug,
+  standouts,
   boundaryUrl,
 }: {
   data: BoothResults;
   electorate: string;
   /** The electorate's slug, for share links. */
   slug: string;
+  /** Places where someone did far better than across the electorate. */
+  standouts: Standout[];
   boundaryUrl: string;
 }) {
   // A voting place's share page (/electorates/[slug]/booths/[id]) opens
@@ -263,6 +268,67 @@ export function BoothExplorer({
       </fieldset>
 
       {headline ? <p className="mt-4 text-base">{headline}</p> : null}
+
+      {standouts.length ? (
+        <div className="mt-4">
+          <h3 className="text-sm font-semibold">Standouts</h3>
+          <p className="text-xs text-muted-foreground">
+            Where someone did far better than across {electorate}. Pick one to
+            see it on the map.
+            {data.stage === "preliminary"
+              ? ` Preliminary counts can include recording slips; the official count on ${OFFICIAL_RESULTS_DATE} checks every voting place.`
+              : ""}
+          </p>
+          <ul className="mt-2 grid gap-2 sm:grid-cols-3">
+            {standouts.map((s) => {
+              const place = data.places.find((p) => p.id === s.placeId);
+              const c = choicesFor(data, s.vote)[s.choice];
+              if (!place || !c) return null;
+              const on =
+                selected === s.placeId && mode === s.vote && focus === s.choice;
+              return (
+                <li key={s.placeId}>
+                  <button
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => {
+                      // Show the place coloured by who stood out there.
+                      setMode(s.vote);
+                      setFocus(s.choice);
+                      pick(s.placeId, "list");
+                    }}
+                    className={cn(
+                      "h-full w-full rounded-xl border-2 px-3 py-2 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
+                      on
+                        ? "border-ink bg-secondary"
+                        : "border-border bg-card hover:border-ink/40",
+                    )}
+                  >
+                    <span className="block truncate font-semibold">
+                      {place.venue}
+                    </span>
+                    <span className="mt-0.5 flex items-center gap-1.5">
+                      <span
+                        aria-hidden
+                        className="size-3 shrink-0 rounded-full border border-ink/20"
+                        style={{ background: partyColorVar(c.pNo) }}
+                      />
+                      <span className="min-w-0 truncate">{c.label}</span>
+                      <span className="num ml-auto shrink-0 font-semibold">
+                        {formatPct(s.share)}
+                      </span>
+                    </span>
+                    <span className="num block text-xs text-muted-foreground">
+                      {formatPct(s.electorateShare)} across the electorate,{" "}
+                      {s.vote} vote
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
 
       <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <div>
