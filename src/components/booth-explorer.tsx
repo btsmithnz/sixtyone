@@ -373,7 +373,7 @@ export function BoothExplorer({
                     aria-hidden
                     className="shrink-0 text-xs text-muted-foreground"
                   >
-                    Here, and across the electorate
+                    Their share
                   </span>
                 </div>
                 <p className="px-1.5 text-xs text-muted-foreground">
@@ -636,7 +636,7 @@ function BoothRow({
   );
 }
 
-/** A standout place: who stood out there, their share here and overall. */
+/** A standout place: who stood out there, their share there and overall. */
 function StandoutRow({
   standout: s,
   data,
@@ -670,11 +670,10 @@ function StandoutRow({
       <span className="text-right">
         <span className="num block font-semibold">
           {formatPct(s.share)}
-          <span className="sr-only"> for {c.label} here,</span>
+          <span className="sr-only"> for {c.label} at this place,</span>
         </span>
         <span className="num block text-xs text-muted-foreground">
-          {formatPct(s.electorateShare)}
-          <span className="sr-only"> across the electorate</span>
+          {formatPct(s.electorateShare)} overall
         </span>
       </span>
     </button>
