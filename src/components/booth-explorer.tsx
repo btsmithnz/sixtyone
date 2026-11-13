@@ -357,7 +357,7 @@ export function BoothExplorer({
                   requestAnimationFrame(() =>
                     (
                       listBox.current?.querySelector<HTMLElement>(row) ??
-                      listBox.current?.querySelector("h3")
+                      listBox.current?.querySelector("h3[tabindex]")
                     )?.focus(),
                   );
                 }}
