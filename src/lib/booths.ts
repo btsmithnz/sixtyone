@@ -263,6 +263,9 @@ export function boothTop<T>(votes: number[], choices: T[], n: number) {
     .map((v) => ({ ...v, percent: total ? (v.votes / total) * 100 : 0 }));
 }
 
+/** Electorate numbers above this are Māori electorates. */
+const MAORI_FROM = 64;
+
 /**
  * Each electorate's home voting places: the places it took the most votes
  * for, among general electorates or among Māori electorates (every place
@@ -312,9 +315,6 @@ export async function getHomePlaces(): Promise<Record<number, number[]>> {
   return homes;
 }
 
-/** Electorate numbers above this are Māori electorates. */
-const MAORI_FROM = 64;
-
 /** How many standout places the nationwide list shows. */
 const NATIONAL_STANDOUTS = 6;
 
@@ -333,7 +333,6 @@ export type BestPlace = PlaceRef & {
   pNo: number;
   label: string;
   share: number;
-  votes: number;
 };
 
 /**
@@ -371,21 +370,24 @@ export async function getNationalStandouts(): Promise<{
   });
 
   // The biggest standout in each electorate, then the biggest of those. A
-  // place can be home to two electorates (general and Māori): once is enough.
+  // place can be home to two electorates (general and Māori): it's listed
+  // once, and the other electorate offers its next standout instead.
   const standouts: NationalStandout[] = [];
   const seen = new Set<number>();
-  const firsts = loaded
-    .flatMap(({ e, data }) => {
-      const [s] = findStandouts(data, homes[e.eNo] ?? []);
-      return s ? [{ e, data, s }] : [];
-    })
-    .sort((a, b) => gapOf(b.s) - gapOf(a.s));
-  for (const { e, data, s } of firsts) {
+  const byElectorate = loaded
+    .map(({ e, data }) => ({
+      e,
+      data,
+      list: findStandouts(data, homes[e.eNo] ?? []),
+    }))
+    .filter(({ list }) => list.length)
+    .sort((a, b) => gapOf(b.list[0]) - gapOf(a.list[0]));
+  for (const { e, data, list } of byElectorate) {
     if (standouts.length === NATIONAL_STANDOUTS) break;
-    if (seen.has(s.placeId)) continue;
+    const s = list.find((x) => !seen.has(x.placeId));
+    const place = s && data.places.find((p) => p.id === s.placeId);
+    if (!s || !place) continue;
     seen.add(s.placeId);
-    const place = data.places.find((p) => p.id === s.placeId);
-    if (!place) continue;
     const c =
       s.vote === "candidate"
         ? data.candidates[s.choice]
@@ -417,7 +419,6 @@ export async function getNationalStandouts(): Promise<{
           pNo: party.pNo,
           label: partyStyle(party.pNo, party.name).short,
           share,
-          votes: total,
         });
       });
     }

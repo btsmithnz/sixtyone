@@ -31,8 +31,6 @@ export type Standout = {
   /** Their share here and across the electorate's voting places (%). */
   share: number;
   electorateShare: number;
-  /** Votes here in this vote. */
-  votes: number;
 };
 
 export const gapOf = (s: Pick<Standout, "share" | "electorateShare">) =>
@@ -91,7 +89,6 @@ export function findStandouts(
           choice,
           share: (n / total) * 100,
           electorateShare: overall[choice] ?? 0,
-          votes: total,
         };
         const current = best.get(place.id);
         if (!current || gapOf(s) > gapOf(current)) best.set(place.id, s);

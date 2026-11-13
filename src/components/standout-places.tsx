@@ -135,10 +135,10 @@ export async function StandoutPlaces({
         ) : null}
       </div>
       <p className="max-w-[80ch] text-xs text-muted-foreground">
-        Voting places with at least {STANDOUT_MIN_VOTES} votes, each counted for
-        the electorate most of its votes were for (students voting for home at a
-        university don’t count, say), and not mobile teams. Special votes aren’t
-        counted by voting place.
+        Voting places with at least {STANDOUT_MIN_VOTES} votes, not counting
+        mobile teams. Each place only counts for its local electorates, the ones
+        it took the most votes for, so students voting for home at a university
+        don’t count. Special votes aren’t counted by voting place.
         {stage === "preliminary"
           ? ` Preliminary counts can include recording slips; the official count on ${OFFICIAL_RESULTS_DATE} checks every voting place.`
           : ""}
