@@ -1,6 +1,7 @@
 {
  "source": "Stats NZ / Representation Commission, 2025 electorate boundaries (CC BY 4.0)",
  "sprite": "/map/electorates.a6d69856ef.svg",
+ "boundaries": "/map/boundaries.6417470f56",
  "width": 1000,
  "height": 1480,
  "general": [
