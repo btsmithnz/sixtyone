@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { LiveStatus } from "@/components/live-status";
+import { SectionHeading } from "@/components/section-heading";
 import {
   ListSortControls,
   ListSortProvider,
@@ -85,10 +86,7 @@ async function ParliamentResults() {
           Special votes are added in the official results on{" "}
           {OFFICIAL_RESULTS_DATE}, and they can move the last list seats of each
           party.{" "}
-          <Link
-            href="/#specials-heading"
-            className="underline underline-offset-2"
-          >
+          <Link href="/#special-votes" className="underline underline-offset-2">
             See what they could change
           </Link>
           .
@@ -116,14 +114,14 @@ async function ParliamentResults() {
       ) : null}
 
       <ListSortProvider>
-        <section aria-labelledby="in-heading" className="space-y-4">
+        <section aria-labelledby="whos-in" className="space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2
-              id="in-heading"
+            <SectionHeading
+              id="whos-in"
               className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
             >
               Who’s in
-            </h2>
+            </SectionHeading>
             <ListSortControls />
           </div>
           <div className="space-y-6">
@@ -137,14 +135,14 @@ async function ParliamentResults() {
           </div>
         </section>
 
-        <section aria-labelledby="out-heading" className="space-y-4">
+        <section aria-labelledby="whos-out" className="space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2
-              id="out-heading"
+            <SectionHeading
+              id="whos-out"
               className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
             >
               Who’s out
-            </h2>
+            </SectionHeading>
             <ListSortControls />
           </div>
           <p className="max-w-[65ch] text-sm text-muted-foreground">

@@ -3,6 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { SectionHeading } from "@/components/section-heading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { formatInt, formatPct } from "@/lib/format";
 import { type ListQueue, listChange } from "@/lib/list-queue";
@@ -210,16 +211,16 @@ export function SpecialsWhatIf({
 
   return (
     <section
-      aria-labelledby="specials-heading"
+      aria-labelledby="special-votes"
       className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
     >
       <div className="sticker p-5 sm:p-7">
-        <h2
-          id="specials-heading"
+        <SectionHeading
+          id="special-votes"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
         >
           What could the special votes change?
-        </h2>
+        </SectionHeading>
         <p className="mt-1 max-w-[65ch] text-sm text-muted-foreground">
           About {formatInt(Math.round(SPECIALS_ESTIMATE / 1000) * 1000)} special
           votes are still being checked and counted, around{" "}
@@ -523,9 +524,12 @@ function KnifeEdges({
 }) {
   return (
     <div className="sticker p-5 sm:p-7">
-      <h2 className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]">
+      <SectionHeading
+        id="knife-edge"
+        className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
+      >
         Seats on a knife-edge
-      </h2>
+      </SectionHeading>
       <p className="mt-1 text-sm text-muted-foreground">
         The closest calls on election night, in party votes, if nobody else’s
         votes changed. Special votes add about{" "}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SectionHeading } from "@/components/section-heading";
 import { formatInt, formatPct } from "@/lib/format";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
 import type { ElectorateSummary } from "@/lib/results";
@@ -15,13 +16,13 @@ export function NailBiters({
     .slice(0, 6);
 
   return (
-    <section aria-labelledby="close-heading">
-      <h2
-        id="close-heading"
+    <section aria-labelledby="nail-biters">
+      <SectionHeading
+        id="nail-biters"
         className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
       >
         Nail-biters
-      </h2>
+      </SectionHeading>
       <p className="mt-1 text-sm text-muted-foreground">
         The tightest electorate races right now.
       </p>

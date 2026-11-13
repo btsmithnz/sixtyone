@@ -7,6 +7,7 @@ import { BoothSection } from "@/components/booth-section";
 import { FavouriteButton } from "@/components/favourite-button";
 import { LiveStatus } from "@/components/live-status";
 import { LocatorMap } from "@/components/locator-map";
+import { SectionHeading } from "@/components/section-heading";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
 import mapData from "@/data/electorate-map.json";
@@ -154,14 +155,14 @@ async function Electorate({
         </div>
       </header>
 
-      <section aria-labelledby="race-heading" className="sticker p-5 sm:p-7">
+      <section aria-labelledby="candidate-race" className="sticker p-5 sm:p-7">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <h2
-            id="race-heading"
+          <SectionHeading
+            id="candidate-race"
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             The candidate race
-          </h2>
+          </SectionHeading>
           {hasVotes && leader && runnerUp ? (
             <p className="text-lg">
               <strong>{displayCandidateName(leader.name)}</strong>{" "}
@@ -222,26 +223,29 @@ async function Electorate({
       </section>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <section className="sticker p-5 sm:p-7" aria-labelledby="trend-heading">
-          <h2
-            id="trend-heading"
+        <section
+          className="sticker p-5 sm:p-7"
+          aria-labelledby="how-the-lead-moved"
+        >
+          <SectionHeading
+            id="how-the-lead-moved"
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             How the lead moved
-          </h2>
+          </SectionHeading>
           <p className="mt-1 mb-4 text-sm text-muted-foreground">
             Each candidate’s share of the vote as booths reported.
           </p>
           <TrendChart rows={rows} series={series} unit="%" height={300} />
         </section>
 
-        <section className="sticker p-5 sm:p-7" aria-labelledby="pv-heading">
-          <h2
-            id="pv-heading"
+        <section className="sticker p-5 sm:p-7" aria-labelledby="party-vote">
+          <SectionHeading
+            id="party-vote"
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             Party vote here
-          </h2>
+          </SectionHeading>
           <p className="mt-1 text-sm text-muted-foreground">
             How {e.name} voted for parties. Party votes decide the overall
             makeup of Parliament.

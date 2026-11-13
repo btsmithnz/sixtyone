@@ -5,6 +5,7 @@ import { MapSection } from "@/components/map-section";
 import { NailBiters } from "@/components/nail-biters";
 import { PartyVote } from "@/components/party-vote";
 import { RaceTo61, type SeatParty } from "@/components/race-to-61";
+import { SectionHeading } from "@/components/section-heading";
 import {
   SpecialsWhatIf,
   type WhatIfParty,
@@ -185,16 +186,16 @@ async function HomeResults() {
       </div>
 
       <section
-        aria-labelledby="trend-heading"
+        aria-labelledby="how-the-night-unfolded"
         className="grid grid-cols-1 gap-8 lg:grid-cols-2"
       >
         <div className="sticker p-5 sm:p-7">
-          <h2
-            id="trend-heading"
+          <SectionHeading
+            id="how-the-night-unfolded"
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             How the night unfolded
-          </h2>
+          </SectionHeading>
           <p className="mt-1 mb-4 text-sm text-muted-foreground">
             Party vote share as the count came in. Advance votes are counted
             first, so early numbers can drift.
@@ -208,9 +209,12 @@ async function HomeResults() {
           />
         </div>
         <div className="sticker p-5 sm:p-7">
-          <h2 className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]">
+          <SectionHeading
+            id="seats-through-the-night"
+            className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
+          >
             Seats through the night
-          </h2>
+          </SectionHeading>
           <p className="mt-1 mb-4 text-sm text-muted-foreground">
             The Electoral Commission’s seat allocation at each update.
           </p>

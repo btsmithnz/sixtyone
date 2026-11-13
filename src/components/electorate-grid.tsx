@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
+import { SectionHeading } from "@/components/section-heading";
 import { formatInt, formatPct } from "@/lib/format";
 import { foldDiacritics } from "@/lib/text";
 import { FavouriteButton } from "./favourite-button";
@@ -37,10 +38,12 @@ export function ElectorateGrid({
     (e.party ? fold(e.party).includes(q) : false);
   const groups = [
     {
+      id: "general-electorates",
       title: "General electorates",
       items: electorates.filter((e) => e.kind === "general" && matches(e)),
     },
     {
+      id: "maori-electorates",
       title: "Māori electorates",
       items: electorates.filter((e) => e.kind === "maori" && matches(e)),
     },
@@ -62,10 +65,13 @@ export function ElectorateGrid({
 
       {groups.map((g) =>
         g.items.length ? (
-          <section key={g.title}>
-            <h2 className="font-display text-2xl font-extrabold [font-stretch:85%]">
+          <section key={g.id} aria-labelledby={g.id}>
+            <SectionHeading
+              id={g.id}
+              className="font-display text-2xl font-extrabold [font-stretch:85%]"
+            >
               {g.title}
-            </h2>
+            </SectionHeading>
             <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {g.items.map((e) => (
                 <li key={e.eNo} className="relative">

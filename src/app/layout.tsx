@@ -5,6 +5,7 @@ import { Bricolage_Grotesque, Schibsted_Grotesk } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
 import { LiveLogoBadge, LogoBadge } from "@/components/logo-badge";
+import { ScrollToHash } from "@/components/scroll-to-hash";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   SITE_DESCRIPTION,
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <SiteFooter />
         </TooltipProvider>
+        <ScrollToHash />
         <Analytics />
       </body>
     </html>

@@ -1,3 +1,4 @@
+import { SectionHeading } from "@/components/section-heading";
 import { formatInt, formatPct } from "@/lib/format";
 import { partyColorVar, partyStyle } from "@/lib/parties";
 import type { Overview } from "@/lib/results";
@@ -16,13 +17,13 @@ export function PartyVote({
   const restPct = rest.reduce((a, p) => a + p.percent, 0);
 
   return (
-    <section aria-labelledby="party-heading" className="sticker p-5 sm:p-7">
-      <h2
-        id="party-heading"
+    <section aria-labelledby="party-vote" className="sticker p-5 sm:p-7">
+      <SectionHeading
+        id="party-vote"
         className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
       >
         Party vote
-      </h2>
+      </SectionHeading>
       <p className="mt-1 text-sm text-muted-foreground">
         Parties need 5% or an electorate to get seats.
       </p>

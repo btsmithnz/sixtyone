@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { SectionHeading } from "@/components/section-heading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { BoothPlace, BoothResults } from "@/lib/booths";
 import { formatInt, formatPct } from "@/lib/format";
@@ -157,14 +158,14 @@ export function BoothExplorer({
   })();
 
   return (
-    <section aria-labelledby="booths-heading" className="sticker p-5 sm:p-7">
+    <section aria-labelledby="booth-by-booth" className="sticker p-5 sm:p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2
-          id="booths-heading"
+        <SectionHeading
+          id="booth-by-booth"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           Booth by booth
-        </h2>
+        </SectionHeading>
         <ToggleGroup
           value={[mode]}
           onValueChange={(v) => {

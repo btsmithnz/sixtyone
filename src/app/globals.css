@@ -172,6 +172,36 @@
     );
   }
 
+  /*
+   * A section heading that links to itself. The "#" is decoration (its alt
+   * text is empty, so it isn't read out): it shows on hover or focus, and
+   * faintly all the time on touch screens, where there's no hover.
+   */
+  .heading-link {
+    border-radius: var(--radius-sm);
+  }
+  .heading-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  .heading-link::after {
+    content: "#";
+    content: "#" / "";
+    margin-left: 0.25em;
+    color: var(--muted-foreground);
+    opacity: 0;
+    transition: opacity 150ms;
+  }
+  .heading-link:hover::after,
+  .heading-link:focus-visible::after {
+    opacity: 1;
+  }
+  @media (hover: none) {
+    .heading-link::after {
+      opacity: 0.4;
+    }
+  }
+
   /* The finish line at 61. */
   .finish-line {
     background-image:
