@@ -253,11 +253,13 @@ function PartyCard({
         <SortedList
           // Flows down each column, like a printed list.
           className="mt-3 gap-x-8 sm:columns-2 lg:columns-3"
-          itemClassName="flex break-inside-avoid items-baseline justify-between gap-3 border-b border-border py-1.5 text-sm"
+          itemClassName="break-inside-avoid border-b border-border py-1.5 text-sm"
+          rowClassName="flex items-baseline justify-between gap-3"
           items={[...g.electorateMps, ...g.listMps].map((m) => ({
             key: String(m.cNo),
             rank: m.listNo,
             sortName: m.sortName,
+            result: m.result,
             content: (
               <>
                 <span className="min-w-0">
@@ -338,12 +340,16 @@ function LeavingCard({
       {people.length ? (
         <SortedList
           className="mt-3"
-          itemClassName="flex items-start gap-2.5 border-b border-border py-2 text-sm"
+          itemClassName="border-b border-border py-2 text-sm"
+          rowClassName="flex items-start gap-2.5"
+          // Under the name, past the dot.
+          resultClassName="pl-[1.375rem]"
           items={people.map((m) => ({
             key: m.sortName,
             // Their 2026 list position.
             rank: m.stood?.listNo ?? null,
             sortName: m.sortName,
+            result: m.result,
             content: (
               <>
                 <span

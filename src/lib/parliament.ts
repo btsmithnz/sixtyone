@@ -11,6 +11,15 @@ import type { ListQueue } from "./list-queue";
 import { displayCandidateName } from "./parties";
 import type { Overview } from "./results";
 
+/** How someone did in the electorate they stood in. */
+export type ElectorateResult = {
+  electorate: string;
+  /** Their share of the candidate vote there (%). */
+  candidate: number;
+  /** Their party's share of the party vote there (%), if it's on the ballot. */
+  party: number | null;
+};
+
 export type Mp = {
   cNo: number;
   name: string;
@@ -21,6 +30,8 @@ export type Mp = {
   electorate: { name: string; slug: string } | null;
   listNo: number | null;
   returning: boolean;
+  /** Anyone who stood in an electorate (list MPs too), once it's counting. */
+  result: ElectorateResult | null;
 };
 
 export type LeavingMp = {
@@ -37,6 +48,8 @@ export type LeavingMp = {
     electorate: string | null;
     listNo: number | null;
   } | null;
+  /** For "lost": how they did in the electorate they stood in. */
+  result: ElectorateResult | null;
 };
 
 export type Parliament = {
@@ -51,12 +64,29 @@ export function buildParliament({
   electorates,
   parties,
   candidates,
-}: Pick<Overview, "electorates" | "parties" | "candidates">): Parliament {
+  electoratePartyShares,
+}: Pick<
+  Overview,
+  "electorates" | "parties" | "candidates" | "electoratePartyShares"
+>): Parliament {
   const incumbents = new Set(
     OUTGOING_MPS.map((m) => m.cNo).filter((c): c is number => c !== null),
   );
   const byCNo = new Map(candidates.map((c) => [c.cNo, c]));
   const electorateName = new Map(electorates.map((e) => [e.eNo, e.name]));
+  const electorateByENo = new Map(electorates.map((e) => [e.eNo, e]));
+  const resultOf = (cNo: number): ElectorateResult | null => {
+    const c = byCNo.get(cNo);
+    const e = c?.eNo != null ? electorateByENo.get(c.eNo) : undefined;
+    const mine = e?.candidates.find((x) => x.cNo === cNo);
+    if (!c || !e || !mine || e.votesCast === 0) return null;
+    return {
+      electorate: e.name,
+      candidate: mine.percent,
+      party:
+        c.pNo !== null ? (electoratePartyShares[e.eNo]?.[c.pNo] ?? null) : null,
+    };
+  };
 
   const mps: Mp[] = [];
   const winners = new Set<number>();
@@ -72,6 +102,7 @@ export function buildParliament({
       electorate: { name: e.name, slug: e.slug },
       listNo: byCNo.get(lead.cNo)?.listNo ?? null,
       returning: incumbents.has(lead.cNo),
+      result: resultOf(lead.cNo),
     });
   }
 
@@ -100,6 +131,7 @@ export function buildParliament({
         electorate: null,
         listNo: c.listNo,
         returning: incumbents.has(c.cNo),
+        result: resultOf(c.cNo),
       });
     }
   }
@@ -122,6 +154,7 @@ export function buildParliament({
             listNo: c.listNo,
           }
         : null,
+      result: c ? resultOf(c.cNo) : null,
     };
   });
 

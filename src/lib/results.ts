@@ -75,6 +75,12 @@ export type Overview = {
   seatsSource: "feed" | "projected" | "none";
   houseSize: number;
   electorates: ElectorateSummary[];
+  /**
+   * Party vote share (%) in each electorate, by electorate number, then
+   * party number. Kept apart from ElectorateSummary, which goes to the
+   * browser in the map and lists, as only the server needs it.
+   */
+  electoratePartyShares: Record<number, Record<number, number>>;
   /** Every candidate, for working out who's elected (see lib/parliament.ts). */
   candidates: {
     cNo: number;
@@ -301,6 +307,18 @@ export async function getOverview(): Promise<Overview> {
     seatsSource,
     houseSize,
     electorates,
+    electoratePartyShares: Object.fromEntries(
+      snaps.map((snap) => {
+        const votes = pBySnap.get(snap.id) ?? [];
+        const total = votes.reduce((a, p) => a + p.votes, 0);
+        return [
+          snap.eNo,
+          Object.fromEntries(
+            votes.map((p) => [p.pNo, total ? (p.votes / total) * 100 : 0]),
+          ),
+        ];
+      }),
+    ),
     candidates: ref.candidates.map(({ cNo, name, eNo, pNo, listNo }) => ({
       cNo,
       name,
