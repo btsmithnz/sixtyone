@@ -1,7 +1,15 @@
 "use client";
 
 import { ArrowLeft, MapPinOff } from "lucide-react";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { BoothPlace, BoothResults } from "@/lib/booths";
 import { formatInt, formatPct } from "@/lib/format";
@@ -39,6 +47,8 @@ const MIN_SHADE = 0.08;
  * rendering them all would bloat every page.
  */
 const COLLAPSED = 8;
+/** Names shown in the hover card. */
+const HOVER_LINES = 3;
 
 export function BoothExplorer({
   data,
@@ -149,17 +159,12 @@ export function BoothExplorer({
   return (
     <section aria-labelledby="booths-heading" className="sticker p-5 sm:p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h2
-            id="booths-heading"
-            className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
-          >
-            Booth by booth
-          </h2>
-          <span className="sticker inline-block -rotate-2 !rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold">
-            {data.stage === "official" ? "Official count" : "Preliminary count"}
-          </span>
-        </div>
+        <h2
+          id="booths-heading"
+          className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
+        >
+          Booth by booth
+        </h2>
         <ToggleGroup
           value={[mode]}
           onValueChange={(v) => {
@@ -179,8 +184,8 @@ export function BoothExplorer({
       <p className="mt-1 text-sm text-muted-foreground">
         Every voting place that took votes for {electorate}, sized by how many.
         {focus === null
-          ? " Coloured by who came first. Pick a name to see where they did best."
-          : " The stronger the colour, the bigger their share."}
+          ? " Coloured by who came first, with how many places each won beside their name. Pick a name to see where they did best."
+          : " The stronger the colour, the bigger their share. Beside each name is how many places they won."}
       </p>
 
       <fieldset className="mt-4">
@@ -311,11 +316,20 @@ export function BoothExplorer({
             </div>
           ) : null}
           <div ref={listBox} className={cn(selectedRow && "hidden")}>
-            <h3 tabIndex={-1} className="text-sm font-semibold outline-none">
-              {focus === null
-                ? "Biggest voting places first"
-                : `Where ${choices[focus]?.label} did best`}
-            </h3>
+            <div className="flex items-baseline justify-between gap-3 px-1.5">
+              <h3 tabIndex={-1} className="text-sm font-semibold outline-none">
+                {focus === null
+                  ? "Biggest voting places first"
+                  : `Where ${choices[focus]?.label} did best`}
+              </h3>
+              {/* What each row's percentage is. */}
+              <span
+                aria-hidden
+                className="shrink-0 text-xs text-muted-foreground"
+              >
+                {focus === null ? "Winner’s share" : "Their share"}
+              </span>
+            </div>
             <ol className="mt-2 divide-y divide-border lg:max-h-[528px] lg:overflow-y-auto lg:pr-1">
               {(expanded ? sorted : sorted.slice(0, COLLAPSED)).map((r) => (
                 <li key={r.place.id}>
@@ -687,27 +701,39 @@ function HoverCard({
   row,
   choices,
   focus,
-  hover: { x, y, w },
+  hover: { x, y, w, h },
 }: {
   row: Row;
   choices: Choice[];
   focus: number | null;
   hover: BoothHover;
 }) {
-  const shown = focus ?? row.winner;
-  const c = choices[shown];
-  const above = y > 150;
+  // The top few here, plus the picked name if it isn't one of them.
+  const ranked = row.votes
+    .map((votes, i) => ({ votes, i }))
+    .filter((v) => v.votes > 0)
+    .sort((a, b) => b.votes - a.votes || a.i - b.i);
+  const lines = ranked.slice(0, HOVER_LINES);
+  if (focus !== null && !lines.some((v) => v.i === focus))
+    lines.push({ votes: row.votes[focus] ?? 0, i: focus });
+  const max = ranked[0]?.votes || 1;
+
+  // Above the pointer when it fits, otherwise below, and always inside the
+  // map. The card's height varies, so it's measured before it's painted.
+  const card = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const el = card.current;
+    if (!el) return;
+    const height = el.offsetHeight;
+    const above = y - 16 - height;
+    el.style.top = `${above >= 8 ? above : Math.max(8, Math.min(y + 20, h - height - 8))}px`;
+  });
   return (
     <div
+      ref={card}
       aria-hidden
       className="sticker pointer-events-none absolute z-10 w-56 !rounded-xl p-3 text-sm"
-      // Centred above the pointer, kept inside the map, and flipped below
-      // near the top edge.
-      style={{
-        left: Math.max(8, Math.min(x - 112, w - 232)),
-        top: above ? y - 16 : y + 20,
-        transform: above ? "translateY(-100%)" : undefined,
-      }}
+      style={{ left: Math.max(8, Math.min(x - 112, w - 232)), top: y + 20 }}
     >
       <div className="font-display text-base leading-tight font-extrabold">
         {row.place.venue}
@@ -715,18 +741,39 @@ function HoverCard({
       {row.place.area ? (
         <div className="text-muted-foreground">{row.place.area}</div>
       ) : null}
-      <div className="mt-2 flex items-center gap-2">
-        <span
-          className="size-3 shrink-0 rounded-full"
-          style={{ background: partyColorVar(c?.pNo) }}
-        />
-        <span className="min-w-0 flex-1 truncate font-semibold">
-          {c?.label}
-        </span>
-        <span className="num">{formatPct(shareOf(row, shown))}</span>
-      </div>
-      <div className="num mt-1 text-muted-foreground">
-        {formatInt(row.total)} votes
+      <ol className="mt-2 space-y-1.5">
+        {lines.map(({ votes, i }, n) => {
+          const c = choices[i];
+          return (
+            <li
+              key={i}
+              className={cn(
+                i === focus && "font-semibold",
+                // The picked name, when it's further down.
+                n === HOVER_LINES && "border-t border-border pt-1.5",
+              )}
+            >
+              <div className="flex items-baseline gap-2">
+                <span className="min-w-0 flex-1 truncate">{c?.label}</span>
+                <span className="num">{formatPct(shareOf(row, i))}</span>
+              </div>
+              <span className="mt-0.5 block h-1.5 rounded-full bg-secondary">
+                <span
+                  className="block h-full rounded-full"
+                  style={{
+                    width: `${(votes / max) * 100}%`,
+                    background: partyColorVar(c?.pNo),
+                  }}
+                />
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+      {/* Only mice hover (see the map), so it's always a click. */}
+      <div className="mt-2 flex items-baseline justify-between gap-2 text-muted-foreground">
+        <span className="num">{formatInt(row.total)} votes</span>
+        <span className="text-xs">Click for more</span>
       </div>
     </div>
   );

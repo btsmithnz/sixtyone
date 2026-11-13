@@ -38,8 +38,14 @@ export type BoothPoint = {
   shade: number;
 };
 
-/** The dot under the pointer, in pixels within a map `w` wide. */
-export type BoothHover = { id: number; x: number; y: number; w: number };
+/** A hovered place, the pointer within the map, and the map's size. */
+export type BoothHover = {
+  id: number;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+};
 
 type Palette = (typeof PALETTES)["light"];
 
@@ -511,7 +517,13 @@ export default function BoothMapCanvas({
           // Taps fire mousemove too; a hover card would then stick on phones.
           if (!map || typeof id !== "number" || !canHover.matches) return;
           map.getCanvas().style.cursor = "pointer";
-          hover({ id, x: e.point.x, y: e.point.y, w: el.clientWidth });
+          hover({
+            id,
+            x: e.point.x,
+            y: e.point.y,
+            w: el.clientWidth,
+            h: el.clientHeight,
+          });
         });
         // The card would be left describing a dot that's moved away.
         map.on("movestart", () => hover(null));

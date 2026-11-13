@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { formatDay, formatTime, nzDateKey } from "@/lib/format";
+import { countStage } from "@/lib/specials";
 
 /**
  * How often an open page asks /api/status whether there's anything new. The
@@ -106,6 +107,13 @@ export function LiveStatus({
       />
       {updatedAt ? (
         <span>
+          {/* Every page's results come from the same count, so say which. */}
+          <span className="font-medium text-foreground">
+            {countStage(updatedAt) === "official"
+              ? "Official count"
+              : "Preliminary count"}
+          </span>
+          {" · "}
           Updated <span className="num">{updatedLabel(updatedAt, today)}</span>
           <span className="sr-only">
             {checking ? ", checking for news" : ""}
