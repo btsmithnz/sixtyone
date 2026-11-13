@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, MapPinOff } from "lucide-react";
+import { useParams } from "next/navigation";
 import {
   lazy,
   Suspense,
@@ -10,7 +11,9 @@ import {
   useRef,
   useState,
 } from "react";
+import { settleScroll } from "@/components/scroll-to-hash";
 import { SectionHeading } from "@/components/section-heading";
+import { ShareButton } from "@/components/share-button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { BoothPlace, BoothResults } from "@/lib/booths";
 import { formatInt, formatPct } from "@/lib/format";
@@ -54,22 +57,49 @@ const HOVER_LINES = 3;
 export function BoothExplorer({
   data,
   electorate,
+  slug,
   boundaryUrl,
 }: {
   data: BoothResults;
   electorate: string;
+  /** The electorate's slug, for share links. */
+  slug: string;
   boundaryUrl: string;
 }) {
+  // A voting place's share page (/electorates/[slug]/booths/[id]) opens
+  // with that place picked.
+  const { id } = useParams<{ id?: string }>();
+  const linked = data.places.find((p) => String(p.id) === id)?.id ?? null;
   const [mode, setMode] = useState<Mode>("candidate");
   const [focus, setFocus] = useState<number | null>(null);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [flyTo, setFlyTo] = useState<{ id: number; seq: number } | null>(null);
+  const [selected, setSelected] = useState<number | null>(linked);
+  const [flyTo, setFlyTo] = useState<{ id: number; seq: number } | null>(
+    linked === null ? null : { id: linked, seq: 0 },
+  );
   const [hover, setHover] = useState<BoothHover | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [mapState, setMapState] = useState<"idle" | "near" | "failed">("idle");
   const mapBox = useRef<HTMLDivElement>(null);
   const detailBox = useRef<HTMLDivElement>(null);
   const listBox = useRef<HTMLDivElement>(null);
+
+  // …and in the vote it was shared from (?vote=party), scrolled to: the
+  // whole section on wide screens, the place's details (below the map) on
+  // phones. Read in an effect: the page is the same static HTML for any
+  // query string. Once per visit, and not over a #link (see ScrollToSection).
+  const landed = useRef(false);
+  useEffect(() => {
+    if (linked === null || landed.current) return;
+    if (new URLSearchParams(location.search).get("vote") === "party")
+      setMode("party");
+    if (location.hash) {
+      landed.current = true;
+      return;
+    }
+    return settleScroll(isWide() ? "booth-by-booth" : "booth-detail", () => {
+      landed.current = true;
+    });
+  }, [linked]);
 
   // Load MapLibre only when the map is about to scroll into view.
   useEffect(() => {
@@ -109,7 +139,6 @@ export function BoothExplorer({
   const hovered = hover ? rows.find((r) => r.place.id === hover.id) : undefined;
   const unmapped = counted.length - points.length;
 
-  const isWide = () => window.matchMedia("(min-width: 1024px)").matches;
   const pick = (id: number, from: "map" | "list") => {
     setSelected(id);
     if (from === "list") {
@@ -162,6 +191,8 @@ export function BoothExplorer({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <SectionHeading
           id="booth-by-booth"
+          share={`/electorates/${slug}#booth-by-booth`}
+          shareTitle={`${electorate}: booth by booth`}
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           Booth by booth
@@ -294,12 +325,13 @@ export function BoothExplorer({
 
         <div className="min-w-0">
           {selectedRow ? (
-            <div ref={detailBox} className="scroll-mt-4">
+            <div ref={detailBox} id="booth-detail" className="scroll-mt-4">
               <BoothDetail
                 key={selectedRow.place.id}
                 row={selectedRow}
                 choices={choices}
                 mode={mode}
+                share={`/electorates/${slug}/booths/${selectedRow.place.id}${mode === "party" ? "?vote=party" : ""}`}
                 other={otherVoteWinner(data, mode, selectedRow.place)}
                 onBack={() => {
                   setSelected(null);
@@ -373,6 +405,9 @@ export function BoothExplorer({
     </section>
   );
 }
+
+/** Side by side map and list, rather than the list under the map. */
+const isWide = () => window.matchMedia("(min-width: 1024px)").matches;
 
 /** Everything shown for one vote and pick: rows, colours, scale, legend. */
 function analyse(data: BoothResults, mode: Mode, focus: number | null) {
@@ -552,12 +587,15 @@ function BoothDetail({
   row,
   choices,
   mode,
+  share,
   other,
   onBack,
 }: {
   row: Row;
   choices: Choice[];
   mode: Mode;
+  /** The place's share page. */
+  share: string;
   /** The winner of the other vote here. */
   other: (Choice & { percent: number }) | null;
   onBack: () => void;
@@ -580,14 +618,22 @@ function BoothDetail({
 
   return (
     <article aria-label={place.venue}>
-      <button
-        type="button"
-        onClick={onBack}
-        className="inline-flex items-center gap-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
-      >
-        <ArrowLeft className="size-4" aria-hidden />
-        All voting places
-      </button>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <ArrowLeft className="size-4" aria-hidden />
+          All voting places
+        </button>
+        <ShareButton
+          path={share}
+          title={`How ${place.venue} voted`}
+          label="Share"
+          className="flex-row-reverse"
+        />
+      </div>
       <h3
         ref={heading}
         tabIndex={-1}

@@ -118,6 +118,7 @@ async function ParliamentResults() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <SectionHeading
               id="whos-in"
+              share="/parliament#whos-in"
               className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
             >
               Who’s in
@@ -139,6 +140,7 @@ async function ParliamentResults() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <SectionHeading
               id="whos-out"
+              share="/parliament/whos-out"
               className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
             >
               Who’s out

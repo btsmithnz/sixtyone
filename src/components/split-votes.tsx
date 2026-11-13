@@ -47,6 +47,7 @@ export function SplitVotes({
       <div className="sticker p-5 sm:p-7">
         <SectionHeading
           id="split-votes"
+          share="/#split-votes"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           Split votes
@@ -123,6 +124,7 @@ export function SplitVotes({
       <div className="sticker p-5 sm:p-7">
         <SectionHeading
           id="personal-votes"
+          share="/#personal-votes"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
         >
           Biggest personal votes

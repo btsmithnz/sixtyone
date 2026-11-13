@@ -217,6 +217,7 @@ export function SpecialsWhatIf({
       <div className="sticker p-5 sm:p-7">
         <SectionHeading
           id="special-votes"
+          share="/#special-votes"
           className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
         >
           What could the special votes change?
@@ -526,6 +527,7 @@ function KnifeEdges({
     <div className="sticker p-5 sm:p-7">
       <SectionHeading
         id="knife-edge"
+        share="/#knife-edge"
         className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
       >
         Seats on a knife-edge

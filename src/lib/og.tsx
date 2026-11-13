@@ -3,7 +3,10 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { ReactNode } from "react";
+import { type BoothPlace, type BoothResults, boothTop } from "./booths";
 import { formatInt, formatPct, formatTime } from "./format";
+import { closestRaces } from "./nail-biters";
+import type { LeavingMp } from "./parliament";
 import { blocSeats, displayCandidateName, partyStyle } from "./parties";
 import type { ElectorateDetail, Overview } from "./results";
 import { majorityOf } from "./seats";
@@ -530,6 +533,536 @@ export async function electorateImage(
         </div>
         <div style={{ display: "flex" }}>{host}</div>
       </div>
+    </div>,
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Section share images: one section of a page, for its share page     */
+/* (/party-vote, /nail-biters, /parliament/whos-out,                   */
+/* /electorates/[slug]/party-vote and each voting place).              */
+/* ------------------------------------------------------------------ */
+
+/** A card's title, with an optional line under it. */
+function Title({ children, sub }: { children: string; sub?: string }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          display: "flex",
+          fontFamily: "Display",
+          fontSize: children.length > 28 ? 50 : 56,
+          lineHeight: 1,
+        }}
+      >
+        {children}
+      </div>
+      {sub ? (
+        <div
+          style={{ display: "flex", marginTop: 6, fontSize: 24, color: MUTED }}
+        >
+          {sub}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** The bottom line: what's counted, and the site. */
+function Footer({ children }: { children?: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        marginTop: "auto",
+        fontSize: 24,
+        color: MUTED,
+      }}
+    >
+      <div style={{ display: "flex" }}>{children ?? ""}</div>
+      <div style={{ display: "flex" }}>{host}</div>
+    </div>
+  );
+}
+
+function Dot({ color, size = 18 }: { color: string; size?: number }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexShrink: 0,
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        background: color,
+      }}
+    />
+  );
+}
+
+/** No results to show yet, on the hatched "not counted" background. */
+function Empty({ children }: { children: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        marginTop: 36,
+        padding: "28px 30px",
+        backgroundImage: HATCH,
+        borderRadius: 20,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          padding: "4px 10px",
+          background: "#fff",
+          borderRadius: 8,
+          fontSize: 30,
+          color: MUTED,
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+type PartyRow = { pNo: number; label: string; percent: number; note?: string };
+
+/** Party vote bars, one row each, with the 5% threshold marked. */
+function PartyRows({ rows }: { rows: PartyRow[] }) {
+  const max = Math.max(35, ...rows.map((r) => r.percent));
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        marginTop: 20,
+      }}
+    >
+      {rows.map((r) => (
+        <div
+          key={r.pNo}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 18,
+            fontSize: 24,
+          }}
+        >
+          <div style={{ display: "flex", width: 190, fontWeight: 700 }}>
+            {r.label}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              position: "relative",
+              height: 18,
+              background: SOFT,
+              borderRadius: 9,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                width: `${(r.percent / max) * 100}%`,
+                background: partyStyle(r.pNo).color,
+                borderRadius: 9,
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                position: "absolute",
+                top: -5,
+                bottom: -5,
+                left: `${(5 / max) * 100}%`,
+                width: 3,
+                background: MUTED,
+                borderRadius: 2,
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              width: 100,
+              fontWeight: 700,
+            }}
+          >
+            {formatPct(r.percent)}
+          </div>
+          {r.note !== undefined ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: 120,
+                fontSize: 22,
+                color: MUTED,
+              }}
+            >
+              {r.note}
+            </div>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const countedLine = (percent: number, updatedAt: number | null) =>
+  percent > 0 && updatedAt
+    ? `${formatPct(percent)} of voting places counted, updated ${formatTime(updatedAt)}`
+    : undefined;
+
+/** /party-vote: the national party vote. */
+export async function partyVoteImage({
+  parties,
+  stats,
+  updatedAt,
+  seatsSource,
+}: Overview) {
+  const rows = parties
+    .filter((p) => p.percent >= 1 || p.totalSeats > 0)
+    .slice(0, 6)
+    .map((p) => ({
+      pNo: p.pNo,
+      label: partyStyle(p.pNo, p.name).short,
+      percent: p.percent,
+      note:
+        seatsSource === "none"
+          ? undefined
+          : p.totalSeats === 1
+            ? "1 seat"
+            : `${p.totalSeats} seats`,
+    }));
+  return render(
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <Title sub="Parties need 5% or an electorate to get seats">
+        Party vote
+      </Title>
+      {rows.length ? (
+        <PartyRows rows={rows} />
+      ) : (
+        <Empty>No party votes counted yet.</Empty>
+      )}
+      <Footer>{countedLine(stats?.percentCounted ?? 0, updatedAt)}</Footer>
+    </div>,
+  );
+}
+
+/** /nail-biters: the three closest electorate races. */
+export async function nailBitersImage({
+  electorates,
+  stats,
+  updatedAt,
+}: Overview) {
+  const close = closestRaces(electorates).slice(0, 3);
+  return render(
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <Title sub="The tightest electorate races right now">Nail-biters</Title>
+      {close.length ? (
+        <div style={{ display: "flex", gap: 20, marginTop: 26 }}>
+          {close.map((e) => (
+            <div
+              key={e.eNo}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                padding: "18px 20px",
+                border: `3px solid ${INK}`,
+                borderRadius: 20,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  fontFamily: "Display",
+                  fontSize: e.name.length > 16 ? 28 : 34,
+                  lineHeight: 1,
+                }}
+              >
+                {e.name}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                  marginTop: 14,
+                  marginBottom: 14,
+                }}
+              >
+                {e.candidates.slice(0, 2).map((c) => (
+                  <div
+                    key={c.cNo}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      fontSize: 22,
+                    }}
+                  >
+                    <Dot color={partyStyle(c.pNo).color} size={14} />
+                    {/* The dot gives the party: names alone fill the line. */}
+                    <div
+                      style={{
+                        display: "block",
+                        flex: 1,
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {displayCandidateName(c.name)}
+                    </div>
+                    <div style={{ display: "flex", color: MUTED }}>
+                      {formatInt(c.votes)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "auto",
+                  padding: "6px 12px",
+                  background: SOFT,
+                  borderRadius: 10,
+                  fontSize: 24,
+                }}
+              >
+                <div style={{ display: "flex", fontWeight: 700 }}>
+                  {`Just ${formatInt(e.margin ?? 0)} votes in it`}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <Empty>Close races show up once electorates start reporting.</Empty>
+      )}
+      <Footer>{countedLine(stats?.percentCounted ?? 0, updatedAt)}</Footer>
+    </div>,
+  );
+}
+
+/** How many names fit on the who's out card. */
+const OUT_NAMES = 12;
+
+/** /parliament/whos-out: MPs who stood again and lost. */
+export async function whosOutImage(
+  leaving: LeavingMp[],
+  { stats, updatedAt }: Overview,
+) {
+  const lost = leaving.filter((m) => m.reason === "lost");
+  const retired = leaving.length - lost.length;
+  const shown = lost.slice(0, OUT_NAMES);
+  const more = lost.length - shown.length;
+  const sub = [
+    lost.length === 1
+      ? "1 MP lost their seat"
+      : `${lost.length} MPs lost their seats`,
+    retired ? `${retired} didn’t stand again` : "",
+  ]
+    .filter(Boolean)
+    .join(", ");
+  return render(
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <Title sub={leaving.length ? sub : undefined}>Who’s out</Title>
+      {leaving.length === 0 ? (
+        <Empty>Who’s leaving shows up once results come in.</Empty>
+      ) : (
+        <div
+          style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 26 }}
+        >
+          {shown.map((m) => (
+            <div
+              key={m.sortName}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "8px 16px",
+                border: `3px solid ${INK}`,
+                borderRadius: 999,
+                fontSize: 24,
+              }}
+            >
+              <Dot color={partyStyle(m.pNo).color} size={16} />
+              <div style={{ display: "flex", fontWeight: 700 }}>{m.name}</div>
+            </div>
+          ))}
+          {more > 0 ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px 6px",
+                fontSize: 24,
+                color: MUTED,
+              }}
+            >
+              {`and ${more} more`}
+            </div>
+          ) : null}
+        </div>
+      )}
+      <Footer>{countedLine(stats?.percentCounted ?? 0, updatedAt)}</Footer>
+    </div>,
+  );
+}
+
+/** /electorates/[slug]/party-vote: how one electorate voted for parties. */
+export async function electoratePartyVoteImage(
+  name: string,
+  detail: ElectorateDetail | null,
+) {
+  const rows = (detail?.partyVotes ?? [])
+    .filter((p) => p.votes > 0 && p.percent >= 1)
+    .slice(0, 6)
+    .map((p) => ({
+      pNo: p.pNo,
+      label: partyStyle(p.pNo).short,
+      percent: p.percent,
+    }));
+  const s = detail?.summary;
+  return render(
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <Title
+        sub={`How ${name} voted for parties`}
+      >{`${name}: party vote`}</Title>
+      {rows.length ? (
+        <PartyRows rows={rows} />
+      ) : (
+        <Empty>No party votes counted here yet.</Empty>
+      )}
+      <Footer>
+        {s && s.votesCast > 0
+          ? `${formatPct(s.percentCounted, 0)} of voting places counted`
+          : undefined}
+      </Footer>
+    </div>,
+  );
+}
+
+/** One vote's top choices at a voting place, for the voting place card. */
+function BoothColumn({
+  title,
+  lines,
+}: {
+  title: string;
+  lines: {
+    key: number;
+    label: string;
+    party?: string;
+    pNo: number | null;
+    percent: number;
+  }[];
+}) {
+  const max = Math.max(1, ...lines.map((l) => l.percent));
+  return (
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, gap: 9 }}>
+      <div
+        style={{ display: "flex", fontSize: 22, fontWeight: 700, color: MUTED }}
+      >
+        {title}
+      </div>
+      {lines.map((l) => (
+        <div
+          key={l.key}
+          style={{ display: "flex", flexDirection: "column", gap: 4 }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: 10,
+              fontSize: 22,
+            }}
+          >
+            <div
+              style={{ display: "flex", flex: 1, gap: 8, overflow: "hidden" }}
+            >
+              <div style={{ display: "flex", fontWeight: 700 }}>{l.label}</div>
+              {l.party ? (
+                <div style={{ display: "flex", color: MUTED }}>{l.party}</div>
+              ) : null}
+            </div>
+            <div style={{ display: "flex", fontWeight: 700 }}>
+              {formatPct(l.percent)}
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              height: 10,
+              background: SOFT,
+              borderRadius: 6,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                width: `${(l.percent / max) * 100}%`,
+                background: partyStyle(l.pNo).color,
+                borderRadius: 6,
+              }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Lines shown per vote on the voting place card. */
+const BOOTH_LINES = 4;
+
+/** /electorates/[slug]/booths/[id]: how one voting place voted. */
+export async function boothImage(
+  electorate: string,
+  data: BoothResults,
+  place: BoothPlace,
+) {
+  const candidates = boothTop(
+    place.candidate,
+    data.candidates,
+    BOOTH_LINES,
+  ).map((v) => ({
+    key: v.i,
+    label: displayCandidateName(v.choice.name),
+    party: partyStyle(v.choice.pNo).short,
+    pNo: v.choice.pNo,
+    percent: v.percent,
+  }));
+  const parties = boothTop(place.party, data.parties, BOOTH_LINES).map((v) => ({
+    key: v.i,
+    label: partyStyle(v.choice.pNo, v.choice.name).short,
+    pNo: v.choice.pNo,
+    percent: v.percent,
+  }));
+  const votes = place.party.reduce((a, n) => a + n, 0);
+  const where = [place.area, `${electorate} electorate`]
+    .filter(Boolean)
+    .join(" · ");
+  return render(
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <Title sub={where}>{place.venue}</Title>
+      <div style={{ display: "flex", gap: 44, marginTop: 16 }}>
+        <BoothColumn title="Candidate vote" lines={candidates} />
+        <BoothColumn title="Party vote" lines={parties} />
+      </div>
+      <Footer>
+        {`${formatInt(votes)} party votes here, ${data.stage === "official" ? "official count" : "preliminary count"}`}
+      </Footer>
     </div>,
   );
 }

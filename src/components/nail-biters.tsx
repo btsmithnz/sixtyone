@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
 import { formatInt, formatPct } from "@/lib/format";
+import { closestRaces } from "@/lib/nail-biters";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
 import type { ElectorateSummary } from "@/lib/results";
 
@@ -10,15 +11,13 @@ export function NailBiters({
 }: {
   electorates: ElectorateSummary[];
 }) {
-  const close = electorates
-    .filter((e) => e.marginPoints !== null && e.votesCast > 0)
-    .sort((a, b) => (a.marginPoints ?? 0) - (b.marginPoints ?? 0))
-    .slice(0, 6);
+  const close = closestRaces(electorates).slice(0, 6);
 
   return (
     <section aria-labelledby="nail-biters">
       <SectionHeading
         id="nail-biters"
+        share="/nail-biters"
         className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
       >
         Nail-biters

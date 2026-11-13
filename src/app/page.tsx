@@ -192,6 +192,7 @@ async function HomeResults() {
         <div className="sticker p-5 sm:p-7">
           <SectionHeading
             id="how-the-night-unfolded"
+            share="/#how-the-night-unfolded"
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             How the night unfolded
@@ -211,6 +212,7 @@ async function HomeResults() {
         <div className="sticker p-5 sm:p-7">
           <SectionHeading
             id="seats-through-the-night"
+            share="/#seats-through-the-night"
             className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
           >
             Seats through the night

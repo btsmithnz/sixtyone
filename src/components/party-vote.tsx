@@ -20,6 +20,7 @@ export function PartyVote({
     <section aria-labelledby="party-vote" className="sticker p-5 sm:p-7">
       <SectionHeading
         id="party-vote"
+        share="/party-vote"
         className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%]"
       >
         Party vote

@@ -30,6 +30,9 @@ const RACE_IMAGE = {
  * `version` (the results version) is appended so each update gets a new
  * image URL. Slack, Discord, iMessage and X cache previews by image URL, so
  * without it a link shared at 10pm could show the 8pm numbers.
+ *
+ * A share page (a section's own link, like /party-vote) shows the same
+ * content as its page, so `canonical` points search engines there.
  */
 export function shareMetadata({
   title,
@@ -38,6 +41,7 @@ export function shareMetadata({
   image = RACE_IMAGE.image,
   imageAlt = RACE_IMAGE.imageAlt,
   version,
+  canonical = path,
 }: {
   title: string;
   description: string;
@@ -45,12 +49,15 @@ export function shareMetadata({
   /** Share-image route; defaults to the race-to-61 image. */
   image?: string;
   imageAlt?: string;
-  version: number | null;
+  /** Results version, or another tag that changes when the image does. */
+  version: number | string | null;
+  /** The page whose content this is, if not `path` itself. */
+  canonical?: string;
 }): Metadata {
   const url = version ? `${image}?v=${version}` : image;
   const images = [{ url, alt: imageAlt, ...OG_SIZE, type: "image/png" }];
   return {
-    alternates: { canonical: path },
+    alternates: { canonical },
     openGraph: {
       type: "website",
       siteName: SITE_NAME,
