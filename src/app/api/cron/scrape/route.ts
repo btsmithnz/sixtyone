@@ -9,8 +9,9 @@ import { scrapeFeed } from "@/lib/scrape";
 export const maxDuration = 300;
 
 /**
- * Scrapes the Electoral Commission feed. Called by Vercel Cron (see
- * vercel.json), which sends `Authorization: Bearer $CRON_SECRET`.
+ * Scrapes the Electoral Commission feed. Built for Vercel Cron, which sends
+ * `Authorization: Bearer $CRON_SECRET`. The schedule is currently removed from
+ * vercel.json because the feed is down; see the README to re-enable it.
  *
  *   curl -H "Authorization: Bearer $CRON_SECRET" localhost:3000/api/cron/scrape
  *   curl -H "Authorization: Bearer $CRON_SECRET" "localhost:3000/api/cron/scrape?force=1"
