@@ -43,7 +43,9 @@ export default function AboutPage() {
         Election-night results are preliminary. They include advance and
         election-day votes, but not special votes, which are counted for the
         official result about three weeks later. Specials can change close
-        electorates and the last seat or two.
+        electorates and the last seat or two. Once the official result is
+        declared, it’s what we show, with what changed since election night; the
+        night’s count stays in the charts.
       </p>
 
       <SectionHeading

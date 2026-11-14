@@ -6,6 +6,7 @@ import {
   partyStyle,
 } from "@/lib/parties";
 import type { ElectorateSummary } from "@/lib/results";
+import { changedHands } from "@/lib/stage";
 import { ElectorateMap, type MapResult } from "./electorate-map";
 
 /** Server wrapper: trims results down to what the map needs. */
@@ -27,7 +28,9 @@ export function MapSection({
         : null,
       marginPoints: e.marginPoints,
       percentCounted: e.percentCounted,
+      stage: e.stage,
       complete: e.complete,
+      changedHands: changedHands(e),
       partyLeader: e.partyVoteLeader
         ? {
             ...e.partyVoteLeader,

@@ -2,9 +2,11 @@
 
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Change } from "@/components/change";
 import { SectionHeading } from "@/components/section-heading";
 import { formatPct } from "@/lib/format";
 import { BASE_SEATS, majorityOf, raisedMajority } from "@/lib/seats";
+import type { CountStage } from "@/lib/stage";
 import { cn } from "@/lib/utils";
 
 export type SeatParty = {
@@ -15,6 +17,8 @@ export type SeatParty = {
   seats: number;
   /** Share of the party vote. */
   percent: number;
+  /** Seats on election night, once the official count is in; else null. */
+  prelimSeats: number | null;
 };
 
 type Side = "left" | "right" | "cross";
@@ -36,12 +40,14 @@ export function RaceTo61({
   houseSize,
   defaultBlocs,
   seatsSource,
+  stage,
   percentCounted,
 }: {
   parties: SeatParty[];
   houseSize: number;
   defaultBlocs: { left: number[]; right: number[] };
   seatsSource: "feed" | "projected" | "none";
+  stage: CountStage;
   /** Share of voting places counted. Nobody is "over the line" until it's 100. */
   percentCounted: number;
 }) {
@@ -66,6 +72,10 @@ export function RaceTo61({
   const right = bySeats.filter((p) => sideOf(p.pNo) === "right");
   const cross = bySeats.filter((p) => sideOf(p.pNo) === "cross");
   const sum = (ps: SeatParty[]) => ps.reduce((a, p) => a + p.seats, 0);
+  const official = stage === "official";
+  /** A bloc's seats now, less what the same parties had on election night. */
+  const sinceNight = (ps: SeatParty[]) =>
+    official ? ps.reduce((a, p) => a + p.seats - (p.prelimSeats ?? 0), 0) : 0;
   const leftSeats = sum(left);
   const rightSeats = sum(right);
   const crossSeats = sum(cross);
@@ -80,7 +90,7 @@ export function RaceTo61({
   // voting place is in. Until then it's "enough so far".
   const ahead =
     leftSeats >= majority ? "left" : rightSeats >= majority ? "right" : null;
-  const countDone = percentCounted >= 100;
+  const countDone = official || percentCounted >= 100;
   const winner = countDone ? ahead : null;
 
   // One tick per seat: left bloc from the left, right bloc from the right,
@@ -109,9 +119,12 @@ export function RaceTo61({
     const lead = leftSeats >= rightSeats ? "left" : "right";
     const leadName = lead === "left" ? leftName : rightName;
     const short = majority - Math.max(leftSeats, rightSeats);
+    const nobody = official
+      ? "Neither side has a majority."
+      : "Nobody's there yet.";
     return crossSeats > 0
-      ? `Nobody's there yet. ${leadName} is ${short} short, so the crossbench holds the cards.`
-      : `Nobody's there yet. ${leadName} is ${short} short of ${majority}.`;
+      ? `${nobody} ${leadName} is ${short} short, so the crossbench holds the cards.`
+      : `${nobody} ${leadName} is ${short} short of ${majority}.`;
   })();
 
   const move = (pNo: number, dir: -1 | 1) => {
@@ -132,11 +145,13 @@ export function RaceTo61({
           {`Who’s getting to ${majority}?`}
         </SectionHeading>
         <p className="text-sm text-muted-foreground">
-          {seatsSource === "projected"
-            ? "Our seat projection from the count so far"
-            : seatsSource === "feed"
-              ? "Seats as allocated by the Electoral Commission so far"
-              : null}
+          {official
+            ? "The Electoral Commission’s official seat allocation"
+            : seatsSource === "projected"
+              ? "Our seat projection from the count so far"
+              : seatsSource === "feed"
+                ? "Seats as allocated by the Electoral Commission so far"
+                : null}
         </p>
         {houseSize > BASE_SEATS ? (
           <p className="basis-full text-sm font-medium">
@@ -154,6 +169,7 @@ export function RaceTo61({
         <BlocTotal
           name={leftName}
           seats={leftSeats}
+          change={sinceNight(left)}
           majority={majority}
           state={ahead === "left" ? (countDone ? "won" : "ahead") : null}
           align="left"
@@ -161,6 +177,7 @@ export function RaceTo61({
         <BlocTotal
           name={rightName}
           seats={rightSeats}
+          change={sinceNight(right)}
           majority={majority}
           state={ahead === "right" ? (countDone ? "won" : "ahead") : null}
           align="right"
@@ -253,6 +270,7 @@ export function RaceTo61({
               parties={left}
               onMove={move}
               side="left"
+              official={official}
             />
             <Column
               title="Crossbench"
@@ -260,6 +278,7 @@ export function RaceTo61({
               parties={cross}
               onMove={move}
               side="cross"
+              official={official}
             />
             <Column
               title={rightName}
@@ -267,6 +286,7 @@ export function RaceTo61({
               parties={right}
               onMove={move}
               side="right"
+              official={official}
             />
           </div>
         </div>
@@ -278,12 +298,15 @@ export function RaceTo61({
 function BlocTotal({
   name,
   seats,
+  change,
   majority,
   state,
   align,
 }: {
   name: string;
   seats: number;
+  /** Seats gained or lost since election night (0 before the official count). */
+  change: number;
   majority: number;
   /** "won" once the count is done; "ahead" when at the majority mid-count. */
   state: "won" | "ahead" | null;
@@ -297,7 +320,14 @@ function BlocTotal({
     ) : null;
   return (
     <div className={cn("relative", align === "right" && "text-right")}>
-      <div className="text-sm font-medium text-muted-foreground">{name}</div>
+      <div className="text-sm font-medium text-muted-foreground">
+        {name}
+        <Change
+          value={change}
+          unit="seats"
+          className="ml-2 font-semibold text-foreground"
+        />
+      </div>
       <div className="flex items-center gap-3">
         {align === "right" ? badge : null}
         <span className="num font-display text-6xl leading-none font-extrabold tracking-tight [font-stretch:75%] sm:text-7xl">
@@ -351,12 +381,15 @@ function Column({
   parties,
   onMove,
   side,
+  official,
 }: {
   title: string;
   seats: number;
   parties: SeatParty[];
   onMove: (pNo: number, dir: -1 | 1) => void;
   side: Side;
+  /** Show each party's seat change since election night. */
+  official: boolean;
 }) {
   const partyVote = parties.reduce((a, p) => a + p.percent, 0);
   return (
@@ -389,7 +422,14 @@ function Column({
             </MoveButton>
             <span className="px-0.5">
               {p.short} <span className="num">{p.seats}</span>
-              <span className="sr-only"> seats,</span>{" "}
+              <span className="sr-only"> seats,</span>
+              {official && p.prelimSeats !== null ? (
+                <Change
+                  value={p.seats - p.prelimSeats}
+                  unit="seats"
+                  className="ml-1 text-xs"
+                />
+              ) : null}{" "}
               <span className="num text-xs font-medium opacity-75">
                 {formatPct(p.percent)}
               </span>

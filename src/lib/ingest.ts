@@ -10,6 +10,10 @@ import type {
   FeedElectorateResult,
   FeedParty,
 } from "./feed/parse";
+import type { CountStage } from "./stage";
+
+/** How a snapshot is stored: when it was fetched, and which count it's from. */
+type StoreOptions = { capturedAt?: Date; stage?: CountStage };
 
 const slugByENo = new Map(
   [...mapData.general, ...mapData.maori].map((e) => [e.eNo, e.slug]),
@@ -70,7 +74,7 @@ export async function upsertReference(ref: {
 /** Stores a national snapshot. Returns false if this `updated` was already stored. */
 export async function storeElection(
   e: FeedElection,
-  capturedAt = new Date(),
+  { capturedAt = new Date(), stage = "preliminary" }: StoreOptions = {},
 ): Promise<boolean> {
   if (!e.updatedAt) throw new Error("election.xml has no updated timestamp");
   const updatedAt = e.updatedAt;
@@ -80,6 +84,7 @@ export async function storeElection(
       .values({
         feedUpdatedAt: updatedAt,
         capturedAt,
+        stage,
         votingPlacesCounted: e.votingPlacesCounted,
         percentVotingPlacesCounted: e.percentVotingPlacesCounted,
         totalVotesCast: e.totalVotesCast,
@@ -104,7 +109,7 @@ export async function storeElection(
 /** Stores an electorate snapshot. Returns false if this `updated` was already stored. */
 export async function storeElectorate(
   r: FeedElectorateResult,
-  capturedAt = new Date(),
+  { capturedAt = new Date(), stage = "preliminary" }: StoreOptions = {},
 ): Promise<boolean> {
   if (!r.updatedAt) throw new Error(`e${r.eNo}.xml has no updated timestamp`);
   const updatedAt = r.updatedAt;
@@ -115,6 +120,7 @@ export async function storeElectorate(
         eNo: r.eNo,
         feedUpdatedAt: updatedAt,
         capturedAt,
+        stage,
         final: r.final,
         totalVotingPlaces: r.totalVotingPlaces,
         votingPlacesCounted: r.votingPlacesCounted,

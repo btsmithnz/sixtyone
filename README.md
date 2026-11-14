@@ -2,7 +2,8 @@
 
 Live results for the 2026 New Zealand general election (Saturday 7 November 2026).
 It tracks who can reach a 61-seat majority, shows every electorate on a map, and charts
-how the night unfolded.
+how the night unfolded. Once the official count is in, that's what it shows, with what
+changed since election night ([docs/official-results.md](docs/official-results.md)).
 
 - **Race to 61**: seat strip with the usual blocs, plus a Build-a-government game.
 - **Map**: all 64 general and 7 Māori electorates, coloured by the candidate or party
@@ -21,11 +22,16 @@ how the night unfolded.
 - **Split votes**: electorates where the candidate and party votes went different ways, and
   the winners with the biggest personal vote over their party.
 - **Your electorates**: star electorates to follow them side by side on `/favourites`.
-- **Special votes what-if** (`src/lib/specials.ts`): once election night's count is done, apply
-  how special votes leaned in 2017, 2020 or 2023 to project the official result, plus the
-  seats that are closest to changing hands. Remove it when the official results land.
   Favourites live in the browser (localStorage), so the page is one cached page for
   everyone and costs nothing extra per visitor.
+- **Special votes what-if** (`src/lib/specials.ts`): once election night's count is done, apply
+  how special votes leaned in 2017, 2020 or 2023 to project the official result, plus the
+  seats that are closest to changing hands. Hidden once the official count is in.
+- **Official results** (`src/lib/stage.ts`): every snapshot records which count it's
+  from. When the official count lands it becomes the result everywhere, and a "What
+  changed since election night" section covers seats, party vote shares and electorates
+  that changed hands. Election night stays in the charts, with the official result as a
+  dot at the end.
 
 ## Getting started
 
@@ -43,12 +49,13 @@ Useful scripts:
 | --- | --- |
 | `pnpm scrape` | One scrape of the live feed (add `--force` to ignore If-Modified-Since) |
 | `pnpm simulate` | Wipes stored results and simulates a whole night (`--until 0.5`, `--seed 7`, `--steps 20`) |
+| `pnpm simulate --official` | Adds a simulated official count to the stored results, replacing any earlier one |
 | `pnpm map:build` | Rebuilds the electorate map from Stats NZ boundaries (`--refresh` to re-download) |
 | `pnpm booths:build` | Parses and geocodes booth results from the files in `data/` (see the script's header) |
 | `pnpm booths:import` | Loads `data/booths-*.csv` into Postgres (a dry run until you add `--write`) |
 | `pnpm db:generate` / `db:migrate` | Drizzle migrations after editing `src/db/schema.ts` |
 
-⚠️ `pnpm simulate` deletes all stored results. It refuses to run when
+⚠️ `pnpm simulate` deletes all stored results (`--official` only deletes official ones). It refuses to run when
 `VERCEL_ENV=production`, but double-check `DATABASE_URL` anyway.
 
 ## How it works
@@ -71,7 +78,8 @@ Electoral Commission feed ──(Vercel Cron, currently off)──▶ /api/cron/
 - **Storage** (`src/db/schema.ts`): reference tables (parties, electorates,
   candidates), plus snapshot tables keyed by the feed's own `updated` timestamp, so
   repeated or overlapping scrapes never duplicate data. History charts come straight
-  from the snapshots.
+  from the snapshots. Each snapshot has a `stage`, `preliminary` or `official`; pages
+  show the latest stage there is.
 - **Caching** (`src/lib/results.ts`): every query is a `'use cache'` function tagged
   `results`, with the `results` cacheLife profile in `next.config.ts` as a safety net.
   All 71 electorate pages are prerendered via `generateStaticParams`. When the scraper
@@ -123,7 +131,11 @@ Electoral Commission feed ──(Vercel Cron, currently off)──▶ /api/cron/
    every 5 minutes (`POLL_MS` in `src/components/live-status.tsx`). On a results day
    (election night, or the official count), set the schedule to `* * * * *` and
    `POLL_MS` to a minute.
-5. **Warm-up.** After a deploy, run one scrape so reference data and results load:
+5. **Official results.** If the feed publishes the official count, set
+   `COUNT_STAGE=official` (Production) before the scrape that picks it up, so it's stored
+   as official. Otherwise import it from the Commission's statistics pages: see
+   [docs/official-results.md](docs/official-results.md).
+6. **Warm-up.** After a deploy, run one scrape so reference data and results load:
    `curl -H "Authorization: Bearer $CRON_SECRET" https://<deployment>/api/cron/scrape?force=1`
 
 The build prerenders pages from Postgres. An empty database builds fine, with empty

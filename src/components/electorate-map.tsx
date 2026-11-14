@@ -5,6 +5,7 @@ import { useId, useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { formatPct } from "@/lib/format";
+import type { CountStage } from "@/lib/stage";
 import { cn } from "@/lib/utils";
 
 export type MapShape = {
@@ -25,7 +26,10 @@ export type MapResult = {
   leader: { name: string; pNo: number | null; party: string } | null;
   marginPoints: number | null;
   percentCounted: number;
+  stage: CountStage;
   complete: boolean;
+  /** On the official count, a different winner from election night. */
+  changedHands: boolean;
   partyLeader: { pNo: number; party: string; percent: number } | null;
 };
 
@@ -64,6 +68,7 @@ export function ElectorateMap({
   const patternId = useId().replace(/:/g, "");
 
   const shapes = roll === "general" ? general : maori;
+  const official = Object.values(results).some((r) => r.stage === "official");
   const shownInsets =
     roll === "general" ? insets : insets.filter((i) => i.id === "auckland");
   const byENo = new Map([...general, ...maori].map((s) => [s.eNo, s]));
@@ -210,7 +215,9 @@ export function ElectorateMap({
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
         {mode === "electorate"
-          ? "Coloured by the candidate in front. Paler means less of the vote is counted."
+          ? official
+            ? "Coloured by the winning candidate."
+            : "Coloured by the candidate in front. Paler means less of the vote is counted."
           : "Coloured by the party winning the party vote there."}
       </p>
 
@@ -369,7 +376,11 @@ function describe(r: MapResult | undefined, mode: Mode) {
   if (!r.leader) return "no results yet";
   return `${r.leader.name} (${r.leader.party}) ${r.complete ? "won" : "leads"}${
     r.marginPoints !== null ? ` by ${formatPct(r.marginPoints)}` : ""
-  }, ${formatPct(r.percentCounted, 0)} counted`;
+  }${
+    r.stage === "official"
+      ? " on the official count"
+      : `, ${formatPct(r.percentCounted, 0)} counted`
+  }${r.changedHands ? ", changing hands since election night" : ""}`;
 }
 
 function MapTooltip({
@@ -443,7 +454,16 @@ function MapTooltip({
       ) : (
         <div className="mt-1 text-muted-foreground">No results yet</div>
       )}
-      {result && result.percentCounted > 0 ? (
+      {result?.stage === "official" ? (
+        <div className="mt-2 border-t border-border pt-2 text-muted-foreground">
+          Official count
+          {result.changedHands && mode === "electorate" ? (
+            <span className="block font-semibold text-foreground">
+              Changed hands since election night
+            </span>
+          ) : null}
+        </div>
+      ) : result && result.percentCounted > 0 ? (
         <div className="mt-2 border-t border-border pt-2 text-muted-foreground">
           <span className="num">{formatPct(result.percentCounted, 0)}</span> of
           voting places counted

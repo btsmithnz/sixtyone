@@ -1,0 +1,2 @@
+ALTER TABLE "election_snapshots" ADD COLUMN "stage" text DEFAULT 'preliminary' NOT NULL;--> statement-breakpoint
+ALTER TABLE "electorate_snapshots" ADD COLUMN "stage" text DEFAULT 'preliminary' NOT NULL;

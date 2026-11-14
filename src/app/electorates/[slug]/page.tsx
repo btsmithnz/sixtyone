@@ -20,6 +20,7 @@ import {
 } from "@/lib/parties";
 import { type ElectorateDetail, getElectorateDetail } from "@/lib/results";
 import { shareMetadata } from "@/lib/site";
+import { changedHands } from "@/lib/stage";
 
 const ALL = [...mapData.general, ...mapData.maori];
 
@@ -59,6 +60,9 @@ function electorateDescription(name: string, detail: ElectorateDetail | null) {
     return `Live 2026 election results for ${name}: the candidates, the votes, and how the count unfolds.`;
   }
   const who = `${displayCandidateName(lead.name)} (${partyStyle(lead.pNo).short})`;
+  if (s.stage === "official") {
+    return `${who} won ${name} by ${formatInt(s.margin)} votes on the official count. 2026 election results: candidates, party vote and how the count unfolded.`;
+  }
   return s.complete
     ? `${who} won ${name} by ${formatInt(s.margin)} votes. Full 2026 election results: candidates, party vote and how the count unfolded.`
     : `${who} leads ${name} by ${formatInt(s.margin)} votes with ${formatPct(s.percentCounted, 0)} of voting places counted. Live 2026 election results.`;
@@ -97,6 +101,9 @@ async function Electorate({
   const { summary: e, partyVotes, history } = detail;
   const [leader, runnerUp] = e.candidates;
   const hasVotes = e.votesCast > 0;
+  const official = e.stage === "official";
+  const night = e.preliminary;
+  const flipped = changedHands(e);
   const maxPct = Math.max(1, ...e.candidates.map((c) => c.percent));
 
   const top = e.candidates.slice(0, 5);
@@ -112,6 +119,9 @@ async function Electorate({
       top.map((c) => [`c${c.cNo}`, h.candidates[c.cNo] ?? 0]),
     ),
   }));
+  const officialShares = official
+    ? Object.fromEntries(top.map((c) => [`c${c.cNo}`, c.percent]))
+    : null;
 
   return (
     <>
@@ -127,13 +137,23 @@ async function Electorate({
             {e.name}
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
-            <LiveStatus updatedAt={e.updatedAt} version={detail.version} />
+            <LiveStatus
+              updatedAt={e.updatedAt}
+              stage={e.stage}
+              version={detail.version}
+            />
             <span className="text-sm text-muted-foreground">
-              <span className="num font-semibold text-foreground">
-                {e.placesCounted}
-              </span>{" "}
-              of <span className="num">{e.totalPlaces || "?"}</span> voting
-              places counted
+              {official ? (
+                "Every vote counted, including special votes"
+              ) : (
+                <>
+                  <span className="num font-semibold text-foreground">
+                    {e.placesCounted}
+                  </span>{" "}
+                  of <span className="num">{e.totalPlaces || "?"}</span> voting
+                  places counted
+                </>
+              )}
               {hasVotes ? (
                 <>
                   ,{" "}
@@ -166,13 +186,32 @@ async function Electorate({
             The candidate race
           </SectionHeading>
           {hasVotes && leader && runnerUp ? (
-            <p className="text-lg">
-              <strong>{displayCandidateName(leader.name)}</strong>{" "}
-              {e.complete ? "won" : "is ahead"} by{" "}
-              <strong className="num">{formatInt(e.margin ?? 0)}</strong> votes
-            </p>
+            <div className="sm:text-right">
+              <p className="text-lg">
+                <strong>{displayCandidateName(leader.name)}</strong>{" "}
+                {e.complete ? "won" : "is ahead"} by{" "}
+                <strong className="num">{formatInt(e.margin ?? 0)}</strong>{" "}
+                votes
+              </p>
+              {night?.leader && !flipped ? (
+                <p className="text-sm text-muted-foreground">
+                  <span className="num">{formatInt(night.margin ?? 0)}</span> on
+                  election night
+                </p>
+              ) : null}
+            </div>
           ) : null}
         </div>
+        {flipped && night?.leader && leader ? (
+          <p className="mt-4 rounded-xl border-2 border-dashed border-border bg-secondary/60 px-4 py-3">
+            <strong>Changed hands on the official count.</strong> On election
+            night {displayCandidateName(night.leader.name)} (
+            {partyStyle(night.leader.pNo).short}) was ahead by{" "}
+            <span className="num">{formatInt(night.margin ?? 0)}</span> votes.
+            Special votes and the recheck put{" "}
+            {displayCandidateName(leader.name)} in front.
+          </p>
+        ) : null}
         <ol className="mt-5 space-y-4">
           {e.candidates.map((c, i) => {
             const style = partyStyle(c.pNo);
@@ -239,8 +278,15 @@ async function Electorate({
           </SectionHeading>
           <p className="mt-1 mb-4 text-sm text-muted-foreground">
             Each candidate’s share of the vote as booths reported.
+            {official ? " The dots are the official result." : null}
           </p>
-          <TrendChart rows={rows} series={series} unit="%" height={300} />
+          <TrendChart
+            rows={rows}
+            series={series}
+            official={officialShares}
+            unit="%"
+            height={300}
+          />
         </section>
 
         <section className="sticker p-5 sm:p-7" aria-labelledby="party-vote">

@@ -47,7 +47,7 @@ export default function ElectoratesPage() {
 }
 
 async function Grid() {
-  const { electorates, version, updatedAt } = await getOverview();
+  const { electorates, version, updatedAt, stage } = await getOverview();
   const results = new Map(electorates.map((e) => [e.eNo, e]));
   // List all 71 from the static map data, so the grid is complete even
   // before the first scrape has loaded anything into the database.
@@ -66,13 +66,14 @@ async function Grid() {
         ink: partyInkVar(lead?.pNo),
         margin: e?.margin ?? null,
         percentCounted: e?.percentCounted ?? 0,
+        stage: e?.stage ?? "preliminary",
         complete: e?.complete ?? false,
       };
     },
   );
   return (
     <>
-      <LiveStatus updatedAt={updatedAt} version={version} />
+      <LiveStatus updatedAt={updatedAt} stage={stage} version={version} />
       <ElectorateGrid electorates={cards} />
     </>
   );

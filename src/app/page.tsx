@@ -6,6 +6,7 @@ import { NailBiters } from "@/components/nail-biters";
 import { PartyVote } from "@/components/party-vote";
 import { RaceTo61, type SeatParty } from "@/components/race-to-61";
 import { SectionHeading } from "@/components/section-heading";
+import { SinceElectionNight } from "@/components/since-election-night";
 import {
   SpecialsWhatIf,
   type WhatIfParty,
@@ -27,15 +28,16 @@ import { getNationalHistory, getOverview, type Overview } from "@/lib/results";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
-  SITE_TAGLINE,
   SITE_URL,
   shareMetadata,
+  taglineFor,
 } from "@/lib/site";
 import { knifeEdges } from "@/lib/specials";
+import { countedPhrase } from "@/lib/stage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const overview = await getOverview();
-  const title = `${SITE_NAME}: ${SITE_TAGLINE}`;
+  const title = `${SITE_NAME}: ${taglineFor(overview.stage)}`;
   const description = homeDescription(overview);
   return {
     title: { absolute: title },
@@ -50,12 +52,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /** A search/share description that reflects the count once it starts. */
-function homeDescription({ parties, stats }: Overview) {
+function homeDescription({ parties, stats, stage }: Overview) {
   const { left, right } = blocSeats(parties);
   if (!stats || left.seats + right.seats === 0) return SITE_DESCRIPTION;
   const [ahead, behind] =
     right.seats >= left.seats ? [right, left] : [left, right];
-  return `${ahead.name} ${ahead.seats} seats, ${behind.name} ${behind.seats}, with ${formatPct(stats.percentCounted)} of voting places counted. Live 2026 NZ election results: the race to 61 and every electorate.`;
+  return `${ahead.name} ${ahead.seats} seats, ${behind.name} ${behind.seats}, ${countedPhrase(stage, stats.percentCounted)}. ${stage === "official" ? "Official" : "Live"} 2026 NZ election results: the race to 61 and every electorate.`;
 }
 
 const jsonLd = {
@@ -81,13 +83,22 @@ export default function Home() {
         }}
       />
       <h1 className="pt-2 font-display text-2xl font-extrabold tracking-tight [font-stretch:85%] sm:text-3xl">
-        New Zealand election 2026: live results
+        New Zealand election 2026:{" "}
+        <Suspense fallback="results">
+          <WhichResults />
+        </Suspense>
       </h1>
       <Suspense fallback={<HomeSkeleton />}>
         <HomeResults />
       </Suspense>
     </>
   );
+}
+
+/** The heading's last words. In the shell, it says just "results". */
+async function WhichResults() {
+  const { stage } = await getOverview();
+  return stage === "official" ? "official results" : "live results";
 }
 
 async function HomeResults() {
@@ -99,7 +110,8 @@ async function HomeResults() {
     overview.version && historyVersion
       ? Math.min(overview.version, historyVersion)
       : (overview.version ?? historyVersion);
-  const { stats, parties } = overview;
+  const { stats, parties, stage } = overview;
+  const official = stage === "official";
 
   const seatParties: SeatParty[] = parties
     .filter((p) => p.totalSeats > 0)
@@ -110,11 +122,15 @@ async function HomeResults() {
       ink: partyInkVar(p.pNo),
       seats: p.totalSeats,
       percent: p.percent,
+      prelimSeats: p.preliminary?.totalSeats ?? null,
     }));
 
-  // Once election night's count is complete: what the special votes could do.
+  // Once election night's count is complete, and until the official count
+  // replaces it: what the special votes could do.
   const whatIf =
-    stats && stats.percentCounted >= 100 ? specialsData(overview) : null;
+    !official && stats && stats.percentCounted >= 100
+      ? specialsData(overview)
+      : null;
 
   // Chart the parties that matter: anyone who's polled 1.5%+ at some point.
   const charted = parties
@@ -142,26 +158,44 @@ async function HomeResults() {
   const hasSeatHistory = history.some((h) =>
     Object.values(h.parties).some((p) => p.seats > 0),
   );
+  // The official result, drawn after the night on both charts.
+  const officialVotes = official
+    ? Object.fromEntries(charted.map((p) => [`p${p.pNo}`, p.percent]))
+    : null;
+  const officialSeats = official
+    ? Object.fromEntries(charted.map((p) => [`p${p.pNo}`, p.totalSeats]))
+    : null;
 
   return (
     <div className="space-y-8">
       {/* Count status: how much is counted frames every number below it. */}
       <div className="space-y-3 pt-2">
-        <LiveStatus updatedAt={overview.updatedAt} version={version} />
-        <CountMeter percent={stats?.percentCounted ?? 0}>
-          {stats && stats.totalVotesCast > 0 ? (
-            <>
-              <span className="num font-semibold text-foreground">
-                {formatInt(stats.totalVotesCast)}
-              </span>{" "}
-              votes,{" "}
-              <span className="num font-semibold text-foreground">
-                {stats.electoratesComplete}
-              </span>{" "}
-              of 71 electorates fully counted
-            </>
-          ) : null}
-        </CountMeter>
+        <LiveStatus
+          updatedAt={overview.updatedAt}
+          stage={stage}
+          version={version}
+        />
+        {official && stats ? (
+          <OfficialMeter
+            votes={stats.totalVotesCast}
+            turnout={stats.turnoutPercent}
+          />
+        ) : (
+          <CountMeter percent={stats?.percentCounted ?? 0}>
+            {stats && stats.totalVotesCast > 0 ? (
+              <>
+                <span className="num font-semibold text-foreground">
+                  {formatInt(stats.totalVotesCast)}
+                </span>{" "}
+                votes,{" "}
+                <span className="num font-semibold text-foreground">
+                  {stats.electoratesComplete}
+                </span>{" "}
+                of 71 electorates fully counted
+              </>
+            ) : null}
+          </CountMeter>
+        )}
       </div>
 
       <RaceTo61
@@ -169,8 +203,11 @@ async function HomeResults() {
         houseSize={overview.houseSize}
         defaultBlocs={DEFAULT_BLOCS}
         seatsSource={overview.seatsSource}
+        stage={stage}
         percentCounted={stats?.percentCounted ?? 0}
       />
+
+      {official ? <SinceElectionNight overview={overview} /> : null}
 
       {whatIf ? (
         <SpecialsWhatIf
@@ -183,7 +220,11 @@ async function HomeResults() {
 
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <MapSection electorates={overview.electorates} />
-        <PartyVote parties={parties} seatsSource={overview.seatsSource} />
+        <PartyVote
+          parties={parties}
+          seatsSource={overview.seatsSource}
+          stage={stage}
+        />
       </div>
 
       <section
@@ -201,10 +242,12 @@ async function HomeResults() {
           <p className="mt-1 mb-4 text-sm text-muted-foreground">
             Party vote share as the count came in. Advance votes are counted
             first, so early numbers can drift.
+            {official ? " The dots are the official result." : null}
           </p>
           <TrendChart
             rows={voteRows}
             series={series}
+            official={officialVotes}
             unit="%"
             referenceY={5}
             referenceLabel="5% threshold"
@@ -220,10 +263,12 @@ async function HomeResults() {
           </SectionHeading>
           <p className="mt-1 mb-4 text-sm text-muted-foreground">
             The Electoral Commission’s seat allocation at each update.
+            {official ? " The dots are the official result." : null}
           </p>
           <TrendChart
             rows={hasSeatHistory ? seatRows : []}
             series={series}
+            official={officialSeats}
             unit="seats"
           />
         </div>
@@ -333,6 +378,31 @@ function CountMeter({
           style={{ width: `${percent}%` }}
         />
       </div>
+    </div>
+  );
+}
+
+/** In place of the count meter once the official count is in. */
+function OfficialMeter({ votes, turnout }: { votes: number; turnout: number }) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b-4 border-ink pb-3 dark:border-[#4a47a0]">
+      <p className="font-display text-4xl leading-none font-extrabold tracking-tight [font-stretch:80%] sm:text-5xl">
+        Official result
+      </p>
+      <p className="text-sm text-muted-foreground">
+        <span className="num font-semibold text-foreground">
+          {formatInt(votes)}
+        </span>{" "}
+        votes
+        {turnout > 0 ? (
+          <>
+            , turnout{" "}
+            <span className="num font-semibold text-foreground">
+              {formatPct(turnout)}
+            </span>
+          </>
+        ) : null}
+      </p>
     </div>
   );
 }

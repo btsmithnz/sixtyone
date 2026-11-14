@@ -11,13 +11,20 @@
  *   pnpm simulate --steps 20     # fewer snapshots
  *   pnpm simulate --until 0.6    # stop when ~60% of the count is in
  *   pnpm simulate --seed 7       # a different (deterministic) night
+ *   pnpm simulate --official     # add an official count to what's stored
  *
- * ⚠️ Deletes all stored results. Refuses non-local databases unless you pass
- * --allow-remote (e.g. for a throwaway preview branch).
+ * --official doesn't touch election night. It takes the preliminary results
+ * already stored (simulated or real), adds special votes that lean the way
+ * they did in 2023 plus small recount corrections, and stores that as the
+ * official count (see docs/official-results.md). Run it again to replace it.
+ *
+ * ⚠️ Deletes stored results (only official ones with --official). Refuses
+ * non-local databases unless you pass --allow-remote (e.g. for a throwaway
+ * preview branch).
  */
 import { parseArgs } from "node:util";
-import { sql } from "drizzle-orm";
-import { sql as client, db } from "@/db";
+import { desc, eq, inArray, sql } from "drizzle-orm";
+import { sql as client, db, schema } from "@/db";
 import { fetchFeedFile } from "@/lib/feed/fetch";
 import {
   parseCandidates,
@@ -29,12 +36,14 @@ import {
 import { formatNzLocal, parseNzLocal } from "@/lib/feed/time";
 import { storeElection, storeElectorate, upsertReference } from "@/lib/ingest";
 import { allocateSeats } from "@/lib/seats";
+import { leanOf, presetLeans } from "@/lib/specials";
 
 const { values: args } = parseArgs({
   options: {
     steps: { type: "string", default: "36" },
     until: { type: "string", default: "1" },
     seed: { type: "string", default: "61" },
+    official: { type: "boolean", default: false },
     "allow-remote": { type: "boolean", default: false },
   },
 });
@@ -124,6 +133,7 @@ const EARLY_DRIFT: Record<string, number> = {
 };
 
 async function main() {
+  if (args.official) return addOfficialCount();
   console.log("Fetching reference data from the live feed…");
   const ref = async (path: string, tag: string) => {
     const res = await fetchFeedFile(path, { rootTag: tag });
@@ -265,7 +275,9 @@ async function main() {
           partyVotes,
           candidateVotes,
         });
-        if (await storeElectorate(parseElectorateResult(xml), now)) {
+        if (
+          await storeElectorate(parseElectorateResult(xml), { capturedAt: now })
+        ) {
           changedElectorates++;
         }
       }
@@ -305,12 +317,168 @@ async function main() {
         };
       }),
     });
-    await storeElection(parseElection(xml), now);
+    await storeElection(parseElection(xml), { capturedAt: now });
     console.log(
       `${stamp}  ${((placesCounted / places) * 100).toFixed(1).padStart(5)}% counted  ${String(changedElectorates).padStart(2)} electorates updated`,
     );
   }
   console.log("Done. Start the app with `pnpm dev`.");
+}
+
+/**
+ * The official count: election night's final votes in each electorate, plus
+ * special votes split the way they leaned in 2023, plus a little recount
+ * noise. Specials add more in Māori electorates, as they do for real.
+ */
+async function addOfficialCount() {
+  const s = schema.electorateSnapshots;
+  const nights = await db
+    .selectDistinctOn([s.eNo])
+    .from(s)
+    .where(eq(s.stage, "preliminary"))
+    .orderBy(s.eNo, desc(s.feedUpdatedAt));
+  if (!nights.length) {
+    throw new Error(
+      "No preliminary results stored: run `pnpm simulate` first.",
+    );
+  }
+  const ids = nights.map((n) => n.id);
+  const [cRows, pRows, candidates, parties] = await Promise.all([
+    db
+      .select()
+      .from(schema.electorateCandidateVotes)
+      .where(inArray(schema.electorateCandidateVotes.snapshotId, ids)),
+    db
+      .select()
+      .from(schema.electoratePartyVotes)
+      .where(inArray(schema.electoratePartyVotes.snapshotId, ids)),
+    db.select().from(schema.candidates),
+    db.select().from(schema.parties).where(eq(schema.parties.registered, true)),
+  ]);
+
+  console.log("Clearing any stored official count…");
+  await db
+    .delete(schema.electionSnapshots)
+    .where(eq(schema.electionSnapshots.stage, "official"));
+  await db
+    .delete(schema.electorateSnapshots)
+    .where(eq(schema.electorateSnapshots.stage, "official"));
+
+  const now = parseNzLocal("2026-11-27T14:00:00");
+  const stamp = formatNzLocal(now);
+  const leans = presetLeans(2023);
+  const pNoOf = new Map(candidates.map((c) => [c.cNo, c.pNo]));
+  /** Share `total` out in proportion to the weights. */
+  const split = <K>(weights: [K, number][], total: number) => {
+    const sum = weights.reduce((a, [, w]) => a + w, 0) || 1;
+    return new Map(weights.map(([k, w]) => [k, Math.round((w / sum) * total)]));
+  };
+  const recount = (votes: number) =>
+    Math.max(0, votes + Math.round(gauss() * votes * 0.002));
+
+  const nationalParty = new Map<number, number>();
+  const wins = new Map<number, number>();
+  let independentWins = 0;
+  let votesCast = 0;
+  let specialVotes = 0;
+  for (const night of nights) {
+    const before = {
+      party: pRows.filter((r) => r.snapshotId === night.id),
+      candidate: cRows.filter((r) => r.snapshotId === night.id),
+    };
+    const total = before.party.reduce((a, p) => a + p.votes, 0);
+    const specials = Math.round(
+      total * between(0.12, night.eNo > 64 ? 0.3 : 0.22),
+    );
+    specialVotes += specials;
+
+    const partySpecials = split(
+      before.party.map((p) => [
+        p.pNo,
+        p.votes * leanOf(leans, p.pNo) * Math.exp(gauss() * 0.1),
+      ]),
+      specials,
+    );
+    const partyVotes = before.party.map((p) => ({
+      pNo: p.pNo,
+      votes: recount(p.votes) + (partySpecials.get(p.pNo) ?? 0),
+    }));
+    const candidateSpecials = split(
+      before.candidate.map((c) => [
+        c.cNo,
+        c.votes *
+          leanOf(leans, pNoOf.get(c.cNo) ?? 0) *
+          Math.exp(gauss() * 0.15),
+      ]),
+      Math.round(specials * 0.97),
+    );
+    const candidateVotes = before.candidate.map((c) => ({
+      cNo: c.cNo,
+      votes: recount(c.votes) + (candidateSpecials.get(c.cNo) ?? 0),
+    }));
+
+    const votes = partyVotes.reduce((a, p) => a + p.votes, 0);
+    votesCast += votes;
+    for (const p of partyVotes) {
+      nationalParty.set(p.pNo, (nationalParty.get(p.pNo) ?? 0) + p.votes);
+    }
+    const lead = [...candidateVotes].sort((a, b) => b.votes - a.votes)[0];
+    const leadParty = lead ? pNoOf.get(lead.cNo) : null;
+    if (leadParty) wins.set(leadParty, (wins.get(leadParty) ?? 0) + 1);
+    else independentWins++;
+
+    const xml = electorateXml({
+      eNo: night.eNo,
+      stamp,
+      final: true,
+      totalPlaces: night.totalVotingPlaces,
+      counted: night.totalVotingPlaces,
+      votes,
+      partyVotes,
+      candidateVotes,
+    });
+    await storeElectorate(parseElectorateResult(xml), {
+      capturedAt: now,
+      stage: "official",
+    });
+  }
+
+  const seats = allocateSeats({
+    partyVotes: nationalParty,
+    electorateWins: wins,
+    independentWins,
+  });
+  const totalPartyVotes = [...nationalParty.values()].reduce(
+    (a, b) => a + b,
+    0,
+  );
+  const xml = electionXml({
+    stamp,
+    placesCounted: nights.reduce((a, n) => a + n.totalVotingPlaces, 0),
+    percentPlaces: 100,
+    votesCast,
+    percentVotesCast: (votesCast / 3633546) * 100,
+    electoratesFinal: nights.length,
+    specialVotes,
+    parties: parties.map((p) => {
+      const votes = nationalParty.get(p.pNo) ?? 0;
+      const seat = seats.parties.find((x) => x.pNo === p.pNo);
+      return {
+        pNo: p.pNo,
+        votes,
+        percent: totalPartyVotes ? (votes / totalPartyVotes) * 100 : 0,
+        partySeats: seat?.listSeats ?? 0,
+        candidateSeats: seat?.electorateSeats ?? 0,
+      };
+    }),
+  });
+  await storeElection(parseElection(xml), {
+    capturedAt: now,
+    stage: "official",
+  });
+  console.log(
+    `${stamp}  official count stored, with ${specialVotes.toLocaleString("en-NZ")} special votes`,
+  );
 }
 
 /* ------------------------- feed-shaped XML output ------------------------- */
@@ -355,6 +523,7 @@ function electionXml(e: {
   votesCast: number;
   percentVotesCast: number;
   electoratesFinal: number;
+  specialVotes?: number;
   parties: {
     pNo: number;
     votes: number;
@@ -373,7 +542,7 @@ function electionXml(e: {
         <total_electorates_final>${e.electoratesFinal}</total_electorates_final>
         <percent_electorates_final>${((e.electoratesFinal / 71) * 100).toFixed(2)}</percent_electorates_final>
         <total_minimal_votes>0</total_minimal_votes>
-        <total_special_votes>0</total_special_votes>
+        <total_special_votes>${e.specialVotes ?? 0}</total_special_votes>
         <total_registered_parties>17</total_registered_parties>
     </statistics>
     <partystatus>

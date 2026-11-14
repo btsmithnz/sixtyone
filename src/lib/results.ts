@@ -3,6 +3,7 @@ import { and, asc, desc, eq, gt, inArray, max, sql } from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db, schema } from "@/db";
 import { allocateSeats } from "./seats";
+import type { CountStage, PrelimLeader } from "./stage";
 
 /**
  * Every results query is cached with `use cache` under this tag. The scraper
@@ -30,6 +31,8 @@ export type ElectorateSummary = {
   slug: string;
   kind: "general" | "maori";
   updatedAt: number | null;
+  /** The count this electorate's latest result comes from. */
+  stage: CountStage;
   totalPlaces: number;
   placesCounted: number;
   percentCounted: number;
@@ -46,6 +49,15 @@ export type ElectorateSummary = {
    * the candidate's share for their personal vote. Null without a party.
    */
   leaderPartyPercent: number | null;
+  /** Election night's result here, once the official count is in; else null. */
+  preliminary: ElectoratePrelim | null;
+};
+
+/** An electorate's final election-night result, to compare with the official one. */
+export type ElectoratePrelim = {
+  leader: PrelimLeader | null;
+  margin: number | null;
+  marginPoints: number | null;
 };
 
 export type PartyResult = {
@@ -57,12 +69,23 @@ export type PartyResult = {
   electorateSeats: number;
   listSeats: number;
   totalSeats: number;
+  /** Election night's numbers, once the official count is in; else null. */
+  preliminary: PartyPrelim | null;
+};
+
+export type PartyPrelim = {
+  percent: number;
+  electorateSeats: number;
+  listSeats: number;
+  totalSeats: number;
 };
 
 export type Overview = {
   /** Results version this data was read at; see resultsVersion(). */
   version: number | null;
   updatedAt: number | null;
+  /** The count the national result comes from: the latest there is. */
+  stage: CountStage;
   stats: {
     votingPlacesCounted: number;
     percentCounted: number;
@@ -74,6 +97,12 @@ export type Overview = {
   /** "feed": the Commission's own allocation; "projected": ours (Sainte-Laguë). */
   seatsSource: "feed" | "projected" | "none";
   houseSize: number;
+  /** Election night's final national numbers, once the official count is in. */
+  preliminary: {
+    updatedAt: number;
+    totalVotesCast: number;
+    houseSize: number;
+  } | null;
   electorates: ElectorateSummary[];
   /**
    * Party vote share (%) in each electorate, by electorate number, then
@@ -104,14 +133,26 @@ async function loadReference() {
 
 /* ----------------------------- latest results ----------------------------- */
 
-async function latestElectorateSnapshots() {
+/** Each electorate's newest snapshot, optionally from one count only. */
+async function latestElectorateSnapshots(stage?: CountStage) {
+  const s = schema.electorateSnapshots;
   return db
-    .selectDistinctOn([schema.electorateSnapshots.eNo])
-    .from(schema.electorateSnapshots)
-    .orderBy(
-      schema.electorateSnapshots.eNo,
-      desc(schema.electorateSnapshots.feedUpdatedAt),
-    );
+    .selectDistinctOn([s.eNo])
+    .from(s)
+    .where(stage ? eq(s.stage, stage) : undefined)
+    .orderBy(s.eNo, desc(s.feedUpdatedAt));
+}
+
+/** The newest national snapshot, optionally from one count only. */
+async function latestElectionSnapshot(stage?: CountStage) {
+  const s = schema.electionSnapshots;
+  const [row] = await db
+    .select()
+    .from(s)
+    .where(stage ? eq(s.stage, stage) : undefined)
+    .orderBy(desc(s.feedUpdatedAt))
+    .limit(1);
+  return row;
 }
 
 function summarise(
@@ -120,7 +161,9 @@ function summarise(
   candidateVotes: { cNo: number; votes: number }[],
   partyVotes: { pNo: number; votes: number }[],
   candidateById: Map<number, typeof schema.candidates.$inferSelect>,
+  preliminary: ElectoratePrelim | null = null,
 ): ElectorateSummary {
+  const official = snap?.stage === "official";
   const total = candidateVotes.reduce((a, c) => a + c.votes, 0);
   const candidates = candidateVotes
     .map((cv) => {
@@ -147,14 +190,18 @@ function summarise(
   return {
     ...e,
     updatedAt: snap?.feedUpdatedAt.getTime() ?? null,
+    stage: snap?.stage ?? "preliminary",
     totalPlaces: snap?.totalVotingPlaces ?? 0,
     placesCounted: snap?.votingPlacesCounted ?? 0,
-    percentCounted: snap?.percentVotingPlacesCounted ?? 0,
+    // The official count is complete by definition, whatever a source says
+    // about voting places (the Commission's CSVs don't say at all).
+    percentCounted: official ? 100 : (snap?.percentVotingPlacesCounted ?? 0),
     votesCast: snap?.totalVotesCast ?? 0,
     complete:
-      !!snap &&
-      snap.totalVotingPlaces > 0 &&
-      snap.votingPlacesCounted >= snap.totalVotingPlaces,
+      official ||
+      (!!snap &&
+        snap.totalVotingPlaces > 0 &&
+        snap.votingPlacesCounted >= snap.totalVotingPlaces),
     candidates,
     margin: hasVotes && second ? first.votes - second.votes : null,
     marginPoints: hasVotes && second ? first.percent - second.percent : null,
@@ -164,77 +211,51 @@ function summarise(
         : null,
     leaderPartyPercent:
       partyTotal && leaderParty ? (leaderParty.votes / partyTotal) * 100 : null,
+    preliminary,
   };
 }
 
-export async function getOverview(): Promise<Overview> {
-  "use cache";
-  cacheLife("results");
-  cacheTag(RESULTS_TAG);
-
-  const [ref, [national], snaps, version] = await Promise.all([
-    loadReference(),
-    db
-      .select()
-      .from(schema.electionSnapshots)
-      .orderBy(desc(schema.electionSnapshots.feedUpdatedAt))
-      .limit(1),
-    latestElectorateSnapshots(),
-    resultsVersion(),
-  ]);
-  const snapIds = snaps.map((s) => s.id);
-  const [cVotes, pVotes, nationalParties] = await Promise.all([
-    snapIds.length
-      ? db
-          .select()
-          .from(schema.electorateCandidateVotes)
-          .where(inArray(schema.electorateCandidateVotes.snapshotId, snapIds))
-      : [],
-    snapIds.length
-      ? db
-          .select()
-          .from(schema.electoratePartyVotes)
-          .where(inArray(schema.electoratePartyVotes.snapshotId, snapIds))
-      : [],
-    national
-      ? db
-          .select()
-          .from(schema.electionPartySnapshots)
-          .where(eq(schema.electionPartySnapshots.snapshotId, national.id))
-      : [],
-  ]);
-
-  const candidateById = new Map(ref.candidates.map((c) => [c.cNo, c]));
-  const snapByENo = new Map(snaps.map((s) => [s.eNo, s]));
-  const group = <T extends { snapshotId: number }>(rows: T[]) => {
-    const m = new Map<number, T[]>();
-    for (const r of rows)
-      m.set(r.snapshotId, [...(m.get(r.snapshotId) ?? []), r]);
-    return m;
+/** The part of a summary kept as election night's result. */
+function prelimOf(s: ElectorateSummary): ElectoratePrelim {
+  const lead = s.margin !== null ? s.candidates[0] : undefined;
+  return {
+    leader: lead ? { cNo: lead.cNo, name: lead.name, pNo: lead.pNo } : null,
+    margin: s.margin,
+    marginPoints: s.marginPoints,
   };
-  const cBySnap = group(cVotes);
-  const pBySnap = group(pVotes);
+}
 
-  const electorates = ref.electorates.map((e) => {
-    const snap = snapByENo.get(e.eNo);
-    return summarise(
-      e,
-      snap,
-      snap ? (cBySnap.get(snap.id) ?? []) : [],
-      snap ? (pBySnap.get(snap.id) ?? []) : [],
-      candidateById,
-    );
-  });
+const groupBySnapshot = <T extends { snapshotId: number }>(rows: T[]) => {
+  const m = new Map<number, T[]>();
+  for (const r of rows) {
+    const list = m.get(r.snapshotId);
+    if (list) list.push(r);
+    else m.set(r.snapshotId, [r]);
+  }
+  return m;
+};
 
-  // Seats: prefer the Commission's published allocation, else project our own.
-  const partyByNo = new Map(ref.parties.map((p) => [p.pNo, p]));
+type NationalPartyRow = typeof schema.electionPartySnapshots.$inferSelect;
+type SeatCounts = {
+  electorateSeats: number;
+  listSeats: number;
+  totalSeats: number;
+};
+
+/**
+ * Seats for one national snapshot: the Commission's allocation when it has
+ * published one, else our own projection from the votes and electorate leads.
+ */
+function seatsFor(
+  nationalParties: NationalPartyRow[],
+  electorates: ElectorateSummary[],
+): {
+  seatsSource: Overview["seatsSource"];
+  houseSize: number;
+  seats: Map<number, SeatCounts>;
+} {
   const feedSeats = nationalParties.reduce((a, p) => a + p.totalSeats, 0);
   const totalVotes = nationalParties.reduce((a, p) => a + p.votes, 0);
-  let seatsSource: Overview["seatsSource"] = "none";
-  let seatMap = new Map<
-    number,
-    { electorateSeats: number; listSeats: number; totalSeats: number }
-  >();
   // Electorate leaders by party. Seats won outside the party vote
   // (independents, or a party not on the party ballot) aren't in any party's
   // total but still count towards the size of the House.
@@ -248,45 +269,165 @@ export async function getOverview(): Promise<Overview> {
       wins.set(lead.pNo, (wins.get(lead.pNo) ?? 0) + 1);
     else outsideWins++;
   }
-  let houseSize = 120;
   if (feedSeats > 0) {
-    seatsSource = "feed";
-    // 120 plus any overhang, which the Commission's party totals include.
-    houseSize = Math.max(120, feedSeats + outsideWins);
-    seatMap = new Map(
-      nationalParties.map((p) => [
-        p.pNo,
-        {
-          electorateSeats: p.candidateSeats,
-          listSeats: p.partySeats,
-          totalSeats: p.totalSeats,
-        },
-      ]),
-    );
-  } else if (totalVotes > 0) {
-    seatsSource = "projected";
+    return {
+      seatsSource: "feed",
+      // 120 plus any overhang, which the Commission's party totals include.
+      houseSize: Math.max(120, feedSeats + outsideWins),
+      seats: new Map(
+        nationalParties.map((p) => [
+          p.pNo,
+          {
+            electorateSeats: p.candidateSeats,
+            listSeats: p.partySeats,
+            totalSeats: p.totalSeats,
+          },
+        ]),
+      ),
+    };
+  }
+  if (totalVotes > 0) {
     const alloc = allocateSeats({
       partyVotes: new Map(nationalParties.map((p) => [p.pNo, p.votes])),
       electorateWins: wins,
       independentWins: outsideWins,
     });
-    houseSize = alloc.totalSeats;
-    seatMap = new Map(alloc.parties.map((p) => [p.pNo, p]));
+    return {
+      seatsSource: "projected",
+      houseSize: alloc.totalSeats,
+      seats: new Map(alloc.parties.map(({ pNo, ...counts }) => [pNo, counts])),
+    };
   }
+  return { seatsSource: "none", houseSize: 120, seats: new Map() };
+}
 
-  const parties: PartyResult[] = nationalParties
+export async function getOverview(): Promise<Overview> {
+  "use cache";
+  cacheLife("results");
+  cacheTag(RESULTS_TAG);
+
+  const [ref, national, snaps, version] = await Promise.all([
+    loadReference(),
+    latestElectionSnapshot(),
+    latestElectorateSnapshots(),
+    resultsVersion(),
+  ]);
+  const stage = national?.stage ?? "preliminary";
+  // Once the official count is in, election night's final numbers are the
+  // baseline for what changed. Only then is this worth the extra queries.
+  const [prelimNational, prelimSnaps] =
+    stage === "official"
+      ? await Promise.all([
+          latestElectionSnapshot("preliminary"),
+          latestElectorateSnapshots("preliminary"),
+        ])
+      : [undefined, []];
+
+  const snapIds = snaps.map((s) => s.id);
+  const nationalIds = [national?.id, prelimNational?.id].filter(
+    (id) => id !== undefined,
+  );
+  const [cVotes, pVotes, nationalParties] = await Promise.all([
+    snapIds.length
+      ? db
+          .select()
+          .from(schema.electorateCandidateVotes)
+          .where(
+            inArray(schema.electorateCandidateVotes.snapshotId, [
+              ...snapIds,
+              ...prelimSnaps.map((s) => s.id),
+            ]),
+          )
+      : [],
+    snapIds.length
+      ? db
+          .select()
+          .from(schema.electoratePartyVotes)
+          .where(inArray(schema.electoratePartyVotes.snapshotId, snapIds))
+      : [],
+    nationalIds.length
+      ? db
+          .select()
+          .from(schema.electionPartySnapshots)
+          .where(inArray(schema.electionPartySnapshots.snapshotId, nationalIds))
+      : [],
+  ]);
+
+  const candidateById = new Map(ref.candidates.map((c) => [c.cNo, c]));
+  const cBySnap = groupBySnapshot(cVotes);
+  const pBySnap = groupBySnapshot(pVotes);
+  const partiesBySnap = groupBySnapshot(nationalParties);
+
+  /** Every electorate, from one snapshot each (missing: no results yet). */
+  const summariseAll = (
+    byENo: Map<number, typeof schema.electorateSnapshots.$inferSelect>,
+    prelims?: Map<number, ElectoratePrelim>,
+  ) =>
+    ref.electorates.map((e) => {
+      const snap = byENo.get(e.eNo);
+      return summarise(
+        e,
+        snap,
+        snap ? (cBySnap.get(snap.id) ?? []) : [],
+        snap ? (pBySnap.get(snap.id) ?? []) : [],
+        candidateById,
+        prelims?.get(e.eNo) ?? null,
+      );
+    });
+
+  // Election night, summarised the same way, for comparison.
+  const prelimElectorates = prelimSnaps.length
+    ? summariseAll(new Map(prelimSnaps.map((s) => [s.eNo, s])))
+    : [];
+  const prelimByENo = new Map(
+    prelimElectorates.map((e) => [e.eNo, prelimOf(e)]),
+  );
+  const electorates = summariseAll(
+    new Map(snaps.map((s) => [s.eNo, s])),
+    prelimByENo,
+  );
+
+  const partyRows = national ? (partiesBySnap.get(national.id) ?? []) : [];
+  const { seatsSource, houseSize, seats } = seatsFor(partyRows, electorates);
+  const prelimRows = prelimNational
+    ? (partiesBySnap.get(prelimNational.id) ?? [])
+    : [];
+  const prelimSeats = prelimNational
+    ? seatsFor(prelimRows, prelimElectorates)
+    : null;
+  const shareOf = (rows: NationalPartyRow[]) => {
+    const total = rows.reduce((a, p) => a + p.votes, 0);
+    return new Map(
+      rows.map((p) => [p.pNo, total ? (p.votes / total) * 100 : 0]),
+    );
+  };
+  const shares = shareOf(partyRows);
+  const prelimShares = shareOf(prelimRows);
+
+  const partyByNo = new Map(ref.parties.map((p) => [p.pNo, p]));
+  const noSeats: SeatCounts = {
+    electorateSeats: 0,
+    listSeats: 0,
+    totalSeats: 0,
+  };
+  const parties: PartyResult[] = partyRows
     .map((p) => {
       const ref = partyByNo.get(p.pNo);
-      const seats = seatMap.get(p.pNo);
+      const prelimPercent = prelimShares.get(p.pNo);
       return {
         pNo: p.pNo,
         abbrev: ref?.abbrev ?? String(p.pNo),
         name: ref?.name ?? `Party ${p.pNo}`,
         votes: p.votes,
-        percent: totalVotes ? (p.votes / totalVotes) * 100 : 0,
-        electorateSeats: seats?.electorateSeats ?? 0,
-        listSeats: seats?.listSeats ?? 0,
-        totalSeats: seats?.totalSeats ?? 0,
+        percent: shares.get(p.pNo) ?? 0,
+        ...(seats.get(p.pNo) ?? noSeats),
+        preliminary:
+          prelimSeats && prelimPercent !== undefined
+            ? {
+                percent: prelimPercent,
+                ...(prelimSeats.seats.get(p.pNo) ?? noSeats),
+              }
+            : null,
       };
     })
     .sort((a, b) => b.votes - a.votes || b.totalSeats - a.totalSeats);
@@ -294,10 +435,12 @@ export async function getOverview(): Promise<Overview> {
   return {
     version,
     updatedAt: national?.feedUpdatedAt.getTime() ?? null,
+    stage,
     stats: national
       ? {
           votingPlacesCounted: national.votingPlacesCounted,
-          percentCounted: national.percentVotingPlacesCounted,
+          percentCounted:
+            stage === "official" ? 100 : national.percentVotingPlacesCounted,
           totalVotesCast: national.totalVotesCast,
           turnoutPercent: national.percentVotesCast,
           electoratesComplete: electorates.filter((e) => e.complete).length,
@@ -306,6 +449,14 @@ export async function getOverview(): Promise<Overview> {
     parties,
     seatsSource,
     houseSize,
+    preliminary:
+      prelimNational && prelimSeats
+        ? {
+            updatedAt: prelimNational.feedUpdatedAt.getTime(),
+            totalVotesCast: prelimNational.totalVotesCast,
+            houseSize: prelimSeats.houseSize,
+          }
+        : null,
     electorates,
     electoratePartyShares: Object.fromEntries(
       snaps.map((snap) => {
@@ -337,7 +488,11 @@ export type NationalPoint = {
   parties: Record<number, { percent: number; seats: number }>;
 };
 
-/** National party vote and seats at each snapshot, oldest first. */
+/**
+ * National party vote and seats through election night's count, oldest
+ * first. The official count isn't a point on this timeline: it lands weeks
+ * later, and pages draw it from the overview instead.
+ */
 export async function getNationalHistory(): Promise<{
   /** Results version this data was read at; see resultsVersion(). */
   version: number | null;
@@ -357,7 +512,8 @@ export async function getNationalHistory(): Promise<{
           percentVotingPlacesCounted: s.percentVotingPlacesCounted,
         })
         .from(s)
-        .where(gt(s.totalVotesCast, 0))
+        // Election night only: the official count is drawn separately.
+        .where(and(eq(s.stage, "preliminary"), gt(s.totalVotesCast, 0)))
         .orderBy(
           countedBucket(s.percentVotingPlacesCounted),
           desc(s.feedUpdatedAt),
@@ -380,9 +536,7 @@ export async function getNationalHistory(): Promise<{
         snaps.map((s) => s.id),
       ),
     );
-  const bySnap = new Map<number, typeof rows>();
-  for (const r of rows)
-    bySnap.set(r.snapshotId, [...(bySnap.get(r.snapshotId) ?? []), r]);
+  const bySnap = groupBySnapshot(rows);
   const points = snaps.map((s) => {
     const ps = bySnap.get(s.id) ?? [];
     const total = ps.reduce((a, p) => a + p.votes, 0);
@@ -430,13 +584,20 @@ export async function getElectorateDetail(
   if (!electorate) return null;
 
   const s = schema.electorateSnapshots;
-  const [[latest], snaps, standing, version] = await Promise.all([
+  const newest = (stage?: CountStage) =>
     db
       .select()
       .from(s)
-      .where(eq(s.eNo, electorate.eNo))
+      .where(
+        and(eq(s.eNo, electorate.eNo), stage ? eq(s.stage, stage) : undefined),
+      )
       .orderBy(desc(s.feedUpdatedAt))
-      .limit(1),
+      .limit(1);
+  const [[latest], [lastPrelim], snaps, standing, version] = await Promise.all([
+    newest(),
+    // Election night's final result, for comparison once the official count
+    // is in. (Before then it's the same row as `latest`.)
+    newest("preliminary"),
     chartPoints(
       db
         .selectDistinctOn([countedBucket(s.percentVotingPlacesCounted)], {
@@ -445,7 +606,13 @@ export async function getElectorateDetail(
           percentVotingPlacesCounted: s.percentVotingPlacesCounted,
         })
         .from(s)
-        .where(and(eq(s.eNo, electorate.eNo), gt(s.totalVotesCast, 0)))
+        .where(
+          and(
+            eq(s.eNo, electorate.eNo),
+            eq(s.stage, "preliminary"),
+            gt(s.totalVotesCast, 0),
+          ),
+        )
         .orderBy(
           countedBucket(s.percentVotingPlacesCounted),
           desc(s.feedUpdatedAt),
@@ -457,9 +624,14 @@ export async function getElectorateDetail(
       .where(eq(schema.candidates.eNo, electorate.eNo)),
     resultsVersion(),
   ]);
-  // The latest snapshot is normally a chart point too; it's needed either way.
+  const baseline = latest?.stage === "official" ? lastPrelim : undefined;
+  // The latest snapshots are normally chart points too; they're needed either way.
   const ids = [
-    ...new Set([...snaps.map((s) => s.id), ...(latest ? [latest.id] : [])]),
+    ...new Set(
+      [...snaps, latest, baseline]
+        .filter((x) => x !== undefined)
+        .map((x) => x.id),
+    ),
   ];
   const [cVotes, pVotes] = await Promise.all([
     ids.length
@@ -481,21 +653,29 @@ export async function getElectorateDetail(
   ]);
 
   const candidateById = new Map(standing.map((c) => [c.cNo, c]));
-  const latestVotes = latest
-    ? cVotes.filter((v) => v.snapshotId === latest.id)
-    : standing.map((c) => ({ cNo: c.cNo, votes: 0 }));
+  const bySnap = groupBySnapshot(cVotes);
   const summary = summarise(
     electorate,
     latest,
-    latestVotes,
+    latest
+      ? (bySnap.get(latest.id) ?? [])
+      : standing.map((c) => ({ cNo: c.cNo, votes: 0 })),
     pVotes,
     candidateById,
+    baseline
+      ? prelimOf(
+          summarise(
+            electorate,
+            baseline,
+            bySnap.get(baseline.id) ?? [],
+            [],
+            candidateById,
+          ),
+        )
+      : null,
   );
 
   const partyTotal = pVotes.reduce((a, p) => a + p.votes, 0);
-  const bySnap = new Map<number, typeof cVotes>();
-  for (const v of cVotes)
-    bySnap.set(v.snapshotId, [...(bySnap.get(v.snapshotId) ?? []), v]);
 
   return {
     version,

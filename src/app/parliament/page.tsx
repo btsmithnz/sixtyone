@@ -13,8 +13,10 @@ import { formatPct } from "@/lib/format";
 import {
   buildParliament,
   type LeavingMp,
+  type MovedMp,
   type Mp,
   type Parliament,
+  sinceElectionNight,
 } from "@/lib/parliament";
 import { partyColorVar, partyStyle } from "@/lib/parties";
 import { getOverview } from "@/lib/results";
@@ -52,14 +54,14 @@ export default function ParliamentPage() {
 
 async function ParliamentResults() {
   const overview = await getOverview();
-  const { stats, parties, houseSize, version, updatedAt } = overview;
+  const { stats, parties, houseSize, version, updatedAt, stage } = overview;
   const parliament = buildParliament(overview);
   const { mps, leaving } = parliament;
 
   if (!mps.length) {
     return (
       <>
-        <LiveStatus updatedAt={updatedAt} version={version} />
+        <LiveStatus updatedAt={updatedAt} stage={stage} version={version} />
         <p className="hatch rounded-2xl p-6 text-sm text-muted-foreground">
           <span className="rounded bg-card px-1">
             The new Parliament shows up here once results come in.
@@ -70,6 +72,8 @@ async function ParliamentResults() {
   }
 
   const counted = stats?.percentCounted ?? 0;
+  const official = stage === "official";
+  const moved = official ? sinceElectionNight(overview, parliament) : null;
   const newCount = mps.filter((m) => !m.returning).length;
   const groups = groupByParty(mps, parties);
   const lost = leaving.filter((m) => m.reason === "lost");
@@ -78,19 +82,29 @@ async function ParliamentResults() {
   return (
     <div className="space-y-8">
       <div className="space-y-3">
-        <LiveStatus updatedAt={updatedAt} version={version} />
-        <p className="max-w-[65ch] text-muted-foreground">
-          {counted >= 100
-            ? "Who’s in and who’s out on the election-night count."
-            : `Who’s in and who’s out on the count so far, with ${formatPct(counted)} of voting places counted.`}{" "}
-          Special votes are added in the official results on{" "}
-          {OFFICIAL_RESULTS_DATE}, and they can move the last list seats of each
-          party.{" "}
-          <Link href="/#special-votes" className="underline underline-offset-2">
-            See what they could change
-          </Link>
-          .
-        </p>
+        <LiveStatus updatedAt={updatedAt} stage={stage} version={version} />
+        {official ? (
+          <p className="max-w-[65ch] text-muted-foreground">
+            Who’s in and who’s out on the official result, with every special
+            vote counted.
+          </p>
+        ) : (
+          <p className="max-w-[65ch] text-muted-foreground">
+            {counted >= 100
+              ? "Who’s in and who’s out on the election-night count."
+              : `Who’s in and who’s out on the count so far, with ${formatPct(counted)} of voting places counted.`}{" "}
+            Special votes are added in the official results on{" "}
+            {OFFICIAL_RESULTS_DATE}, and they can move the last list seats of
+            each party.{" "}
+            <Link
+              href="/#special-votes"
+              className="underline underline-offset-2"
+            >
+              See what they could change
+            </Link>
+            .
+          </p>
+        )}
       </div>
 
       <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -112,6 +126,8 @@ async function ParliamentResults() {
           seats stay empty.
         </p>
       ) : null}
+
+      {moved ? <SinceElectionNight {...moved} /> : null}
 
       <ListSortProvider>
         <section aria-labelledby="whos-in" className="space-y-4">
@@ -197,6 +213,101 @@ function groupByParty(mps: Mp[], parties: { pNo: number; name: string }[]) {
   }
   const size = (g: Group) => g.electorateMps.length + g.listMps.length;
   return [...groups.values()].sort((a, b) => size(b) - size(a));
+}
+
+/** Who the official count brought in, and who it pushed out. */
+function SinceElectionNight({
+  arrived,
+  departed,
+}: {
+  arrived: MovedMp[];
+  departed: MovedMp[];
+}) {
+  return (
+    <section aria-labelledby="since-election-night" className="space-y-4">
+      <SectionHeading
+        id="since-election-night"
+        share="/parliament#since-election-night"
+        className="font-display text-3xl font-extrabold tracking-tight [font-stretch:85%] sm:text-4xl"
+      >
+        Since election night
+      </SectionHeading>
+      {arrived.length || departed.length ? (
+        <>
+          <p className="max-w-[65ch] text-sm text-muted-foreground">
+            Special votes and the recheck of every vote changed who’s in.
+          </p>
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+            <MovedCard
+              title="In on the official count"
+              people={arrived}
+              empty="Nobody new."
+            />
+            <MovedCard
+              title="In on election night, now out"
+              people={departed}
+              empty="Nobody dropped out."
+            />
+          </div>
+        </>
+      ) : (
+        <p className="max-w-[65ch] text-sm text-muted-foreground">
+          The same people are elected as on election night. Special votes moved
+          the numbers, but not the seats.
+        </p>
+      )}
+    </section>
+  );
+}
+
+function MovedCard({
+  title,
+  people,
+  empty,
+}: {
+  title: string;
+  people: MovedMp[];
+  empty: string;
+}) {
+  return (
+    <div className="sticker p-5">
+      <h3 className="font-display text-2xl font-extrabold [font-stretch:90%]">
+        {title}{" "}
+        <span className="num text-muted-foreground">{people.length}</span>
+      </h3>
+      {people.length ? (
+        <ul className="mt-3">
+          {people.map((m) => (
+            <li
+              key={m.cNo}
+              className="flex items-start gap-2.5 border-b border-border py-2 text-sm"
+            >
+              <span
+                aria-hidden
+                className="mt-1 size-3 shrink-0 rounded-full"
+                style={{ background: partyColorVar(m.pNo) }}
+              />
+              <span className="min-w-0">
+                <span className="font-medium">{m.name}</span>{" "}
+                <span className="text-muted-foreground">
+                  {partyStyle(m.pNo).short}
+                </span>
+                <span className="block text-xs text-muted-foreground">
+                  {m.electorate ?? (
+                    <>
+                      List <span className="num">#{m.listNo}</span>
+                    </>
+                  )}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-3 text-sm text-muted-foreground">{empty}</p>
+      )}
+    </div>
+  );
 }
 
 function Stat({ label, value }: { label: string; value: number }) {
