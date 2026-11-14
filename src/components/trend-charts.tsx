@@ -106,7 +106,9 @@ export function TrendChart({
         style={{ height }}
       >
         <p className="max-w-[28ch] rounded-xl bg-card px-4 py-3">
-          This fills in as results come through on the night.
+          {official
+            ? "Election night’s count wasn’t recorded here, so there’s nothing to chart."
+            : "This fills in as results come through on the night."}
         </p>
       </div>
     );
@@ -130,7 +132,8 @@ export function TrendChart({
       <ChartContainer config={config} className="w-full" style={{ height }}>
         <LineChart
           data={data}
-          margin={{ left: 0, right: 12, top: 8, bottom: 0 }}
+          // Room above the plot for the "Official" label.
+          margin={{ left: 0, right: 12, top: officialAt ? 22 : 8, bottom: 0 }}
         >
           <CartesianGrid vertical={false} strokeDasharray="3 4" />
           <XAxis
@@ -181,7 +184,9 @@ export function TrendChart({
               strokeDasharray="2 4"
               label={{
                 value: "Official",
-                position: "insideTopRight",
+                position: "top",
+                // Ends at the line: centred, it would run off the chart.
+                textAnchor: "end",
                 fill: "var(--muted-foreground)",
                 fontSize: 12,
               }}

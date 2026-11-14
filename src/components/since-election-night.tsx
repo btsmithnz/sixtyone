@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Change } from "@/components/change";
 import { SectionHeading } from "@/components/section-heading";
-import { formatInt, formatPct } from "@/lib/format";
+import { formatInt, formatPct, shareChange } from "@/lib/format";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
 import type { Overview } from "@/lib/results";
 import { changedHands } from "@/lib/stage";
@@ -32,8 +32,11 @@ export function SinceElectionNight({
   // The biggest movers among parties anyone would look for.
   const movers = parties
     .filter((p) => p.preliminary && (p.percent >= 1 || p.totalSeats > 0))
-    .map((p) => ({ ...p, change: p.percent - (p.preliminary?.percent ?? 0) }))
-    .filter((p) => Math.abs(p.change) >= 0.05)
+    .map((p) => ({
+      ...p,
+      change: shareChange(p.percent, p.preliminary?.percent ?? p.percent),
+    }))
+    .filter((p) => p.change !== 0)
     .sort((a, b) => Math.abs(b.change) - Math.abs(a.change))
     .slice(0, 4);
   const flipped = electorates.filter(changedHands);

@@ -1046,6 +1046,8 @@ export async function boothImage(
   electorate: string,
   data: BoothResults,
   place: BoothPlace,
+  /** The site's count, for the header (not the booth results' own stage). */
+  stage: CountStage,
 ) {
   const candidates = boothTop(
     place.candidate,
@@ -1079,6 +1081,6 @@ export async function boothImage(
         {`${formatInt(votes)} party votes here, ${data.stage === "official" ? "official count" : "preliminary count"}`}
       </Footer>
     </div>,
-    data.stage,
+    stage,
   );
 }

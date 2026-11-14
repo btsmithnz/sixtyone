@@ -34,6 +34,7 @@ import {
   parseParties,
 } from "@/lib/feed/parse";
 import { formatNzLocal, parseNzLocal } from "@/lib/feed/time";
+import { nzDateKey } from "@/lib/format";
 import { storeElection, storeElectorate, upsertReference } from "@/lib/ingest";
 import { allocateSeats } from "@/lib/seats";
 import { leanOf, presetLeans } from "@/lib/specials";
@@ -358,7 +359,11 @@ async function addOfficialCount() {
     db.select().from(schema.parties).where(eq(schema.parties.registered, true)),
   ]);
 
-  const now = parseNzLocal("2026-11-27T14:00:00");
+  // Official results come about three weeks after election night, at 2pm.
+  const lastNight = Math.max(...nights.map((n) => n.feedUpdatedAt.getTime()));
+  const now = parseNzLocal(
+    `${nzDateKey(lastNight + 20 * 86_400_000)}T14:00:00`,
+  );
   const stamp = formatNzLocal(now);
   const leans = presetLeans(2023);
   const pNoOf = new Map(candidates.map((c) => [c.cNo, c.pNo]));

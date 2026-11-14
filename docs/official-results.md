@@ -49,11 +49,18 @@ Every snapshot carries a `stage`: `preliminary` or `official` (`src/db/schema.ts
 
 ### Getting official data in
 
-Both paths store the same rows, then call `revalidateTag("results", "max")` once.
+Both paths store the same rows, then revalidate the site once: the scraper's cron route
+does that itself; after an import, call `/api/revalidate` (below). Give each import its
+own `updated` time (when it was published or imported): the newest timestamp is the
+results version, so a re-import with the same one wouldn't refresh open pages or share
+images.
 
-1. **Feed:** set `COUNT_STAGE=official` before the scrape that picks up the official
-   count. Once any official snapshot exists, the scraper stores everything after it as
-   official anyway (recounts), so the variable only matters for that first scrape.
+1. **Feed:** set `COUNT_STAGE=official` (Production, then redeploy so the cron route
+   sees it) before the feed publishes the official count, and keep it while recounts
+   may come through. Remove it afterwards, so the next election's night is stored as
+   preliminary. If it's forgotten, the official numbers are stored as preliminary: the
+   site keeps showing any official count already stored, but election night's history
+   and baseline pick up the official numbers.
 2. **CSV/HTML:** an import script (dry run first, like `pnpm booths:import`) writes one
    official national snapshot and one per electorate **in a single transaction**, so
    visitors never see half the electorates official: `storeElection` and
@@ -61,6 +68,10 @@ Both paths store the same rows, then call `revalidateTag("results", "max")` once
    `scripts/simulate.ts`). Electorate snapshots need no voting place counts: an official
    electorate is always complete. Write the Commission's seat allocation into the party
    rows, or seats are projected.
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" https://<site>/api/revalidate
+```
 
 Test the whole switch beforehand with `pnpm simulate --official`, which adds a plausible
 set of special votes to the last preliminary snapshot and stores the result as official.

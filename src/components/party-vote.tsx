@@ -1,6 +1,6 @@
 import { Change } from "@/components/change";
 import { SectionHeading } from "@/components/section-heading";
-import { formatInt, formatPct } from "@/lib/format";
+import { formatInt, formatPct, shareChange } from "@/lib/format";
 import { partyColorVar, partyStyle } from "@/lib/parties";
 import type { Overview } from "@/lib/results";
 
@@ -52,7 +52,7 @@ export function PartyVote({
                   </span>
                   {compare && p.preliminary ? (
                     <Change
-                      value={p.percent - p.preliminary.percent}
+                      value={shareChange(p.percent, p.preliminary.percent)}
                       digits={1}
                       unit="percentage points"
                       className="text-sm text-muted-foreground"

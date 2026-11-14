@@ -15,20 +15,9 @@ import {
   parseParties,
 } from "./feed/parse";
 import { storeElection, storeElectorate, upsertReference } from "./ingest";
-import { type CountStage, parseCountStage } from "./stage";
+import { parseCountStage } from "./stage";
 
 const ELECTORATE_COUNT = 71;
-
-/** Which count new snapshots are from; see scrapeFeed. */
-async function countStage(): Promise<CountStage> {
-  if (process.env.COUNT_STAGE) return parseCountStage(process.env.COUNT_STAGE);
-  const [official] = await db
-    .select({ id: schema.electionSnapshots.id })
-    .from(schema.electionSnapshots)
-    .where(eq(schema.electionSnapshots.stage, "official"))
-    .limit(1);
-  return official ? "official" : "preliminary";
-}
 const CONCURRENCY = 6;
 
 export type ScrapeSummary = {
@@ -47,9 +36,10 @@ export type ScrapeSummary = {
  * keyed by the feed's own `updated` timestamp, so duplicates are ignored.
  *
  * Nothing in the feed reliably says which count it is, so snapshots are
- * stored as preliminary until an official one exists, then as official
- * (recounts). COUNT_STAGE overrides that: set it to "official" if the feed
- * publishes the official result (docs/official-results.md).
+ * stored as preliminary unless COUNT_STAGE=official: set that while the feed
+ * publishes the official result or a recount (docs/official-results.md).
+ * Even if it's left unset, a preliminary snapshot never replaces an official
+ * one on the site (see latestFirst in results.ts).
  */
 export async function scrapeFeed({
   force = false,
@@ -58,7 +48,7 @@ export async function scrapeFeed({
   force?: boolean;
 } = {}): Promise<ScrapeSummary> {
   const started = Date.now();
-  const stage = await countStage();
+  const stage = parseCountStage(process.env.COUNT_STAGE || "preliminary");
   const [run] = await db
     .insert(schema.scrapeRuns)
     .values({ status: "running" })

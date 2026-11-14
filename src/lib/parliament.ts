@@ -172,7 +172,6 @@ function listQueue(
 export type MovedMp = {
   cNo: number;
   name: string;
-  sortName: string;
   pNo: number | null;
   /** How they were (or are) elected: an electorate's name, or null for the list. */
   electorate: string | null;
@@ -181,8 +180,8 @@ export type MovedMp = {
 
 /**
  * Who's in on the official count but wasn't on election night's, and who
- * was in on election night but isn't now. Both empty before the official
- * count, or when the same people are elected.
+ * was in on election night but isn't now (both empty when the same people
+ * are elected). Null without an election-night count to compare with.
  */
 export function sinceElectionNight(
   {
@@ -191,8 +190,8 @@ export function sinceElectionNight(
     candidates,
   }: Pick<Overview, "electorates" | "parties" | "candidates">,
   { mps }: Parliament,
-): { arrived: MovedMp[]; departed: MovedMp[] } {
-  if (!parties.some((p) => p.preliminary)) return { arrived: [], departed: [] };
+): { arrived: MovedMp[]; departed: MovedMp[] } | null {
+  if (!parties.some((p) => p.preliminary)) return null;
 
   // Election night's Parliament, filled the same way as today's.
   const nightWinners = new Map<number, string>();
@@ -221,7 +220,6 @@ export function sinceElectionNight(
     .map((m) => ({
       cNo: m.cNo,
       name: m.name,
-      sortName: m.sortName,
       pNo: m.pNo,
       electorate: m.electorate?.name ?? null,
       listNo: m.listNo,
@@ -235,7 +233,6 @@ export function sinceElectionNight(
             {
               cNo,
               name: displayCandidateName(c.name),
-              sortName: c.name,
               pNo: c.pNo,
               electorate,
               listNo: c.listNo,

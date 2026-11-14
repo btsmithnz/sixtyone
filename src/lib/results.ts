@@ -67,7 +67,6 @@ export type ElectorateSummary = {
 export type ElectoratePrelim = {
   leader: { cNo: number; name: string; pNo: number | null } | null;
   margin: number | null;
-  marginPoints: number | null;
 };
 
 export type PartyResult = {
@@ -85,7 +84,7 @@ export type PartyResult = {
 
 export type PartyPrelim = {
   percent: number;
-  electorateSeats: number;
+  /** For working out election night's list MPs (lib/parliament.ts). */
   listSeats: number;
   totalSeats: number;
 };
@@ -109,7 +108,6 @@ export type Overview = {
   houseSize: number;
   /** Election night's final national numbers, once the official count is in. */
   preliminary: {
-    updatedAt: number;
     totalVotesCast: number;
     houseSize: number;
   } | null;
@@ -241,7 +239,6 @@ function prelimOf(s: ElectorateSummary): ElectoratePrelim {
   return {
     leader: lead ? { cNo: lead.cNo, name: lead.name, pNo: lead.pNo } : null,
     margin: s.margin,
-    marginPoints: s.marginPoints,
   };
 }
 
@@ -333,10 +330,11 @@ export async function getOverview(): Promise<Overview> {
     resultsVersion(),
   ]);
   const stage = national?.stage ?? "preliminary";
-  // Once the official count is in, election night's final numbers are the
-  // baseline for what changed. Only then is this worth the extra queries.
+  // Once any of the official count is in (normally all of it at once),
+  // election night's final numbers are the baseline for what changed. Only
+  // then is this worth the extra queries.
   const [prelimNational, prelimSnaps] =
-    stage === "official"
+    stage === "official" || snaps.some((s) => s.stage === "official")
       ? await Promise.all([
           latestElectionSnapshot("preliminary"),
           latestElectorateSnapshots("preliminary"),
@@ -452,7 +450,8 @@ export async function getOverview(): Promise<Overview> {
           prelimSeats && prelimPercent !== undefined
             ? {
                 percent: prelimPercent,
-                ...(prelimSeats.seats.get(p.pNo) ?? noSeats),
+                listSeats: prelimSeats.seats.get(p.pNo)?.listSeats ?? 0,
+                totalSeats: prelimSeats.seats.get(p.pNo)?.totalSeats ?? 0,
               }
             : null,
       };
@@ -479,7 +478,6 @@ export async function getOverview(): Promise<Overview> {
     preliminary:
       prelimNational && prelimSeats
         ? {
-            updatedAt: prelimNational.feedUpdatedAt.getTime(),
             totalVotesCast: prelimNational.totalVotesCast,
             houseSize: prelimSeats.houseSize,
           }

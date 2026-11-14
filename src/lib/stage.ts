@@ -7,8 +7,6 @@
  *
  * No imports: drizzle-kit loads this through src/db/schema.ts.
  */
-import type { ElectoratePrelim } from "./results";
-
 export const COUNT_STAGES = ["preliminary", "official"] as const;
 export type CountStage = (typeof COUNT_STAGES)[number];
 
@@ -28,7 +26,7 @@ export function parseCountStage(value: string): CountStage {
 export function changedHands(e: {
   candidates: { cNo: number }[];
   margin: number | null;
-  preliminary: ElectoratePrelim | null;
+  preliminary: { leader: { cNo: number } | null } | null;
 }) {
   const before = e.preliminary?.leader;
   const now = e.margin !== null ? e.candidates[0] : undefined;

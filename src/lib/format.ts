@@ -39,6 +39,13 @@ const dateKey = new Intl.DateTimeFormat("en-CA", {
 /** "2026-11-07": the NZ calendar date, for same-day comparisons. */
 export const nzDateKey = (ms: number) => dateKey.format(ms);
 
+/**
+ * How far a share moved, in points, between the two figures as shown (to
+ * 0.1), so the change always matches the numbers beside it.
+ */
+export const shareChange = (now: number, before: number) =>
+  (Math.round(now * 10) - Math.round(before * 10)) / 10;
+
 /** "Labour 34.2%, National 31.0%, Green 11.1%" */
 export const formatShares = (items: { label: string; percent: number }[]) =>
   items.map((i) => `${i.label} ${formatPct(i.percent)}`).join(", ");

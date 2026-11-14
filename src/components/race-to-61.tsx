@@ -147,8 +147,10 @@ export function RaceTo61({
           {`Who’s getting to ${majority}?`}
         </SectionHeading>
         <p className="text-sm text-muted-foreground">
-          {official && seatsSource === "feed"
-            ? "The Electoral Commission’s official seat allocation"
+          {official
+            ? seatsSource === "feed"
+              ? "The Electoral Commission’s official seat allocation"
+              : "Our seat projection from the official count"
             : seatsSource === "projected"
               ? "Our seat projection from the count so far"
               : seatsSource === "feed"
