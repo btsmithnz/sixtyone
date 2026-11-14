@@ -37,7 +37,7 @@ export default function FavouritesPage() {
  * picks out its favourites. No per-visitor requests, no database work.
  */
 async function Dashboard() {
-  const { electorates, version, updatedAt } = await getOverview();
+  const { electorates, version, updatedAt, stage } = await getOverview();
   const results = new Map(electorates.map((e) => [e.eNo, e]));
   const cards: FavouriteCard[] = [...mapData.general, ...mapData.maori].map(
     ({ eNo, name, slug }) => {
@@ -48,6 +48,7 @@ async function Dashboard() {
         name: e?.name ?? name,
         slug,
         percentCounted: e?.percentCounted ?? 0,
+        stage: e?.stage ?? "preliminary",
         complete: e?.complete ?? false,
         margin: counted ? e.margin : null,
         candidates: counted
@@ -70,7 +71,7 @@ async function Dashboard() {
   );
   return (
     <>
-      <LiveStatus updatedAt={updatedAt} version={version} />
+      <LiveStatus updatedAt={updatedAt} stage={stage} version={version} />
       <FavouritesDashboard electorates={cards} />
     </>
   );

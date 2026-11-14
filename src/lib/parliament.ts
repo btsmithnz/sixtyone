@@ -109,11 +109,7 @@ export function buildParliament({
   const listSeats = new Map<number, number>();
   const queues = new Map<number, ListQueue>();
   for (const p of parties) {
-    const queue = candidates
-      .filter(
-        (c) => c.pNo === p.pNo && c.listNo !== null && !winners.has(c.cNo),
-      )
-      .sort((a, b) => (a.listNo ?? 0) - (b.listNo ?? 0));
+    const queue = listQueue(candidates, p.pNo, winners);
     queues.set(
       p.pNo,
       queue.map((c) => ({
@@ -159,6 +155,92 @@ export function buildParliament({
   });
 
   return { mps, leaving, listSeats, queues };
+}
+
+/** A party's list in order, minus anyone who won an electorate. */
+function listQueue(
+  candidates: Overview["candidates"],
+  pNo: number,
+  winners: Set<number>,
+) {
+  return candidates
+    .filter((c) => c.pNo === pNo && c.listNo !== null && !winners.has(c.cNo))
+    .sort((a, b) => (a.listNo ?? 0) - (b.listNo ?? 0));
+}
+
+/** Someone elected on one count but not the other. */
+export type MovedMp = {
+  cNo: number;
+  name: string;
+  pNo: number | null;
+  /** How they were (or are) elected: an electorate's name, or null for the list. */
+  electorate: string | null;
+  listNo: number | null;
+};
+
+/**
+ * Who's in on the official count but wasn't on election night's, and who
+ * was in on election night but isn't now (both empty when the same people
+ * are elected). Null without an election-night count to compare with.
+ */
+export function sinceElectionNight(
+  {
+    electorates,
+    parties,
+    candidates,
+  }: Pick<Overview, "electorates" | "parties" | "candidates">,
+  { mps }: Parliament,
+): { arrived: MovedMp[]; departed: MovedMp[] } | null {
+  if (!parties.some((p) => p.preliminary)) return null;
+
+  // Election night's Parliament, filled the same way as today's.
+  const nightWinners = new Map<number, string>();
+  for (const e of electorates) {
+    // An electorate still on election night's count is its own baseline.
+    const leader =
+      e.stage === "official"
+        ? e.preliminary?.leader
+        : e.margin !== null
+          ? e.candidates[0]
+          : undefined;
+    if (leader) nightWinners.set(leader.cNo, e.name);
+  }
+  const winnerSet = new Set(nightWinners.keys());
+  const night = new Map<number, string | null>(nightWinners);
+  for (const p of parties) {
+    const seats = p.preliminary?.listSeats ?? 0;
+    for (const c of listQueue(candidates, p.pNo, winnerSet).slice(0, seats))
+      night.set(c.cNo, null);
+  }
+
+  const byCNo = new Map(candidates.map((c) => [c.cNo, c]));
+  const now = new Set(mps.map((m) => m.cNo));
+  const arrived = mps
+    .filter((m) => !night.has(m.cNo))
+    .map((m) => ({
+      cNo: m.cNo,
+      name: m.name,
+      pNo: m.pNo,
+      electorate: m.electorate?.name ?? null,
+      listNo: m.listNo,
+    }));
+  const departed = [...night]
+    .filter(([cNo]) => !now.has(cNo))
+    .flatMap(([cNo, electorate]) => {
+      const c = byCNo.get(cNo);
+      return c
+        ? [
+            {
+              cNo,
+              name: displayCandidateName(c.name),
+              pNo: c.pNo,
+              electorate,
+              listNo: c.listNo,
+            },
+          ]
+        : [];
+    });
+  return { arrived, departed };
 }
 
 /**

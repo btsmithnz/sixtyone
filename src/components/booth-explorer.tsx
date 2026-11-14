@@ -18,7 +18,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { BoothPlace, BoothResults } from "@/lib/booths";
 import { formatInt, formatPct } from "@/lib/format";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
-import { OFFICIAL_RESULTS_DATE } from "@/lib/specials";
 import type { Standout, Vote } from "@/lib/standouts";
 import { cn } from "@/lib/utils";
 import type { BoothHover, BoothPoint } from "./booth-map-canvas";
@@ -441,7 +440,7 @@ export function BoothExplorer({
       <p className="mt-5 text-xs text-muted-foreground">
         Special votes aren’t counted by voting place, so they’re not here.
         {data.stage === "preliminary"
-          ? ` Preliminary counts can include recording slips; the official count on ${OFFICIAL_RESULTS_DATE} checks every voting place.`
+          ? ` Preliminary counts can include recording slips; the official count checks every voting place.`
           : ""}
         {data.suppressed === 1
           ? " One place took fewer than 6 votes, so it’s left out for secrecy."

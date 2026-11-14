@@ -1,18 +1,26 @@
+import { Change } from "@/components/change";
 import { SectionHeading } from "@/components/section-heading";
-import { formatInt, formatPct } from "@/lib/format";
+import { formatInt, formatPct, shareChange } from "@/lib/format";
 import { partyColorVar, partyStyle } from "@/lib/parties";
 import type { Overview } from "@/lib/results";
 
-/** Party vote standings with a 5% threshold marker. */
+/**
+ * Party vote standings with a 5% threshold marker. On the official count,
+ * each party also shows how its share and seats moved since election night.
+ */
 export function PartyVote({
   parties,
   seatsSource,
-}: {
-  parties: Overview["parties"];
-  seatsSource: Overview["seatsSource"];
-}) {
+  stage,
+}: Pick<Overview, "parties" | "seatsSource" | "stage">) {
   const max = Math.max(35, ...parties.map((p) => p.percent));
-  const main = parties.filter((p) => p.percent >= 1 || p.totalSeats > 0);
+  const main = parties.filter(
+    (p) =>
+      p.percent >= 1 ||
+      p.totalSeats > 0 ||
+      (p.preliminary?.totalSeats ?? 0) > 0,
+  );
+  const compare = stage === "official" && parties.some((p) => p.preliminary);
   const rest = parties.filter((p) => !main.includes(p));
   const restPct = rest.reduce((a, p) => a + p.percent, 0);
 
@@ -27,6 +35,7 @@ export function PartyVote({
       </SectionHeading>
       <p className="mt-1 text-sm text-muted-foreground">
         Parties need 5% or an electorate to get seats.
+        {compare ? " Changes are since election night." : null}
       </p>
 
       <ol className="mt-5 space-y-3.5">
@@ -36,8 +45,19 @@ export function PartyVote({
             <li key={p.pNo}>
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-semibold">{style.short}</span>
-                <span className="num font-display text-2xl leading-none font-extrabold">
-                  {formatPct(p.percent)}
+                {/* The change reads after the share, but sits before it. */}
+                <span className="flex flex-row-reverse items-baseline gap-2">
+                  <span className="num font-display text-2xl leading-none font-extrabold">
+                    {formatPct(p.percent)}
+                  </span>
+                  {compare && p.preliminary ? (
+                    <Change
+                      value={shareChange(p.percent, p.preliminary.percent)}
+                      digits={1}
+                      unit="percentage points"
+                      className="text-sm text-muted-foreground"
+                    />
+                  ) : null}
                 </span>
               </div>
               <div className="relative mt-1.5 h-3 rounded-full bg-secondary">
@@ -61,6 +81,13 @@ export function PartyVote({
                     {p.totalSeats === 0
                       ? "No seats"
                       : `${p.totalSeats} seats (${p.electorateSeats} electorate, ${p.listSeats} list)`}
+                    {compare && p.preliminary ? (
+                      <Change
+                        value={p.totalSeats - p.preliminary.totalSeats}
+                        unit="seats"
+                        className="ml-1.5 font-semibold text-foreground"
+                      />
+                    ) : null}
                   </span>
                 ) : null}
               </div>

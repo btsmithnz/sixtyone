@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
-import { formatInt, formatPct } from "@/lib/format";
+import { countedLabel, formatInt } from "@/lib/format";
 import { closestRaces } from "@/lib/nail-biters";
 import { displayCandidateName, partyColorVar, partyStyle } from "@/lib/parties";
 import type { ElectorateSummary } from "@/lib/results";
+import { type CountStage, changedHands } from "@/lib/stage";
 
 /** The closest electorate races, by margin between first and second. */
 export function NailBiters({
   electorates,
+  stage,
 }: {
   electorates: ElectorateSummary[];
+  stage: CountStage;
 }) {
   const close = closestRaces(electorates).slice(0, 6);
 
@@ -23,7 +26,9 @@ export function NailBiters({
         Nail-biters
       </SectionHeading>
       <p className="mt-1 text-sm text-muted-foreground">
-        The tightest electorate races right now.
+        {stage === "official"
+          ? "The tightest electorate results on the official count."
+          : "The tightest electorate races right now."}
       </p>
       {close.length === 0 ? (
         <p className="hatch mt-4 rounded-2xl p-6 text-sm text-muted-foreground">
@@ -46,7 +51,7 @@ export function NailBiters({
                       {e.name}
                     </span>
                     <span className="num shrink-0 text-xs text-muted-foreground">
-                      {formatPct(e.percentCounted, 0)} counted
+                      {countedLabel(e.stage, e.percentCounted)}
                     </span>
                   </div>
                   <div className="mt-3 space-y-1.5">
@@ -76,6 +81,13 @@ export function NailBiters({
                       {formatInt(e.margin ?? 0)} votes
                     </strong>{" "}
                     in it
+                    {e.preliminary?.leader ? (
+                      <span className="block text-xs text-muted-foreground">
+                        {changedHands(e)
+                          ? `Changed hands: ${displayCandidateName(e.preliminary.leader.name)} led by ${formatInt(e.preliminary.margin ?? 0)} votes on election night`
+                          : `${formatInt(e.preliminary.margin ?? 0)} votes on election night`}
+                      </span>
+                    ) : null}
                   </div>
                 </Link>
               </li>

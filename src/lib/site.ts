@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import type { CountStage } from "./stage";
 
 export const SITE_NAME = "SixtyOne";
 export const SITE_TAGLINE = "NZ election 2026 live results";
+/** The home page's tagline, once it knows which count it shows. */
+export const taglineFor = (stage: CountStage) =>
+  stage === "official" ? "NZ election 2026 official results" : SITE_TAGLINE;
 export const SITE_DESCRIPTION =
   "Live results for the 2026 New Zealand general election on Saturday 7 November: who's getting to 61 seats, every electorate on the map, and how the count unfolds.";
 

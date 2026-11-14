@@ -4,7 +4,8 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
-import { formatInt, formatPct } from "@/lib/format";
+import { countedLabel, formatInt } from "@/lib/format";
+import type { CountStage } from "@/lib/stage";
 import { foldDiacritics } from "@/lib/text";
 import { FavouriteButton } from "./favourite-button";
 
@@ -19,6 +20,7 @@ export type ElectorateCard = {
   ink: string;
   margin: number | null;
   percentCounted: number;
+  stage: CountStage;
   complete: boolean;
 };
 
@@ -110,7 +112,7 @@ export function ElectorateGrid({
                           <span className="num mt-1 block text-xs text-muted-foreground">
                             {e.complete ? "Won" : "Ahead"} by{" "}
                             {formatInt(e.margin ?? 0)},{" "}
-                            {formatPct(e.percentCounted, 0)} counted
+                            {countedLabel(e.stage, e.percentCounted)}
                           </span>
                         </>
                       ) : (

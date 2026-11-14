@@ -11,6 +11,7 @@ import { blocSeats, displayCandidateName, partyStyle } from "./parties";
 import type { ElectorateDetail, Overview } from "./results";
 import { majorityOf } from "./seats";
 import { OG_SIZE, SITE_URL } from "./site";
+import type { CountStage } from "./stage";
 
 /*
  * Share images (1200×630), rendered with next/og. Satori only does flexbox,
@@ -49,7 +50,8 @@ const fonts = Promise.all([
 
 const host = new URL(SITE_URL).host;
 
-async function render(body: ReactNode) {
+/** One share image: the header, then `body` on a card. `stage` labels the header. */
+async function render(body: ReactNode, stage: CountStage) {
   const image = new ImageResponse(
     <div
       style={{
@@ -63,7 +65,7 @@ async function render(body: ReactNode) {
         color: INK,
       }}
     >
-      <Header />
+      <Header stage={stage} />
       <div
         style={{
           display: "flex",
@@ -89,7 +91,7 @@ async function render(body: ReactNode) {
   return image;
 }
 
-function Header() {
+function Header({ stage }: { stage: CountStage }) {
   return (
     <div
       style={{
@@ -123,7 +125,7 @@ function Header() {
         </div>
       </div>
       <div style={{ display: "flex", fontSize: 24, color: MUTED }}>
-        NZ election 2026, live results
+        {`NZ election 2026, ${stage === "official" ? "official" : "live"} results`}
       </div>
     </div>
   );
@@ -166,7 +168,7 @@ function Strip({ ticks }: { ticks: (string | null)[] }) {
 
 /** Home page share image: the race to 61 as it stands. */
 export async function raceImage(overview: Overview) {
-  const { parties, houseSize, stats, updatedAt } = overview;
+  const { parties, houseSize, stats, stage } = overview;
   const majority = majorityOf(houseSize);
   const blocs = blocSeats(parties);
   const counted = stats?.percentCounted ?? 0;
@@ -192,7 +194,11 @@ export async function raceImage(overview: Overview) {
         ? "right"
         : null;
   const stateOf = (side: "left" | "right") =>
-    ahead === side ? (counted >= 100 ? "won" : "ahead") : null;
+    ahead === side
+      ? stage === "official" || counted >= 100
+        ? "won"
+        : "ahead"
+      : null;
   const top = parties.filter((p) => p.percent > 0).slice(0, 5);
 
   return render(
@@ -300,14 +306,11 @@ export async function raceImage(overview: Overview) {
           color: MUTED,
         }}
       >
-        <div style={{ display: "flex" }}>
-          {counted > 0 && updatedAt
-            ? `${formatPct(counted)} of voting places counted, updated ${formatTime(updatedAt)}`
-            : ""}
-        </div>
+        <div style={{ display: "flex" }}>{countedLine(overview) ?? ""}</div>
         <div style={{ display: "flex" }}>{host}</div>
       </div>
     </div>,
+    overview.stage,
   );
 }
 
@@ -528,12 +531,13 @@ export async function electorateImage(
       >
         <div style={{ display: "flex" }}>
           {hasVotes && lead && summary
-            ? `${displayCandidateName(lead.name)} ${summary.complete ? "won" : "ahead"} by ${formatInt(summary.margin ?? 0)} votes, ${formatPct(summary.percentCounted, 0)} counted`
+            ? `${displayCandidateName(lead.name)} ${summary.complete ? "won" : "ahead"} by ${formatInt(summary.margin ?? 0)} votes${summary.stage === "official" ? " on the official count" : `, ${formatPct(summary.percentCounted, 0)} counted`}`
             : "Candidates, votes and how the count unfolds"}
         </div>
         <div style={{ display: "flex" }}>{host}</div>
       </div>
     </div>,
+    detail?.summary.stage ?? "preliminary",
   );
 }
 
@@ -716,18 +720,22 @@ function PartyRows({ rows }: { rows: PartyRow[] }) {
   );
 }
 
-const countedLine = (percent: number, updatedAt: number | null) =>
-  percent > 0 && updatedAt
+/** The footer's status line: how much is counted, or that it's official. */
+function countedLine({
+  stats,
+  stage,
+  updatedAt,
+}: Pick<Overview, "stats" | "stage" | "updatedAt">) {
+  if (stage === "official") return "Official count, every vote counted";
+  const percent = stats?.percentCounted ?? 0;
+  return percent > 0 && updatedAt
     ? `${formatPct(percent)} of voting places counted, updated ${formatTime(updatedAt)}`
     : undefined;
+}
 
 /** /party-vote: the national party vote. */
-export async function partyVoteImage({
-  parties,
-  stats,
-  updatedAt,
-  seatsSource,
-}: Overview) {
+export async function partyVoteImage(overview: Overview) {
+  const { parties, seatsSource } = overview;
   const rows = parties
     .filter((p) => p.percent >= 1 || p.totalSeats > 0)
     .slice(0, 6)
@@ -752,21 +760,26 @@ export async function partyVoteImage({
       ) : (
         <Empty>No party votes counted yet.</Empty>
       )}
-      <Footer>{countedLine(stats?.percentCounted ?? 0, updatedAt)}</Footer>
+      <Footer>{countedLine(overview)}</Footer>
     </div>,
+    overview.stage,
   );
 }
 
 /** /nail-biters: the three closest electorate races. */
-export async function nailBitersImage({
-  electorates,
-  stats,
-  updatedAt,
-}: Overview) {
-  const close = closestRaces(electorates).slice(0, 3);
+export async function nailBitersImage(overview: Overview) {
+  const close = closestRaces(overview.electorates).slice(0, 3);
   return render(
     <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-      <Title sub="The tightest electorate races right now">Nail-biters</Title>
+      <Title
+        sub={
+          overview.stage === "official"
+            ? "The tightest results on the official count"
+            : "The tightest electorate races right now"
+        }
+      >
+        Nail-biters
+      </Title>
       {close.length ? (
         <div style={{ display: "flex", gap: 20, marginTop: 26 }}>
           {close.map((e) => (
@@ -849,8 +862,9 @@ export async function nailBitersImage({
       ) : (
         <Empty>Close races show up once electorates start reporting.</Empty>
       )}
-      <Footer>{countedLine(stats?.percentCounted ?? 0, updatedAt)}</Footer>
+      <Footer>{countedLine(overview)}</Footer>
     </div>,
+    overview.stage,
   );
 }
 
@@ -858,10 +872,7 @@ export async function nailBitersImage({
 const OUT_NAMES = 12;
 
 /** /parliament/whos-out: MPs who stood again and lost. */
-export async function whosOutImage(
-  leaving: LeavingMp[],
-  { stats, updatedAt }: Overview,
-) {
+export async function whosOutImage(leaving: LeavingMp[], overview: Overview) {
   const lost = leaving.filter((m) => m.reason === "lost");
   const retired = leaving.length - lost.length;
   const shown = lost.slice(0, OUT_NAMES);
@@ -915,8 +926,9 @@ export async function whosOutImage(
           ) : null}
         </div>
       )}
-      <Footer>{countedLine(stats?.percentCounted ?? 0, updatedAt)}</Footer>
+      <Footer>{countedLine(overview)}</Footer>
     </div>,
+    overview.stage,
   );
 }
 
@@ -946,10 +958,13 @@ export async function electoratePartyVoteImage(
       )}
       <Footer>
         {s && s.votesCast > 0
-          ? `${formatPct(s.percentCounted, 0)} of voting places counted`
+          ? s.stage === "official"
+            ? "Official count"
+            : `${formatPct(s.percentCounted, 0)} of voting places counted`
           : undefined}
       </Footer>
     </div>,
+    detail?.summary.stage ?? "preliminary",
   );
 }
 
@@ -1031,6 +1046,8 @@ export async function boothImage(
   electorate: string,
   data: BoothResults,
   place: BoothPlace,
+  /** The site's count, for the header (not the booth results' own stage). */
+  stage: CountStage,
 ) {
   const candidates = boothTop(
     place.candidate,
@@ -1064,5 +1081,6 @@ export async function boothImage(
         {`${formatInt(votes)} party votes here, ${data.stage === "official" ? "official count" : "preliminary count"}`}
       </Footer>
     </div>,
+    stage,
   );
 }

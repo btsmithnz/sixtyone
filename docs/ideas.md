@@ -26,8 +26,9 @@
    (booth-level 2023 data plus voting place locations makes this possible).
 5. **Follow an electorate.** Pin a few electorates to the top of the home page
    (localStorage), or send web push when a followed race flips.
-6. **Official results.** The final count lands about three weeks later and specials
-   often flip a seat. Ingest it and show "election night vs final".
+6. **Official results importer.** The data model and pages are ready
+   ([official-results.md](./official-results.md)); what's left is parsing whatever format
+   the Commission publishes on the day.
 7. **Hex cartogram view.** An equal-area tile map stops rural electorates dominating
    and makes Auckland legible without an inset.
 8. **Embeds.** An iframe-able race strip for other sites and blogs.

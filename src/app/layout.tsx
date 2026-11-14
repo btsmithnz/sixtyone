@@ -148,10 +148,10 @@ function SiteFooter() {
         >
           Electoral Commission media feed
         </a>
-        . Election-night results are preliminary: special votes are counted over
-        the following weeks. Boundaries: Stats NZ / Representation Commission
-        2025 (CC BY 4.0). SixtyOne is an independent project, not affiliated
-        with the Electoral Commission.
+        . Election-night results are preliminary: the official result, with
+        special votes, follows about three weeks later. Boundaries: Stats NZ /
+        Representation Commission 2025 (CC BY 4.0). SixtyOne is an independent
+        project, not affiliated with the Electoral Commission.
       </p>
       <p className="mt-3">
         Made by{" "}

@@ -10,6 +10,19 @@ import type {
   FeedElectorateResult,
   FeedParty,
 } from "./feed/parse";
+import type { CountStage } from "./stage";
+
+/**
+ * How a snapshot is stored: when it was fetched, which count it's from, and
+ * optionally inside a caller's transaction (an import of the official count
+ * stores everything at once, so nobody sees half of it).
+ */
+type StoreOptions = {
+  capturedAt?: Date;
+  stage?: CountStage;
+  tx?: Executor;
+};
+type Executor = typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 const slugByENo = new Map(
   [...mapData.general, ...mapData.maori].map((e) => [e.eNo, e.slug]),
@@ -70,16 +83,21 @@ export async function upsertReference(ref: {
 /** Stores a national snapshot. Returns false if this `updated` was already stored. */
 export async function storeElection(
   e: FeedElection,
-  capturedAt = new Date(),
+  {
+    capturedAt = new Date(),
+    stage = "preliminary",
+    tx: outer = db,
+  }: StoreOptions = {},
 ): Promise<boolean> {
   if (!e.updatedAt) throw new Error("election.xml has no updated timestamp");
   const updatedAt = e.updatedAt;
-  return db.transaction(async (tx) => {
+  return outer.transaction(async (tx) => {
     const [row] = await tx
       .insert(schema.electionSnapshots)
       .values({
         feedUpdatedAt: updatedAt,
         capturedAt,
+        stage,
         votingPlacesCounted: e.votingPlacesCounted,
         percentVotingPlacesCounted: e.percentVotingPlacesCounted,
         totalVotesCast: e.totalVotesCast,
@@ -104,17 +122,22 @@ export async function storeElection(
 /** Stores an electorate snapshot. Returns false if this `updated` was already stored. */
 export async function storeElectorate(
   r: FeedElectorateResult,
-  capturedAt = new Date(),
+  {
+    capturedAt = new Date(),
+    stage = "preliminary",
+    tx: outer = db,
+  }: StoreOptions = {},
 ): Promise<boolean> {
   if (!r.updatedAt) throw new Error(`e${r.eNo}.xml has no updated timestamp`);
   const updatedAt = r.updatedAt;
-  return db.transaction(async (tx) => {
+  return outer.transaction(async (tx) => {
     const [row] = await tx
       .insert(schema.electorateSnapshots)
       .values({
         eNo: r.eNo,
         feedUpdatedAt: updatedAt,
         capturedAt,
+        stage,
         final: r.final,
         totalVotingPlaces: r.totalVotingPlaces,
         votingPlacesCounted: r.votingPlacesCounted,
