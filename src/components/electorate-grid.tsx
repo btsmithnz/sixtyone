@@ -4,8 +4,8 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
 import { SectionHeading } from "@/components/section-heading";
-import { formatInt } from "@/lib/format";
-import { type CountStage, countedLabel } from "@/lib/stage";
+import { countedLabel, formatInt } from "@/lib/format";
+import type { CountStage } from "@/lib/stage";
 import { foldDiacritics } from "@/lib/text";
 import { FavouriteButton } from "./favourite-button";
 

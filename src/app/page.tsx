@@ -15,7 +15,7 @@ import { SplitVotes } from "@/components/split-votes";
 import { StandoutPlaces } from "@/components/standout-places";
 import { TrendChart, type TrendRow } from "@/components/trend-charts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatInt, formatPct } from "@/lib/format";
+import { countedPhrase, formatInt, formatPct } from "@/lib/format";
 import { buildParliament } from "@/lib/parliament";
 import {
   blocSeats,
@@ -33,7 +33,6 @@ import {
   taglineFor,
 } from "@/lib/site";
 import { knifeEdges } from "@/lib/specials";
-import { countedPhrase } from "@/lib/stage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const overview = await getOverview();
@@ -113,8 +112,13 @@ async function HomeResults() {
   const { stats, parties, stage } = overview;
   const official = stage === "official";
 
+  // Parties with seats, plus (on the official count) any that lost them all,
+  // so the change since election night adds up.
   const seatParties: SeatParty[] = parties
-    .filter((p) => p.totalSeats > 0)
+    .filter(
+      (p) =>
+        p.totalSeats > 0 || (official && (p.preliminary?.totalSeats ?? 0) > 0),
+    )
     .map((p) => ({
       pNo: p.pNo,
       short: partyStyle(p.pNo, p.name).short,
@@ -219,7 +223,7 @@ async function HomeResults() {
       ) : null}
 
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <MapSection electorates={overview.electorates} />
+        <MapSection electorates={overview.electorates} stage={stage} />
         <PartyVote
           parties={parties}
           seatsSource={overview.seatsSource}
@@ -274,7 +278,7 @@ async function HomeResults() {
         </div>
       </section>
 
-      <NailBiters electorates={overview.electorates} />
+      <NailBiters electorates={overview.electorates} stage={stage} />
 
       <SplitVotes electorates={overview.electorates} />
 
@@ -386,23 +390,22 @@ function CountMeter({
 function OfficialMeter({ votes, turnout }: { votes: number; turnout: number }) {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b-4 border-ink pb-3 dark:border-[#4a47a0]">
-      <p className="font-display text-4xl leading-none font-extrabold tracking-tight [font-stretch:80%] sm:text-5xl">
-        Official result
-      </p>
-      <p className="text-sm text-muted-foreground">
-        <span className="num font-semibold text-foreground">
+      <p className="flex items-baseline gap-2">
+        <span className="num font-display text-4xl leading-none font-extrabold tracking-tight [font-stretch:80%] sm:text-5xl">
           {formatInt(votes)}
-        </span>{" "}
-        votes
-        {turnout > 0 ? (
-          <>
-            , turnout{" "}
-            <span className="num font-semibold text-foreground">
-              {formatPct(turnout)}
-            </span>
-          </>
-        ) : null}
+        </span>
+        <span className="text-base font-medium">
+          votes, special votes included
+        </span>
       </p>
+      {turnout > 0 ? (
+        <p className="text-sm text-muted-foreground">
+          Turnout{" "}
+          <span className="num font-semibold text-foreground">
+            {formatPct(turnout)}
+          </span>
+        </p>
+      ) : null}
     </div>
   );
 }

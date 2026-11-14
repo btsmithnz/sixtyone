@@ -197,7 +197,13 @@ export function sinceElectionNight(
   // Election night's Parliament, filled the same way as today's.
   const nightWinners = new Map<number, string>();
   for (const e of electorates) {
-    const leader = e.preliminary?.leader;
+    // An electorate still on election night's count is its own baseline.
+    const leader =
+      e.stage === "official"
+        ? e.preliminary?.leader
+        : e.margin !== null
+          ? e.candidates[0]
+          : undefined;
     if (leader) nightWinners.set(leader.cNo, e.name);
   }
   const winnerSet = new Set(nightWinners.keys());

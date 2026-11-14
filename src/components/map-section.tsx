@@ -6,14 +6,16 @@ import {
   partyStyle,
 } from "@/lib/parties";
 import type { ElectorateSummary } from "@/lib/results";
-import { changedHands } from "@/lib/stage";
+import { type CountStage, changedHands } from "@/lib/stage";
 import { ElectorateMap, type MapResult } from "./electorate-map";
 
 /** Server wrapper: trims results down to what the map needs. */
 export function MapSection({
   electorates,
+  stage,
 }: {
   electorates: ElectorateSummary[];
+  stage: CountStage;
 }) {
   const results: Record<number, MapResult> = {};
   for (const e of electorates) {
@@ -54,6 +56,7 @@ export function MapSection({
       insets={mapData.insets}
       results={results}
       colors={colors}
+      official={stage === "official"}
     />
   );
 }

@@ -80,7 +80,10 @@ export function SinceElectionNight({
                     {partyStyle(p.pNo, p.name).short}
                   </span>
                   <span className="num text-muted-foreground">
-                    {p.before} → {p.totalSeats}
+                    <span aria-hidden>
+                      {p.before} → {p.totalSeats}
+                    </span>
+                    <span className="sr-only">{p.totalSeats} seats</span>
                   </span>
                   <Change
                     value={p.totalSeats - p.before}
@@ -120,7 +123,7 @@ export function SinceElectionNight({
                   <Change
                     value={p.change}
                     digits={1}
-                    unit="points"
+                    unit="percentage points"
                     className="ml-auto font-semibold"
                   />
                 </li>
@@ -152,7 +155,8 @@ export function SinceElectionNight({
                     </Link>{" "}
                     changed hands: {displayCandidateName(winner.name)} (
                     {partyStyle(winner.pNo).short}) won by{" "}
-                    <span className="num">{formatInt(e.margin ?? 0)}</span>.
+                    <span className="num">{formatInt(e.margin ?? 0)}</span>{" "}
+                    votes.
                     {before?.leader ? (
                       <span className="text-muted-foreground">
                         {" "}
@@ -161,8 +165,8 @@ export function SinceElectionNight({
                         {partyStyle(before.leader.pNo).short}) led by{" "}
                         <span className="num">
                           {formatInt(before.margin ?? 0)}
-                        </span>
-                        .
+                        </span>{" "}
+                        votes.
                       </span>
                     ) : null}
                   </li>

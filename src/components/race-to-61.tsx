@@ -75,7 +75,9 @@ export function RaceTo61({
   const official = stage === "official";
   /** A bloc's seats now, less what the same parties had on election night. */
   const sinceNight = (ps: SeatParty[]) =>
-    official ? ps.reduce((a, p) => a + p.seats - (p.prelimSeats ?? 0), 0) : 0;
+    official
+      ? ps.reduce((a, p) => a + p.seats - (p.prelimSeats ?? p.seats), 0)
+      : 0;
   const leftSeats = sum(left);
   const rightSeats = sum(right);
   const crossSeats = sum(cross);
@@ -145,7 +147,7 @@ export function RaceTo61({
           {`Who’s getting to ${majority}?`}
         </SectionHeading>
         <p className="text-sm text-muted-foreground">
-          {official
+          {official && seatsSource === "feed"
             ? "The Electoral Commission’s official seat allocation"
             : seatsSource === "projected"
               ? "Our seat projection from the count so far"

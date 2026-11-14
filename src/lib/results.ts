@@ -1,9 +1,19 @@
 import "server-only";
-import { and, asc, desc, eq, gt, inArray, max, sql } from "drizzle-orm";
+import {
+  type AnyColumn,
+  and,
+  asc,
+  desc,
+  eq,
+  gt,
+  inArray,
+  max,
+  sql,
+} from "drizzle-orm";
 import { cacheLife, cacheTag } from "next/cache";
 import { db, schema } from "@/db";
 import { allocateSeats } from "./seats";
-import type { CountStage, PrelimLeader } from "./stage";
+import type { CountStage } from "./stage";
 
 /**
  * Every results query is cached with `use cache` under this tag. The scraper
@@ -55,7 +65,7 @@ export type ElectorateSummary = {
 
 /** An electorate's final election-night result, to compare with the official one. */
 export type ElectoratePrelim = {
-  leader: PrelimLeader | null;
+  leader: { cNo: number; name: string; pNo: number | null } | null;
   margin: number | null;
   marginPoints: number | null;
 };
@@ -133,24 +143,34 @@ async function loadReference() {
 
 /* ----------------------------- latest results ----------------------------- */
 
-/** Each electorate's newest snapshot, optionally from one count only. */
+/**
+ * Sort order for "the latest snapshot": any official one, then the newest.
+ * A preliminary snapshot stored after the official count (a scraper left
+ * running untagged) must never replace it.
+ */
+const latestFirst = (s: { stage: AnyColumn; feedUpdatedAt: AnyColumn }) => [
+  desc(sql`${s.stage} = 'official'`),
+  desc(s.feedUpdatedAt),
+];
+
+/** Each electorate's latest snapshot, optionally from one count only. */
 async function latestElectorateSnapshots(stage?: CountStage) {
   const s = schema.electorateSnapshots;
   return db
     .selectDistinctOn([s.eNo])
     .from(s)
     .where(stage ? eq(s.stage, stage) : undefined)
-    .orderBy(s.eNo, desc(s.feedUpdatedAt));
+    .orderBy(s.eNo, ...latestFirst(s));
 }
 
-/** The newest national snapshot, optionally from one count only. */
+/** The latest national snapshot, optionally from one count only. */
 async function latestElectionSnapshot(stage?: CountStage) {
   const s = schema.electionSnapshots;
   const [row] = await db
     .select()
     .from(s)
     .where(stage ? eq(s.stage, stage) : undefined)
-    .orderBy(desc(s.feedUpdatedAt))
+    .orderBy(...latestFirst(s))
     .limit(1);
   return row;
 }
@@ -358,34 +378,41 @@ export async function getOverview(): Promise<Overview> {
   const pBySnap = groupBySnapshot(pVotes);
   const partiesBySnap = groupBySnapshot(nationalParties);
 
-  /** Every electorate, from one snapshot each (missing: no results yet). */
-  const summariseAll = (
-    byENo: Map<number, typeof schema.electorateSnapshots.$inferSelect>,
-    prelims?: Map<number, ElectoratePrelim>,
+  const summariseSnap = (
+    e: (typeof ref.electorates)[number],
+    snap: typeof schema.electorateSnapshots.$inferSelect | undefined,
+    preliminary: ElectoratePrelim | null = null,
   ) =>
-    ref.electorates.map((e) => {
-      const snap = byENo.get(e.eNo);
-      return summarise(
-        e,
-        snap,
-        snap ? (cBySnap.get(snap.id) ?? []) : [],
-        snap ? (pBySnap.get(snap.id) ?? []) : [],
-        candidateById,
-        prelims?.get(e.eNo) ?? null,
-      );
-    });
+    summarise(
+      e,
+      snap,
+      snap ? (cBySnap.get(snap.id) ?? []) : [],
+      snap ? (pBySnap.get(snap.id) ?? []) : [],
+      candidateById,
+      preliminary,
+    );
 
-  // Election night, summarised the same way, for comparison.
-  const prelimElectorates = prelimSnaps.length
-    ? summariseAll(new Map(prelimSnaps.map((s) => [s.eNo, s])))
-    : [];
+  // Election night's final result in each electorate that had one,
+  // summarised the same way, for comparison.
+  const refByENo = new Map(ref.electorates.map((e) => [e.eNo, e]));
+  const prelimElectorates = prelimSnaps.flatMap((snap) => {
+    const e = refByENo.get(snap.eNo);
+    return e ? [summariseSnap(e, snap)] : [];
+  });
   const prelimByENo = new Map(
     prelimElectorates.map((e) => [e.eNo, prelimOf(e)]),
   );
-  const electorates = summariseAll(
-    new Map(snaps.map((s) => [s.eNo, s])),
-    prelimByENo,
-  );
+  // Every electorate (no snapshot: no results yet). Only an official result
+  // gets election night's alongside it.
+  const snapByENo = new Map(snaps.map((s) => [s.eNo, s]));
+  const electorates = ref.electorates.map((e) => {
+    const snap = snapByENo.get(e.eNo);
+    return summariseSnap(
+      e,
+      snap,
+      snap?.stage === "official" ? (prelimByENo.get(e.eNo) ?? null) : null,
+    );
+  });
 
   const partyRows = national ? (partiesBySnap.get(national.id) ?? []) : [];
   const { seatsSource, houseSize, seats } = seatsFor(partyRows, electorates);
@@ -584,20 +611,13 @@ export async function getElectorateDetail(
   if (!electorate) return null;
 
   const s = schema.electorateSnapshots;
-  const newest = (stage?: CountStage) =>
+  const [newest, snaps, standing, version] = await Promise.all([
+    // The newest snapshot from each count: up to two rows.
     db
-      .select()
+      .selectDistinctOn([s.stage])
       .from(s)
-      .where(
-        and(eq(s.eNo, electorate.eNo), stage ? eq(s.stage, stage) : undefined),
-      )
-      .orderBy(desc(s.feedUpdatedAt))
-      .limit(1);
-  const [[latest], [lastPrelim], snaps, standing, version] = await Promise.all([
-    newest(),
-    // Election night's final result, for comparison once the official count
-    // is in. (Before then it's the same row as `latest`.)
-    newest("preliminary"),
+      .where(eq(s.eNo, electorate.eNo))
+      .orderBy(s.stage, desc(s.feedUpdatedAt)),
     chartPoints(
       db
         .selectDistinctOn([countedBucket(s.percentVotingPlacesCounted)], {
@@ -624,7 +644,12 @@ export async function getElectorateDetail(
       .where(eq(schema.candidates.eNo, electorate.eNo)),
     resultsVersion(),
   ]);
-  const baseline = latest?.stage === "official" ? lastPrelim : undefined;
+  // The official result if there is one (see latestFirst), with election
+  // night's to compare.
+  const official = newest.find((x) => x.stage === "official");
+  const lastPrelim = newest.find((x) => x.stage === "preliminary");
+  const latest = official ?? lastPrelim;
+  const baseline = official ? lastPrelim : undefined;
   // The latest snapshots are normally chart points too; they're needed either way.
   const ids = [
     ...new Set(

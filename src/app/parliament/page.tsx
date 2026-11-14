@@ -127,7 +127,7 @@ async function ParliamentResults() {
         </p>
       ) : null}
 
-      {moved ? <SinceElectionNight {...moved} /> : null}
+      {moved ? <MpsSinceElectionNight {...moved} /> : null}
 
       <ListSortProvider>
         <section aria-labelledby="whos-in" className="space-y-4">
@@ -216,7 +216,7 @@ function groupByParty(mps: Mp[], parties: { pNo: number; name: string }[]) {
 }
 
 /** Who the official count brought in, and who it pushed out. */
-function SinceElectionNight({
+function MpsSinceElectionNight({
   arrived,
   departed,
 }: {

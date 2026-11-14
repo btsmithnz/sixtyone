@@ -771,7 +771,15 @@ export async function nailBitersImage(overview: Overview) {
   const close = closestRaces(overview.electorates).slice(0, 3);
   return render(
     <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-      <Title sub="The tightest electorate races right now">Nail-biters</Title>
+      <Title
+        sub={
+          overview.stage === "official"
+            ? "The tightest results on the official count"
+            : "The tightest electorate races right now"
+        }
+      >
+        Nail-biters
+      </Title>
       {close.length ? (
         <div style={{ display: "flex", gap: 20, marginTop: 26 }}>
           {close.map((e) => (

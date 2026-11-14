@@ -34,10 +34,11 @@ count in the same XML format as election night.
 Every snapshot carries a `stage`: `preliminary` or `official` (`src/db/schema.ts`,
 `src/lib/stage.ts`).
 
-- **Pages show the newest snapshot**, as they always have, and official snapshots are
-  newer. The national snapshot's stage is the page's stage (`Overview.stage`); each
-  electorate also carries its own (`ElectorateSummary.stage`), and an official
-  electorate always counts as complete.
+- **Pages show the latest snapshot, and official outranks preliminary**, whatever the
+  timestamps: a preliminary update stored after the official count can't replace it.
+  The national snapshot's stage is the page's stage (`Overview.stage`); each electorate
+  also carries its own (`ElectorateSummary.stage`), and an official electorate always
+  counts as complete.
 - **History stays preliminary.** The charts read preliminary snapshots only, and the
   official result is drawn as a separate dot. Otherwise the official snapshot (at 100%)
   would replace election night's final point.
@@ -50,12 +51,16 @@ Every snapshot carries a `stage`: `preliminary` or `official` (`src/db/schema.ts
 
 Both paths store the same rows, then call `revalidateTag("results", "max")` once.
 
-1. **Feed:** run the scraper with `COUNT_STAGE=official` so what it stores is tagged
-   official.
+1. **Feed:** set `COUNT_STAGE=official` before the scrape that picks up the official
+   count. Once any official snapshot exists, the scraper stores everything after it as
+   official anyway (recounts), so the variable only matters for that first scrape.
 2. **CSV/HTML:** an import script (dry run first, like `pnpm booths:import`) writes one
    official national snapshot and one per electorate **in a single transaction**, so
-   visitors never see half the electorates official. Electorate snapshots need no voting
-   place counts: an official electorate is always complete.
+   visitors never see half the electorates official: `storeElection` and
+   `storeElectorate` take a `tx` for this (see `addOfficialCount` in
+   `scripts/simulate.ts`). Electorate snapshots need no voting place counts: an official
+   electorate is always complete. Write the Commission's seat allocation into the party
+   rows, or seats are projected.
 
 Test the whole switch beforehand with `pnpm simulate --official`, which adds a plausible
 set of special votes to the last preliminary snapshot and stores the result as official.

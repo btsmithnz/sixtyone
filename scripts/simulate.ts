@@ -48,6 +48,8 @@ const { values: args } = parseArgs({
   },
 });
 const STEPS = Number(args.steps);
+/** Enrolled electors (statistics.xml), for turnout. */
+const ELECTORS = 3_633_546;
 const UNTIL = Number(args.until);
 
 // This wipes every stored result, so only run it against a local database
@@ -303,7 +305,7 @@ async function main() {
       placesCounted,
       percentPlaces: (placesCounted / places) * 100,
       votesCast,
-      percentVotesCast: (votesCast / 3633546) * 100,
+      percentVotesCast: (votesCast / ELECTORS) * 100,
       electoratesFinal,
       parties: registered.map((p) => {
         const votes = nationalParty.get(p.pNo) ?? 0;
@@ -356,14 +358,6 @@ async function addOfficialCount() {
     db.select().from(schema.parties).where(eq(schema.parties.registered, true)),
   ]);
 
-  console.log("Clearing any stored official count…");
-  await db
-    .delete(schema.electionSnapshots)
-    .where(eq(schema.electionSnapshots.stage, "official"));
-  await db
-    .delete(schema.electorateSnapshots)
-    .where(eq(schema.electorateSnapshots.stage, "official"));
-
   const now = parseNzLocal("2026-11-27T14:00:00");
   const stamp = formatNzLocal(now);
   const leans = presetLeans(2023);
@@ -381,6 +375,7 @@ async function addOfficialCount() {
   let independentWins = 0;
   let votesCast = 0;
   let specialVotes = 0;
+  const electorateXmls: string[] = [];
   for (const night of nights) {
     const before = {
       party: pRows.filter((r) => r.snapshotId === night.id),
@@ -437,10 +432,7 @@ async function addOfficialCount() {
       partyVotes,
       candidateVotes,
     });
-    await storeElectorate(parseElectorateResult(xml), {
-      capturedAt: now,
-      stage: "official",
-    });
+    electorateXmls.push(xml);
   }
 
   const seats = allocateSeats({
@@ -452,12 +444,12 @@ async function addOfficialCount() {
     (a, b) => a + b,
     0,
   );
-  const xml = electionXml({
+  const nationalXml = electionXml({
     stamp,
     placesCounted: nights.reduce((a, n) => a + n.totalVotingPlaces, 0),
     percentPlaces: 100,
     votesCast,
-    percentVotesCast: (votesCast / 3633546) * 100,
+    percentVotesCast: (votesCast / ELECTORS) * 100,
     electoratesFinal: nights.length,
     specialVotes,
     parties: parties.map((p) => {
@@ -472,9 +464,20 @@ async function addOfficialCount() {
       };
     }),
   });
-  await storeElection(parseElection(xml), {
-    capturedAt: now,
-    stage: "official",
+  // One transaction, as a real import must be: nobody sees half an official
+  // count. It replaces any official count stored before.
+  await db.transaction(async (tx) => {
+    await tx
+      .delete(schema.electionSnapshots)
+      .where(eq(schema.electionSnapshots.stage, "official"));
+    await tx
+      .delete(schema.electorateSnapshots)
+      .where(eq(schema.electorateSnapshots.stage, "official"));
+    const options = { capturedAt: now, stage: "official", tx } as const;
+    for (const xml of electorateXmls) {
+      await storeElectorate(parseElectorateResult(xml), options);
+    }
+    await storeElection(parseElection(nationalXml), options);
   });
   console.log(
     `${stamp}  official count stored, with ${specialVotes.toLocaleString("en-NZ")} special votes`,

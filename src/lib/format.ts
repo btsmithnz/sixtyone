@@ -1,4 +1,5 @@
 import { NZ_TIME_ZONE } from "./feed/time";
+import type { CountStage } from "./stage";
 
 const int = new Intl.NumberFormat("en-NZ");
 export const formatInt = (n: number) => int.format(n);
@@ -41,3 +42,15 @@ export const nzDateKey = (ms: number) => dateKey.format(ms);
 /** "Labour 34.2%, National 31.0%, Green 11.1%" */
 export const formatShares = (items: { label: string; percent: number }[]) =>
   items.map((i) => `${i.label} ${formatPct(i.percent)}`).join(", ");
+
+/** "with 87.5% of voting places counted", or "on the official count". */
+export const countedPhrase = (stage: CountStage, percentCounted: number) =>
+  stage === "official"
+    ? "on the official count"
+    : `with ${formatPct(percentCounted)} of voting places counted`;
+
+/** A result's progress in a few words: "87% counted", or "official count". */
+export const countedLabel = (stage: CountStage, percentCounted: number) =>
+  stage === "official"
+    ? "official count"
+    : `${formatPct(percentCounted, 0)} counted`;

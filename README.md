@@ -133,7 +133,7 @@ Electoral Commission feed ──(Vercel Cron, currently off)──▶ /api/cron/
    `POLL_MS` to a minute.
 5. **Official results.** If the feed publishes the official count, set
    `COUNT_STAGE=official` (Production) before the scrape that picks it up, so it's stored
-   as official. Otherwise import it from the Commission's statistics pages: see
+   as official (after that the scraper keeps to official by itself). Otherwise import it from the Commission's statistics pages: see
    [docs/official-results.md](docs/official-results.md).
 6. **Warm-up.** After a deploy, run one scrape so reference data and results load:
    `curl -H "Authorization: Bearer $CRON_SECRET" https://<deployment>/api/cron/scrape?force=1`

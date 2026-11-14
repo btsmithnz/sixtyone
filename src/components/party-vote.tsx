@@ -45,18 +45,19 @@ export function PartyVote({
             <li key={p.pNo}>
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-semibold">{style.short}</span>
-                <span className="flex items-baseline gap-2">
+                {/* The change reads after the share, but sits before it. */}
+                <span className="flex flex-row-reverse items-baseline gap-2">
+                  <span className="num font-display text-2xl leading-none font-extrabold">
+                    {formatPct(p.percent)}
+                  </span>
                   {compare && p.preliminary ? (
                     <Change
                       value={p.percent - p.preliminary.percent}
                       digits={1}
-                      unit="points"
+                      unit="percentage points"
                       className="text-sm text-muted-foreground"
                     />
                   ) : null}
-                  <span className="num font-display text-2xl leading-none font-extrabold">
-                    {formatPct(p.percent)}
-                  </span>
                 </span>
               </div>
               <div className="relative mt-1.5 h-3 rounded-full bg-secondary">

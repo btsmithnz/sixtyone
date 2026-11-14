@@ -144,7 +144,12 @@ async function Electorate({
             />
             <span className="text-sm text-muted-foreground">
               {official ? (
-                "Every vote counted, including special votes"
+                <>
+                  <span className="num font-semibold text-foreground">
+                    {formatInt(e.votesCast)}
+                  </span>{" "}
+                  votes, special votes included
+                </>
               ) : (
                 <>
                   <span className="num font-semibold text-foreground">
@@ -152,17 +157,17 @@ async function Electorate({
                   </span>{" "}
                   of <span className="num">{e.totalPlaces || "?"}</span> voting
                   places counted
+                  {hasVotes ? (
+                    <>
+                      ,{" "}
+                      <span className="num font-semibold text-foreground">
+                        {formatInt(e.votesCast)}
+                      </span>{" "}
+                      votes
+                    </>
+                  ) : null}
                 </>
               )}
-              {hasVotes ? (
-                <>
-                  ,{" "}
-                  <span className="num font-semibold text-foreground">
-                    {formatInt(e.votesCast)}
-                  </span>{" "}
-                  votes
-                </>
-              ) : null}
             </span>
           </div>
         </div>
@@ -195,6 +200,7 @@ async function Electorate({
               </p>
               {night?.leader && !flipped ? (
                 <p className="text-sm text-muted-foreground">
+                  Ahead by{" "}
                   <span className="num">{formatInt(night.margin ?? 0)}</span> on
                   election night
                 </p>

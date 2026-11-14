@@ -45,6 +45,7 @@ export function ElectorateMap({
   insets,
   results,
   colors,
+  official,
 }: {
   sprite: string;
   width: number;
@@ -55,6 +56,8 @@ export function ElectorateMap({
   results: Record<number, MapResult>;
   /** CSS colour per p_no (0 = independent). */
   colors: Record<number, string>;
+  /** Results are the official count. */
+  official: boolean;
 }) {
   const [roll, setRoll] = useState<Roll>("general");
   const [mode, setMode] = useState<Mode>("electorate");
@@ -68,7 +71,6 @@ export function ElectorateMap({
   const patternId = useId().replace(/:/g, "");
 
   const shapes = roll === "general" ? general : maori;
-  const official = Object.values(results).some((r) => r.stage === "official");
   const shownInsets =
     roll === "general" ? insets : insets.filter((i) => i.id === "auckland");
   const byENo = new Map([...general, ...maori].map((s) => [s.eNo, s]));

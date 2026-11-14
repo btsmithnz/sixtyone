@@ -12,7 +12,7 @@ export function Change({
   className,
 }: {
   value: number;
-  /** For screen readers, plural: "points", "seats". A change of 1 drops the "s". */
+  /** For screen readers, plural: "percentage points", "seats". A change of 1 drops the "s". */
   unit: string;
   digits?: number;
   className?: string;

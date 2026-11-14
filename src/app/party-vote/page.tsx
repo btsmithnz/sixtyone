@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { ScrollToSection } from "@/components/scroll-to-hash";
-import { formatShares } from "@/lib/format";
+import { countedPhrase, formatShares } from "@/lib/format";
 import { partyStyle } from "@/lib/parties";
 import { getOverview } from "@/lib/results";
 import { shareMetadata } from "@/lib/site";
-import { countedPhrase } from "@/lib/stage";
 import Home from "../page";
 
 /**

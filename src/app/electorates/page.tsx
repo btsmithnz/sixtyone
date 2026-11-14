@@ -19,7 +19,7 @@ import { shareMetadata } from "@/lib/site";
 export async function generateMetadata(): Promise<Metadata> {
   const title = "All 71 electorates";
   const description =
-    "Live 2026 New Zealand election results for all 64 general and 7 Māori electorates: who's ahead and by how much.";
+    "2026 New Zealand election results for all 64 general and 7 Māori electorates: who's ahead or won, and by how much.";
   return {
     title,
     description,
