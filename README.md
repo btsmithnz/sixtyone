@@ -14,10 +14,21 @@ how the night unfolded.
   every voting place that took its votes, sized by votes and coloured by who came first,
   or shaded by one candidate's or party's share. Hidden until booth results are imported
   (`pnpm booths:import`).
+- **Standout voting places** (`src/lib/standouts.ts`): places where a candidate or party
+  did far better than across the rest of the electorate, at the top of each electorate's
+  booth list, plus the biggest across the country and each party's best place on the home
+  page. The rules are deliberately simple (enough votes, home electorate only, no mobile
+  teams, a big enough gap) so the page can say exactly how places were picked. They're
+  written out, with the reasons, at the top of that file.
 - **Your new Parliament** (`/parliament`, `src/lib/parliament.ts`): every MP worked out
   from electorate winners and party lists, marked new or returning against the outgoing
-  Parliament (`src/data/outgoing-mps.ts`), plus who's leaving. The special votes what-if
-  and knife-edge seats name who'd come in or drop out.
+  Parliament (`src/data/outgoing-mps.ts`), plus who's leaving. Sort by list rank, by
+  name, or by how each MP did in the electorate they stood in (candidate vote or party
+  vote). The special votes what-if and knife-edge seats name who'd come in or drop out.
+- **Links and sharing**: every section heading links to itself (`/page#id`), and most
+  have a share button (`src/components/share-button.tsx`): the share sheet on phones, or
+  copy the link on a computer. Any voting place can be shared too. See "Sharing and SEO"
+  below for how the links get their own previews.
 - **Split votes**: electorates where the candidate and party votes went different ways, and
   the winners with the biggest personal vote over their party.
 - **Your electorates**: star electorates to follow them side by side on `/favourites`.
@@ -96,6 +107,16 @@ Electoral Commission feed ──(Vercel Cron, currently off)──▶ /api/cron/
   carry `?v=<results version>`, so Slack, iMessage, X and friends fetch a fresh preview
   after each update instead of reusing a cached one. Also `sitemap.xml`, `robots.txt`
   (previews are `noindex`), a web manifest and WebSite JSON-LD.
+- **Share pages** (e.g. `src/app/party-vote/page.tsx`): the part of a link after `#`
+  never reaches the server, so `/#party-vote` can't have its own preview. Sections worth
+  a preview of their own get a share page instead: the same page, opened at that
+  section (`ScrollToSection`), with its own image. Their canonical URL is the main page,
+  so search engines see one page. There are share pages for the party vote, nail-biters,
+  who's out, each electorate's party vote, and each voting place
+  (`/electorates/<slug>/booths/<id>`). Other sections share a plain `#` link. There are
+  thousands of voting places, so those pages render on first visit, and the first visit
+  waits for the finished page, so link previews always get the place's own title and
+  image.
 - **Seats** (`src/lib/seats.ts`): the Commission's own allocation is used when it's
   published. Otherwise we project seats with Sainte-Laguë, the 5% / one-electorate
   threshold and overhang.
