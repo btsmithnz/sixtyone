@@ -7,12 +7,14 @@ import { Suspense } from "react";
 import { LiveLogoBadge, LogoBadge } from "@/components/logo-badge";
 import { ScrollToHash } from "@/components/scroll-to-hash";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { getOverview } from "@/lib/results";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_TAGLINE,
   SITE_URL,
 } from "@/lib/site";
+import type { CountStage } from "@/lib/stage";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -137,21 +139,45 @@ function NavLink({ href, children }: { href: string; children: string }) {
   );
 }
 
+async function LiveSourceNote() {
+  const { stage } = await getOverview();
+  return <SourceNote stage={stage} />;
+}
+
+/** Where the results come from, for the count being shown. */
+function SourceNote({ stage }: { stage: CountStage }) {
+  const link = "underline underline-offset-2 hover:text-foreground";
+  return stage === "official" ? (
+    <>
+      Official results from the{" "}
+      <a className={link} href="https://www.electionresults.govt.nz/">
+        Electoral Commission
+      </a>
+      , with special votes. Election night&rsquo;s preliminary count, from the
+      Commission&rsquo;s media feed, is kept for comparison.
+    </>
+  ) : (
+    <>
+      Results from the{" "}
+      <a className={link} href="https://media.election.net.nz/xml/">
+        Electoral Commission media feed
+      </a>
+      . Election-night results are preliminary: the official result, with
+      special votes, follows about three weeks later.
+    </>
+  );
+}
+
 function SiteFooter() {
   return (
     <footer className="mx-auto w-full max-w-7xl px-4 pb-10 text-sm text-muted-foreground sm:px-6">
       <p className="max-w-prose">
-        Results from the{" "}
-        <a
-          className="underline underline-offset-2 hover:text-foreground"
-          href="https://media.election.net.nz/xml/"
-        >
-          Electoral Commission media feed
-        </a>
-        . Election-night results are preliminary: the official result, with
-        special votes, follows about three weeks later. Boundaries: Stats NZ /
-        Representation Commission 2025 (CC BY 4.0). SixtyOne is an independent
-        project, not affiliated with the Electoral Commission.
+        <Suspense fallback={<SourceNote stage="preliminary" />}>
+          <LiveSourceNote />
+        </Suspense>{" "}
+        Boundaries: Stats NZ / Representation Commission 2025 (CC BY 4.0).
+        SixtyOne is an independent project, not affiliated with the Electoral
+        Commission.
       </p>
       <p className="mt-3">
         Made by{" "}

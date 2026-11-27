@@ -17,6 +17,9 @@
   live: that would be ~9k requests per cycle to the Commission's uncached origin) and
   mapped for every electorate, with standout places.
 - **Follow an electorate.** Star electorates to see them side by side on `/favourites`.
+- **Official results.** The official count leads once it's in, with what changed since
+  election night. It's imported from the Commission's results pages on deploy
+  ([official-results.md](./official-results.md)).
 
 ## Worth doing next
 
@@ -25,9 +28,6 @@
 2. **Swing against 2023.** Needs 2023 results re-aggregated onto the 2025 boundaries
    (booth-level 2023 data plus voting place locations makes this possible).
 3. **Web push for followed electorates**, when a followed race flips.
-4. **Official results importer.** The data model and pages are ready
-   ([official-results.md](./official-results.md)); what's left is parsing whatever format
-   the Commission publishes on the day.
-5. **Hex cartogram view.** An equal-area tile map stops rural electorates dominating
+4. **Hex cartogram view.** An equal-area tile map stops rural electorates dominating
    and makes Auckland legible without an inset.
-6. **Embeds.** An iframe-able race strip for other sites and blogs.
+5. **Embeds.** An iframe-able race strip for other sites and blogs.

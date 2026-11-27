@@ -42,7 +42,8 @@ changed since election night ([docs/official-results.md](docs/official-results.m
   from. When the official count lands it becomes the result everywhere, and a "What
   changed since election night" section covers seats, party vote shares and electorates
   that changed hands. Election night stays in the charts, with the official result as a
-  dot at the end.
+  dot at the end. The count is committed as `imports/official-<year>.json` and loaded on
+  deploy.
 
 ## Getting started
 
@@ -64,6 +65,8 @@ Useful scripts:
 | `pnpm map:build` | Rebuilds the electorate map from Stats NZ boundaries (`--refresh` to re-download) |
 | `pnpm booths:build` | Parses and geocodes booth results from the files in `data/` (see the script's header) |
 | `pnpm booths:import` | Loads `data/booths-*.csv` into Postgres (a dry run until you add `--write`) |
+| `pnpm official:distil` | Turns saved official results pages (`data/official-<year>/`) into `imports/official-<year>.json` |
+| `pnpm official:import` | Loads the newest `imports/official-*.json` as the official count (a dry run until you add `--write`; the build runs it with `--write`) |
 | `pnpm db:generate` / `db:migrate` | Drizzle migrations after editing `src/db/schema.ts` |
 
 ⚠️ `pnpm simulate` deletes all stored results (`--official` only deletes official ones). It refuses to run when
