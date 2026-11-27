@@ -124,8 +124,15 @@ export function LiveStatus({
           <span className="font-medium text-foreground">
             {stage === "official" ? "Official count" : "Preliminary count"}
           </span>
-          {" · "}
-          Updated <span className="num">{updatedLabel(updatedAt, today)}</span>
+          {/* The official count is one release, and an import's timestamp is
+              when its pages were saved, not when the Commission published. */}
+          {stage === "preliminary" && (
+            <>
+              {" · "}
+              Updated{" "}
+              <span className="num">{updatedLabel(updatedAt, today)}</span>
+            </>
+          )}
           <span className="sr-only">
             {checking ? ", checking for news" : ""}
           </span>
