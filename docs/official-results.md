@@ -80,8 +80,9 @@ the same one is a no-op.
    - It writes one official national snapshot and one per electorate **in a single
      transaction**, with the Commission's seat allocation in the party rows.
    - The pages have no voting place counts, electors or special votes. Places come from
-     election night's count, turnout uses election night's roll, and special votes are
-     stored as 0. The E9 statistics (mid-December) have the rest; a later file with a
+     election night's count; turnout and special votes are stored as 0, and the home page
+     hides a 0 turnout. (Election night's roll isn't a stand-in: the official count
+     includes people who enrolled on election day.) The E9 statistics (mid-December) have the rest; a later file with a
      newer `fetchedAt` adds a newer official snapshot, which wins.
    - For the next election, delete the old file from `imports/`: its names won't match
      the new database, which fails the build.

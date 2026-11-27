@@ -17,7 +17,9 @@
  *
  * The pages give no voting place counts, electors or special votes (those
  * come with the E9 statistics), so places come from election night's count,
- * turnout uses election night's roll, and special votes are left at 0.
+ * and turnout and special votes are left at 0 (the site hides a 0 turnout).
+ * Election night's roll is no stand-in: the official count includes people
+ * who enrolled on election day.
  */
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
@@ -142,15 +144,6 @@ async function main() {
     .where(eq(os.stage, "preliminary"))
     .orderBy(desc(os.feedUpdatedAt))
     .limit(1);
-  /** Turnout against election night's roll, when there was one. */
-  const turnout = (
-    votes: number,
-    prelim?: { totalVotesCast: number; percentVotesCast: number },
-  ) =>
-    prelim && prelim.totalVotesCast > 0 && prelim.percentVotesCast > 0
-      ? (votes / prelim.totalVotesCast) * prelim.percentVotesCast
-      : 0;
-
   const electorateResults: FeedElectorateResult[] = official.electorates.map(
     (e) => {
       const n = nights.get(e.eNo);
@@ -162,7 +155,7 @@ async function main() {
         votingPlacesCounted: n?.totalVotingPlaces ?? 0,
         percentVotingPlacesCounted: 100,
         totalVotesCast: e.votesCounted,
-        percentVotesCast: turnout(e.votesCounted, n),
+        percentVotesCast: 0,
         partyInformals: e.partyInformals,
         candidateInformals: e.candidateInformals,
         partyVotes: e.parties.map((p) => ({
@@ -188,7 +181,7 @@ async function main() {
     votingPlacesCounted: night?.votingPlacesCounted ?? 0,
     percentVotingPlacesCounted: 100,
     totalVotesCast: totalVotes,
-    percentVotesCast: turnout(totalVotes, night),
+    percentVotesCast: 0,
     electoratesFinal: official.electorates.length,
     percentElectoratesFinal: 100,
     minimalVotes: 0,
@@ -226,7 +219,7 @@ async function main() {
   );
   console.log("  All names matched.");
   console.log(
-    `  ${fmt(totalVotes)} votes, ${night ? `${signed(totalVotes - night.totalVotesCast)} since election night` : "no election night count stored"}; turnout ${election.percentVotesCast.toFixed(1)}%`,
+    `  ${fmt(totalVotes)} votes, ${night ? `${signed(totalVotes - night.totalVotesCast)} since election night` : "no election night count stored"}`,
   );
   console.log("  Seats (change since election night):");
   for (const p of election.parties.filter(
