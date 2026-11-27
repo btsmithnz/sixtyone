@@ -1,0 +1,8281 @@
+{
+ "source": "https://www.electionresults.govt.nz/electionresults_2026/",
+ "fetchedAt": "2026-11-27T01:19:05.096Z",
+ "parties": [
+  {
+   "name": "National Party",
+   "votes": 819012,
+   "percent": 28.35,
+   "electorateSeats": 40,
+   "listSeats": 0,
+   "totalSeats": 40
+  },
+  {
+   "name": "Labour Party",
+   "votes": 863238,
+   "percent": 29.88,
+   "electorateSeats": 22,
+   "listSeats": 14,
+   "totalSeats": 36
+  },
+  {
+   "name": "Green Party",
+   "votes": 406356,
+   "percent": 14.06,
+   "electorateSeats": 3,
+   "listSeats": 14,
+   "totalSeats": 17
+  },
+  {
+   "name": "ACT New Zealand",
+   "votes": 304521,
+   "percent": 10.54,
+   "electorateSeats": 1,
+   "listSeats": 12,
+   "totalSeats": 13
+  },
+  {
+   "name": "New Zealand First Party",
+   "votes": 277565,
+   "percent": 9.6,
+   "electorateSeats": 0,
+   "listSeats": 12,
+   "totalSeats": 12
+  },
+  {
+   "name": "Opportunity Party",
+   "votes": 175093,
+   "percent": 6.06,
+   "electorateSeats": 0,
+   "listSeats": 7,
+   "totalSeats": 7
+  },
+  {
+   "name": "Te Pāti Māori",
+   "votes": 18310,
+   "percent": 0.63,
+   "electorateSeats": 5,
+   "listSeats": 0,
+   "totalSeats": 5
+  },
+  {
+   "name": "Aotearoa Legalise Cannabis Party",
+   "votes": 6230,
+   "percent": 0.21,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "Animal Justice Party Aotearoa New Zealand",
+   "votes": 3136,
+   "percent": 0.1,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "NZ Outdoors & Freedom Party",
+   "votes": 2991,
+   "percent": 0.1,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "Conservative Party NZ",
+   "votes": 2246,
+   "percent": 0.07,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "Women’s Rights Party",
+   "votes": 2231,
+   "percent": 0.07,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "New Zealand Loyal",
+   "votes": 2043,
+   "percent": 0.07,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "Vision New Zealand",
+   "votes": 1963,
+   "percent": 0.06,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "Te Tai Tokerau Party",
+   "votes": 1554,
+   "percent": 0.05,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "Alliance Party",
+   "votes": 1322,
+   "percent": 0.04,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  },
+  {
+   "name": "Free Palestine",
+   "votes": 1079,
+   "percent": 0.03,
+   "electorateSeats": 0,
+   "listSeats": 0,
+   "totalSeats": 0
+  }
+ ],
+ "electorates": [
+  {
+   "eNo": 1,
+   "name": "Auckland Central",
+   "votesCounted": 40008,
+   "candidateInformals": 260,
+   "partyInformals": 133,
+   "candidates": [
+    {
+     "name": "CHANG, Johan",
+     "votes": 1218
+    },
+    {
+     "name": "CHEN, Naisi",
+     "votes": 3731
+    },
+    {
+     "name": "KINSER, Candace",
+     "votes": 13887
+    },
+    {
+     "name": "MANAIA, Christopher",
+     "votes": 247
+    },
+    {
+     "name": "MODKOVA, Antonia",
+     "votes": 1285
+    },
+    {
+     "name": "SWARBRICK, Chlöe",
+     "votes": 18610
+    }
+   ],
+   "parties": [
+    {
+     "name": "Opportunity Party",
+     "votes": 4273
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10341
+    },
+    {
+     "name": "National Party",
+     "votes": 10291
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 73
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4188
+    },
+    {
+     "name": "Green Party",
+     "votes": 8444
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 11
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 36
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 11
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 20
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2039
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 11
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 19
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 90
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 3
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 21
+    }
+   ]
+  },
+  {
+   "eNo": 2,
+   "name": "Banks Peninsula",
+   "votesCounted": 53231,
+   "candidateInformals": 288,
+   "partyInformals": 142,
+   "candidates": [
+    {
+     "name": "McLELLAN, Tracey",
+     "votes": 22398
+    },
+    {
+     "name": "PAULING, Craig",
+     "votes": 6817
+    },
+    {
+     "name": "SALES, Lesley Margaret",
+     "votes": 105
+    },
+    {
+     "name": "STRINGER, John",
+     "votes": 1909
+    },
+    {
+     "name": "TURNBULL, Kyle",
+     "votes": 113
+    },
+    {
+     "name": "TURNER, AmyLorraine",
+     "votes": 116
+    },
+    {
+     "name": "WEENINK, Vanessa",
+     "votes": 19378
+    },
+    {
+     "name": "WELLMAN, Zac",
+     "votes": 1329
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 14911
+    },
+    {
+     "name": "Green Party",
+     "votes": 9794
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 43
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4318
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 47
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 61
+    },
+    {
+     "name": "National Party",
+     "votes": 13450
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4696
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 50
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 75
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 17
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 51
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 5455
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 69
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 6
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 44
+    }
+   ]
+  },
+  {
+   "eNo": 3,
+   "name": "Botany",
+   "votesCounted": 37950,
+   "candidateInformals": 435,
+   "partyInformals": 169,
+   "candidates": [
+    {
+     "name": "DAHCHE, Ali",
+     "votes": 1589
+    },
+    {
+     "name": "LEAVASA, Anae Neru",
+     "votes": 9578
+    },
+    {
+     "name": "LUXON, Christopher",
+     "votes": 23562
+    },
+    {
+     "name": "STOBO, Craig H.",
+     "votes": 1922
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 4610
+    },
+    {
+     "name": "Labour Party",
+     "votes": 7354
+    },
+    {
+     "name": "National Party",
+     "votes": 18697
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2703
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 9
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 40
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 35
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 26
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 17
+    },
+    {
+     "name": "Green Party",
+     "votes": 2480
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 11
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 21
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1686
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 35
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 5
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 26
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 26
+    }
+   ]
+  },
+  {
+   "eNo": 4,
+   "name": "Christchurch Central",
+   "votesCounted": 43247,
+   "candidateInformals": 348,
+   "partyInformals": 264,
+   "candidates": [
+    {
+     "name": "ANDERSON, Blair",
+     "votes": 398
+    },
+    {
+     "name": "ARNEIL, Mark Russell",
+     "votes": 1977
+    },
+    {
+     "name": "BYRNES, Greg",
+     "votes": 112
+    },
+    {
+     "name": "CARTER, Kahu",
+     "votes": 7865
+    },
+    {
+     "name": "HAMPTON, George",
+     "votes": 16601
+    },
+    {
+     "name": "HANSEN, Tubby",
+     "votes": 43
+    },
+    {
+     "name": "LAURIE, Hayden",
+     "votes": 117
+    },
+    {
+     "name": "SKIPPER, Eden",
+     "votes": 1472
+    },
+    {
+     "name": "STEPHENS, Dale Aotea",
+     "votes": 13255
+    }
+   ],
+   "parties": [
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 133
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3162
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 49
+    },
+    {
+     "name": "Green Party",
+     "votes": 8194
+    },
+    {
+     "name": "Labour Party",
+     "votes": 14007
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 4056
+    },
+    {
+     "name": "National Party",
+     "votes": 9871
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3285
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 50
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 25
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 14
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 12
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 19
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 52
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 6
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 4
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 44
+    }
+   ]
+  },
+  {
+   "eNo": 5,
+   "name": "Christchurch East",
+   "votesCounted": 44385,
+   "candidateInformals": 336,
+   "partyInformals": 256,
+   "candidates": [
+    {
+     "name": "BUTLER, Teresa",
+     "votes": 4993
+    },
+    {
+     "name": "DAVIDS, Alexandra",
+     "votes": 11186
+    },
+    {
+     "name": "DAVIDSON, Reuben John",
+     "votes": 21522
+    },
+    {
+     "name": "GULLERY, Ethan",
+     "votes": 207
+    },
+    {
+     "name": "HOUGHTON, Helen",
+     "votes": 272
+    },
+    {
+     "name": "LAMBERT, Paula",
+     "votes": 480
+    },
+    {
+     "name": "MUELLER-CAJAR, David",
+     "votes": 129
+    },
+    {
+     "name": "SEVERIN, Toni",
+     "votes": 1592
+    },
+    {
+     "name": "SINGH, Vikramjit",
+     "votes": 75
+    },
+    {
+     "name": "THOMPSON, Glenn",
+     "votes": 69
+    },
+    {
+     "name": "WIREMU, Shane",
+     "votes": 2568
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 7204
+    },
+    {
+     "name": "National Party",
+     "votes": 9277
+    },
+    {
+     "name": "Labour Party",
+     "votes": 16252
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 71
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 86
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 141
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 68
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3486
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 41
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4561
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 62
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 26
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2720
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 83
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 14
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 35
+    }
+   ]
+  },
+  {
+   "eNo": 6,
+   "name": "Coromandel",
+   "votesCounted": 46124,
+   "candidateInformals": 316,
+   "partyInformals": 237,
+   "candidates": [
+    {
+     "name": "ANDERSEN, Vincent",
+     "votes": 4536
+    },
+    {
+     "name": "BENNETT, Glen",
+     "votes": 8079
+    },
+    {
+     "name": "COBB, Ray",
+     "votes": 366
+    },
+    {
+     "name": "GREALEY, Pamela",
+     "votes": 5206
+    },
+    {
+     "name": "HART, Steven",
+     "votes": 186
+    },
+    {
+     "name": "McCORMICK, Mike",
+     "votes": 2519
+    },
+    {
+     "name": "SIMPSON, Scott",
+     "votes": 24292
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 7466
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8673
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 126
+    },
+    {
+     "name": "Green Party",
+     "votes": 3945
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 7342
+    },
+    {
+     "name": "National Party",
+     "votes": 15909
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 20
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 49
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 84
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 34
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 12
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 42
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2044
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 85
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 12
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 40
+    }
+   ]
+  },
+  {
+   "eNo": 7,
+   "name": "Dunedin",
+   "votesCounted": 41456,
+   "candidateInformals": 357,
+   "partyInformals": 150,
+   "candidates": [
+    {
+     "name": "ASUNCION, Kristine",
+     "votes": 8228
+    },
+    {
+     "name": "BAINBRIDGE-ZAFAR, David",
+     "votes": 1614
+    },
+    {
+     "name": "BILLOT, Victor",
+     "votes": 223
+    },
+    {
+     "name": "BROOKING, Rachel",
+     "votes": 18362
+    },
+    {
+     "name": "HERNANDEZ, Francisco Bagkus",
+     "votes": 8838
+    },
+    {
+     "name": "McDERMOTT, Adrian",
+     "votes": 366
+    },
+    {
+     "name": "McDONALD-KING, Kym",
+     "votes": 2523
+    },
+    {
+     "name": "ONG, Benedict",
+     "votes": 320
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 6911
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3696
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 62
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13733
+    },
+    {
+     "name": "Green Party",
+     "votes": 10782
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 95
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3022
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 2767
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 33
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 20
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 15
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 18
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 19
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 90
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 1
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 2
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 40
+    }
+   ]
+  },
+  {
+   "eNo": 8,
+   "name": "East Cape",
+   "votesCounted": 38376,
+   "candidateInformals": 450,
+   "partyInformals": 181,
+   "candidates": [
+    {
+     "name": "DICKSON, Gordon John",
+     "votes": 310
+    },
+    {
+     "name": "HAWKES, Darrin",
+     "votes": 2241
+    },
+    {
+     "name": "KIRKPATRICK, Dana Margot",
+     "votes": 17998
+    },
+    {
+     "name": "LUXTON, Jo",
+     "votes": 12425
+    },
+    {
+     "name": "SMITH, Cail",
+     "votes": 906
+    },
+    {
+     "name": "WALKER, Jordan",
+     "votes": 3439
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 4995
+    },
+    {
+     "name": "National Party",
+     "votes": 11338
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10849
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1672
+    },
+    {
+     "name": "Green Party",
+     "votes": 3993
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 13
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 30
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 76
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 17
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 17
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4806
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 21
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 45
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 234
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 9
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 42
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 38
+    }
+   ]
+  },
+  {
+   "eNo": 9,
+   "name": "East Coast Bays",
+   "votesCounted": 36765,
+   "candidateInformals": 295,
+   "partyInformals": 117,
+   "candidates": [
+    {
+     "name": "LIND, Allan",
+     "votes": 185
+    },
+    {
+     "name": "McENROE, Brendan",
+     "votes": 7386
+    },
+    {
+     "name": "McKEE, Abe",
+     "votes": 2915
+    },
+    {
+     "name": "MILLS, Samuel",
+     "votes": 1308
+    },
+    {
+     "name": "STANFORD, Erica",
+     "votes": 22707
+    },
+    {
+     "name": "TAYLOR, Vaughan",
+     "votes": 1307
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand Loyal",
+     "votes": 99
+    },
+    {
+     "name": "Labour Party",
+     "votes": 6958
+    },
+    {
+     "name": "Green Party",
+     "votes": 3306
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4975
+    },
+    {
+     "name": "National Party",
+     "votes": 15991
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3004
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 9
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 37
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 36
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 25
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 13
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 15
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2090
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 46
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 13
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 28
+    }
+   ]
+  },
+  {
+   "eNo": 10,
+   "name": "Epsom",
+   "votesCounted": 42693,
+   "candidateInformals": 220,
+   "partyInformals": 103,
+   "candidates": [
+    {
+     "name": "BELICH, Camilla",
+     "votes": 8024
+    },
+    {
+     "name": "GOLDSMITH, Paul",
+     "votes": 12070
+    },
+    {
+     "name": "GUMMER, Martin",
+     "votes": 496
+    },
+    {
+     "name": "JACKSON, Paul",
+     "votes": 1692
+    },
+    {
+     "name": "JERRY, Sawan",
+     "votes": 35
+    },
+    {
+     "name": "SEYMOUR, David",
+     "votes": 14662
+    },
+    {
+     "name": "XU-NAN, Lawrence",
+     "votes": 4464
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 7544
+    },
+    {
+     "name": "National Party",
+     "votes": 17496
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1853
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3806
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 17
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6093
+    },
+    {
+     "name": "Green Party",
+     "votes": 5593
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 6
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 30
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 28
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 18
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 15
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 10
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 6
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 44
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 28
+    }
+   ]
+  },
+  {
+   "eNo": 11,
+   "name": "Glendene",
+   "votesCounted": 37321,
+   "candidateInformals": 519,
+   "partyInformals": 261,
+   "candidates": [
+    {
+     "name": "FRENCH, Evan",
+     "votes": 1171
+    },
+    {
+     "name": "KUMAR, Sunil",
+     "votes": 8868
+    },
+    {
+     "name": "McNEIL, Rob",
+     "votes": 256
+    },
+    {
+     "name": "NGARO, Alfred",
+     "votes": 2565
+    },
+    {
+     "name": "ROBERTS, Amanda",
+     "votes": 1442
+    },
+    {
+     "name": "SCHUSTER, Tua",
+     "votes": 131
+    },
+    {
+     "name": "SEPULONI, Carmel Jean",
+     "votes": 17423
+    },
+    {
+     "name": "SERHAN, Yasmine",
+     "votes": 3776
+    }
+   ],
+   "parties": [
+    {
+     "name": "Opportunity Party",
+     "votes": 2069
+    },
+    {
+     "name": "National Party",
+     "votes": 8552
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 69
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3075
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 2032
+    },
+    {
+     "name": "Labour Party",
+     "votes": 15580
+    },
+    {
+     "name": "Green Party",
+     "votes": 5364
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 13
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 73
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 26
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 17
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 14
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 12
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 100
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 8
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 26
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 30
+    }
+   ]
+  },
+  {
+   "eNo": 12,
+   "name": "Hamilton East",
+   "votesCounted": 37394,
+   "candidateInformals": 394,
+   "partyInformals": 174,
+   "candidates": [
+    {
+     "name": "DANSEY, Georgie",
+     "votes": 16200
+    },
+    {
+     "name": "GIELEN, Jacobus",
+     "votes": 212
+    },
+    {
+     "name": "HAMILTON, Ryan",
+     "votes": 16027
+    },
+    {
+     "name": "LABOYRIE, Nicola",
+     "votes": 1917
+    },
+    {
+     "name": "POCOCK, Naomi",
+     "votes": 1680
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 11516
+    },
+    {
+     "name": "National Party",
+     "votes": 11445
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3230
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2428
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3419
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 9
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 33
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 51
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 51
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 25
+    },
+    {
+     "name": "Green Party",
+     "votes": 4824
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 22
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 23
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 94
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 6
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 23
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 21
+    }
+   ]
+  },
+  {
+   "eNo": 13,
+   "name": "Hamilton West",
+   "votesCounted": 37727,
+   "candidateInformals": 438,
+   "partyInformals": 252,
+   "candidates": [
+    {
+     "name": "COUPER, Nathan Lee",
+     "votes": 34
+    },
+    {
+     "name": "HUTT, Louise",
+     "votes": 4037
+    },
+    {
+     "name": "PHELPS, Steve",
+     "votes": 103
+    },
+    {
+     "name": "POKERE-PHILLIPS, Donna",
+     "votes": 136
+    },
+    {
+     "name": "POTAKA, Tama William",
+     "votes": 15375
+    },
+    {
+     "name": "SMITH, Blair",
+     "votes": 1106
+    },
+    {
+     "name": "STONE, Kevin",
+     "votes": 2448
+    },
+    {
+     "name": "THOMSON, Wiremu",
+     "votes": 104
+    },
+    {
+     "name": "WILLIAMSON, Myra",
+     "votes": 13105
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 4505
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 44
+    },
+    {
+     "name": "National Party",
+     "votes": 10845
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2012
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3754
+    },
+    {
+     "name": "Labour Party",
+     "votes": 12296
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3591
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 13
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 48
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 68
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 64
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 25
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 17
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 126
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 33
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 31
+    }
+   ]
+  },
+  {
+   "eNo": 14,
+   "name": "Henderson",
+   "votesCounted": 34587,
+   "candidateInformals": 483,
+   "partyInformals": 251,
+   "candidates": [
+    {
+     "name": "LUV, Kay",
+     "votes": 166
+    },
+    {
+     "name": "NICHOLAS, Angee",
+     "votes": 8942
+    },
+    {
+     "name": "PAPALI'I, Kelso",
+     "votes": 93
+    },
+    {
+     "name": "PEIRCE, Nick",
+     "votes": 1209
+    },
+    {
+     "name": "TALAGI, John Divine Paola",
+     "votes": 72
+    },
+    {
+     "name": "TWYFORD, Phil",
+     "votes": 16580
+    },
+    {
+     "name": "WELLS, Alika",
+     "votes": 3016
+    },
+    {
+     "name": "WILSON, David Ashley",
+     "votes": 2065
+    },
+    {
+     "name": "WONG, Almo",
+     "votes": 1125
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 8489
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 2042
+    },
+    {
+     "name": "Labour Party",
+     "votes": 15311
+    },
+    {
+     "name": "Green Party",
+     "votes": 3824
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3050
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1298
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 11
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 27
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 58
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 37
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 9
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 28
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 22
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 96
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 8
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 10
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 16
+    }
+   ]
+  },
+  {
+   "eNo": 15,
+   "name": "Hutt South",
+   "votesCounted": 47037,
+   "candidateInformals": 351,
+   "partyInformals": 478,
+   "candidates": [
+    {
+     "name": "ANDERSEN, Ginny",
+     "votes": 20889
+    },
+    {
+     "name": "BISHOP, Chris",
+     "votes": 19404
+    },
+    {
+     "name": "BOYCE, Alistair",
+     "votes": 1243
+    },
+    {
+     "name": "DICK, Malcolm",
+     "votes": 69
+    },
+    {
+     "name": "PETTERSON, Tom",
+     "votes": 50
+    },
+    {
+     "name": "SMITH, David L F",
+     "votes": 45
+    },
+    {
+     "name": "WHITE, Courtney",
+     "votes": 3084
+    },
+    {
+     "name": "WYLIE-VAN EERD, Ben",
+     "votes": 1236
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 16976
+    },
+    {
+     "name": "National Party",
+     "votes": 11227
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3711
+    },
+    {
+     "name": "Green Party",
+     "votes": 6908
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 4301
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3131
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 17
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 33
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 60
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 28
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 14
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 12
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 20
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 76
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 0
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 15
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 30
+    }
+   ]
+  },
+  {
+   "eNo": 16,
+   "name": "Ilam",
+   "votesCounted": 42845,
+   "candidateInformals": 328,
+   "partyInformals": 127,
+   "candidates": [
+    {
+     "name": "CAMPBELL, Hamish",
+     "votes": 20407
+    },
+    {
+     "name": "DAVIDSON, Mike",
+     "votes": 5372
+    },
+    {
+     "name": "FRASER, Courtney",
+     "votes": 220
+    },
+    {
+     "name": "HARPUR, Ken",
+     "votes": 1157
+    },
+    {
+     "name": "JAMIESON, Rata",
+     "votes": 13187
+    },
+    {
+     "name": "WALTON, Nathan",
+     "votes": 1443
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 14557
+    },
+    {
+     "name": "Green Party",
+     "votes": 5645
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 44
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4484
+    },
+    {
+     "name": "Labour Party",
+     "votes": 11055
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3006
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 42
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 67
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 45
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 19
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 8
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 21
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3642
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 41
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 11
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 29
+    }
+   ]
+  },
+  {
+   "eNo": 17,
+   "name": "Invercargill",
+   "votesCounted": 37477,
+   "candidateInformals": 625,
+   "partyInformals": 246,
+   "candidates": [
+    {
+     "name": "GRUMBALL, Anntwinette",
+     "votes": 933
+    },
+    {
+     "name": "KENNEDY, Dave",
+     "votes": 2450
+    },
+    {
+     "name": "LEE, Janice",
+     "votes": 11089
+    },
+    {
+     "name": "SEAGER, Hayden John",
+     "votes": 541
+    },
+    {
+     "name": "SIMMONDS, Penny",
+     "votes": 21454
+    }
+   ],
+   "parties": [
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 187
+    },
+    {
+     "name": "Green Party",
+     "votes": 2934
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10170
+    },
+    {
+     "name": "National Party",
+     "votes": 12398
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4895
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 21
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 35
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 39
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 16
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4917
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 31
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 43
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1427
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 55
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 19
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 42
+    }
+   ]
+  },
+  {
+   "eNo": 18,
+   "name": "Kaikōura",
+   "votesCounted": 41964,
+   "candidateInformals": 410,
+   "partyInformals": 180,
+   "candidates": [
+    {
+     "name": "ARBUCKLE, Jamie",
+     "votes": 5915
+    },
+    {
+     "name": "BRITTON, Iain",
+     "votes": 150
+    },
+    {
+     "name": "FLIGHT, Matt",
+     "votes": 11694
+    },
+    {
+     "name": "HILL-HUGHES, Oliver John",
+     "votes": 353
+    },
+    {
+     "name": "HOWARD, Ted",
+     "votes": 397
+    },
+    {
+     "name": "SMITH, Stuart",
+     "votes": 20323
+    },
+    {
+     "name": "SPOONER, Tom",
+     "votes": 2256
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 6243
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8579
+    },
+    {
+     "name": "National Party",
+     "votes": 14295
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6615
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 12
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 58
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 70
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 43
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 13
+    },
+    {
+     "name": "Green Party",
+     "votes": 3494
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 36
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 83
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2138
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 48
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 14
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 39
+    }
+   ]
+  },
+  {
+   "eNo": 19,
+   "name": "Kaipara ki Mahurangi",
+   "votesCounted": 44754,
+   "candidateInformals": 261,
+   "partyInformals": 190,
+   "candidates": [
+    {
+     "name": "BROWN, Zephyr",
+     "votes": 3517
+    },
+    {
+     "name": "COURT, Simon",
+     "votes": 3301
+    },
+    {
+     "name": "DENNIS, Mark",
+     "votes": 1047
+    },
+    {
+     "name": "DOTCOM, Liz",
+     "votes": 150
+    },
+    {
+     "name": "EB, Daniel",
+     "votes": 1630
+    },
+    {
+     "name": "MARCROFT, Jenny",
+     "votes": 3208
+    },
+    {
+     "name": "ROWE, Jessica",
+     "votes": 21857
+    },
+    {
+     "name": "SWINBURN, Jolyon",
+     "votes": 7954
+    },
+    {
+     "name": "WAGSTAFF, Ivan",
+     "votes": 1220
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 4270
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 7462
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 48
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2488
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5717
+    },
+    {
+     "name": "National Party",
+     "votes": 16421
+    },
+    {
+     "name": "Labour Party",
+     "votes": 7791
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 8
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 93
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 97
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 32
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 16
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 21
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 51
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 11
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 34
+    }
+   ]
+  },
+  {
+   "eNo": 20,
+   "name": "Kapiti",
+   "votesCounted": 51148,
+   "candidateInformals": 269,
+   "partyInformals": 187,
+   "candidates": [
+    {
+     "name": "COSTLEY, Tim",
+     "votes": 23293
+    },
+    {
+     "name": "GAYLOR, Penny",
+     "votes": 1704
+    },
+    {
+     "name": "GOODE, Richard",
+     "votes": 38
+    },
+    {
+     "name": "HANDFORD, Sophie",
+     "votes": 21592
+    },
+    {
+     "name": "SNG, Chee Khiang (CK)",
+     "votes": 1144
+    },
+    {
+     "name": "WALKER, Michael",
+     "votes": 56
+    },
+    {
+     "name": "WILLIS, Melody",
+     "votes": 2488
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 13909
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4620
+    },
+    {
+     "name": "Labour Party",
+     "votes": 16038
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 4457
+    },
+    {
+     "name": "Green Party",
+     "votes": 6973
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4597
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 14
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 60
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 76
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 17
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 20
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 38
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 82
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 0
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 11
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 38
+    }
+   ]
+  },
+  {
+   "eNo": 21,
+   "name": "Kenepuru",
+   "votesCounted": 42382,
+   "candidateInformals": 523,
+   "partyInformals": 294,
+   "candidates": [
+    {
+     "name": "BLACKSHAW, Jon",
+     "votes": 2010
+    },
+    {
+     "name": "EDMONDS, Barbara",
+     "votes": 23657
+    },
+    {
+     "name": "EVETTS, Matthew",
+     "votes": 10247
+    },
+    {
+     "name": "MASON, Robert",
+     "votes": 1493
+    },
+    {
+     "name": "PHAM, Lan",
+     "votes": 3748
+    },
+    {
+     "name": "WESSEX, Bob",
+     "votes": 58
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 2974
+    },
+    {
+     "name": "Labour Party",
+     "votes": 18314
+    },
+    {
+     "name": "National Party",
+     "votes": 8344
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3444
+    },
+    {
+     "name": "Green Party",
+     "votes": 6450
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 2240
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 8
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 32
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 59
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 26
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 20
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 5
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 24
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 101
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 20
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 25
+    }
+   ]
+  },
+  {
+   "eNo": 22,
+   "name": "Māngere",
+   "votesCounted": 30586,
+   "candidateInformals": 536,
+   "partyInformals": 693,
+   "candidates": [
+    {
+     "name": "AFEAKI, Hine",
+     "votes": 206
+    },
+    {
+     "name": "ALP, Kelvyn",
+     "votes": 56
+    },
+    {
+     "name": "BOURKE, Rosemary",
+     "votes": 3423
+    },
+    {
+     "name": "HAU, Vicky",
+     "votes": 2085
+    },
+    {
+     "name": "LANE, Ben",
+     "votes": 664
+    },
+    {
+     "name": "MULIPOLA, Michel",
+     "votes": 3082
+    },
+    {
+     "name": "SINGH, Manu",
+     "votes": 466
+    },
+    {
+     "name": "SOSENE, Lemauga Lydia",
+     "votes": 18433
+    },
+    {
+     "name": "TAIONE, Alani Fisher",
+     "votes": 235
+    },
+    {
+     "name": "TE MOKE, Timoti",
+     "votes": 223
+    }
+   ],
+   "parties": [
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 25
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 36
+    },
+    {
+     "name": "National Party",
+     "votes": 3372
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2624
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 786
+    },
+    {
+     "name": "Green Party",
+     "votes": 2619
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 691
+    },
+    {
+     "name": "Labour Party",
+     "votes": 19457
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 3
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 23
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 48
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 21
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 12
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 115
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 6
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 40
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 15
+    }
+   ]
+  },
+  {
+   "eNo": 23,
+   "name": "Manurewa",
+   "votesCounted": 30027,
+   "candidateInformals": 786,
+   "partyInformals": 379,
+   "candidates": [
+    {
+     "name": "MAJEED, Ghouse",
+     "votes": 4310
+    },
+    {
+     "name": "TAVUI, Avalua",
+     "votes": 396
+    },
+    {
+     "name": "TOFILAU TEVAGA, Esther",
+     "votes": 3633
+    },
+    {
+     "name": "WILLIAMS, Arena",
+     "votes": 19453
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 4650
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 69
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2739
+    },
+    {
+     "name": "Labour Party",
+     "votes": 18117
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 686
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 5
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 60
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 44
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 17
+    },
+    {
+     "name": "Green Party",
+     "votes": 2468
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 17
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 11
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 520
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 136
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 6
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 82
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 21
+    }
+   ]
+  },
+  {
+   "eNo": 24,
+   "name": "Maungakiekie",
+   "votesCounted": 41402,
+   "candidateInformals": 494,
+   "partyInformals": 219,
+   "candidates": [
+    {
+     "name": "ALVAREZ DE LUGO, Juan",
+     "votes": 1074
+    },
+    {
+     "name": "FLEMING, Greg",
+     "votes": 17639
+    },
+    {
+     "name": "LANGEVELD, Keegan",
+     "votes": 1148
+    },
+    {
+     "name": "PAULL, Derrick",
+     "votes": 1349
+    },
+    {
+     "name": "POWELL, Adam",
+     "votes": 3551
+    },
+    {
+     "name": "RADHAKRISHNAN, Priyanca",
+     "votes": 15013
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 3628
+    },
+    {
+     "name": "National Party",
+     "votes": 12143
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2560
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3263
+    },
+    {
+     "name": "Green Party",
+     "votes": 5580
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13698
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 19
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 31
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 60
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 17
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 21
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 11
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 15
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 71
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 7
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 28
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 31
+    }
+   ]
+  },
+  {
+   "eNo": 25,
+   "name": "Mt Albert",
+   "votesCounted": 42027,
+   "candidateInformals": 310,
+   "partyInformals": 116,
+   "candidates": [
+    {
+     "name": "BONES, Luke",
+     "votes": 116
+    },
+    {
+     "name": "EDEN-WHAITIRI, Sheldon",
+     "votes": 914
+    },
+    {
+     "name": "LEE, Melissa",
+     "votes": 11311
+    },
+    {
+     "name": "MENENDEZ MARCH, Ricardo",
+     "votes": 5059
+    },
+    {
+     "name": "PRICE, Alex",
+     "votes": 866
+    },
+    {
+     "name": "WHITE, Helen",
+     "votes": 17329
+    },
+    {
+     "name": "WONG, Qiulae",
+     "votes": 5137
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 2176
+    },
+    {
+     "name": "National Party",
+     "votes": 10143
+    },
+    {
+     "name": "Green Party",
+     "votes": 8945
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 2992
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13021
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 4349
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 10
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 34
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 54
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 16
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 22
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 8
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 14
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 80
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 19
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 25
+    }
+   ]
+  },
+  {
+   "eNo": 26,
+   "name": "Mt Maunganui",
+   "votesCounted": 42900,
+   "candidateInformals": 323,
+   "partyInformals": 126,
+   "candidates": [
+    {
+     "name": "COXHEAD, Tracey",
+     "votes": 3084
+    },
+    {
+     "name": "GRATTAN, Caitlin",
+     "votes": 284
+    },
+    {
+     "name": "GREY, Rhieve",
+     "votes": 8678
+    },
+    {
+     "name": "LUXTON, Cameron",
+     "votes": 2303
+    },
+    {
+     "name": "RUTHERFORD, Tom",
+     "votes": 24071
+    },
+    {
+     "name": "WESTHEAD, Pualele Joan",
+     "votes": 3203
+    },
+    {
+     "name": "YOUNG, Greer",
+     "votes": 133
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 5566
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 72
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8310
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6145
+    },
+    {
+     "name": "National Party",
+     "votes": 16049
+    },
+    {
+     "name": "Green Party",
+     "votes": 3864
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 32
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 6
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 68
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 29
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 38
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2436
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 103
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 17
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 24
+    }
+   ]
+  },
+  {
+   "eNo": 27,
+   "name": "Mt Roskill",
+   "votesCounted": 37906,
+   "candidateInformals": 530,
+   "partyInformals": 232,
+   "candidates": [
+    {
+     "name": "ATTENBOROUGH, Jamie",
+     "votes": 974
+    },
+    {
+     "name": "CHEUNG, Carlos",
+     "votes": 15453
+    },
+    {
+     "name": "DEO, Priyanka",
+     "votes": 186
+    },
+    {
+     "name": "IYER, Anjana",
+     "votes": 2272
+    },
+    {
+     "name": "QU, Yang",
+     "votes": 939
+    },
+    {
+     "name": "WOOD, Michael Philip",
+     "votes": 16581
+    }
+   ],
+   "parties": [
+    {
+     "name": "Opportunity Party",
+     "votes": 2086
+    },
+    {
+     "name": "National Party",
+     "votes": 12520
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 43
+    },
+    {
+     "name": "Green Party",
+     "votes": 4339
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 2328
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13935
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 18
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 32
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 29
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 47
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2169
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 10
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 12
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 69
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 1
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 15
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 21
+    }
+   ]
+  },
+  {
+   "eNo": 28,
+   "name": "Napier",
+   "votesCounted": 41285,
+   "candidateInformals": 293,
+   "partyInformals": 274,
+   "candidates": [
+    {
+     "name": "BOONEN, Roy Peter",
+     "votes": 2109
+    },
+    {
+     "name": "HEDLEY, Alex",
+     "votes": 13579
+    },
+    {
+     "name": "LAWRENCE, Te Kira",
+     "votes": 2243
+    },
+    {
+     "name": "NIMON, Katie",
+     "votes": 20957
+    },
+    {
+     "name": "ORMOND, John",
+     "votes": 1479
+    },
+    {
+     "name": "WAINWRIGHT, Graham",
+     "votes": 338
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 3773
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10707
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4258
+    },
+    {
+     "name": "National Party",
+     "votes": 13796
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6038
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 17
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 39
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 79
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 28
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 17
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 24
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 41
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2086
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 71
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 1
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 11
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 25
+    }
+   ]
+  },
+  {
+   "eNo": 29,
+   "name": "Nelson",
+   "votesCounted": 43802,
+   "candidateInformals": 375,
+   "partyInformals": 210,
+   "candidates": [
+    {
+     "name": "BAILLIE, Chris",
+     "votes": 1562
+    },
+    {
+     "name": "BOYACK, Rachel",
+     "votes": 17572
+    },
+    {
+     "name": "CAMERON, Blair",
+     "votes": 18655
+    },
+    {
+     "name": "CRAWFORD, Julian",
+     "votes": 228
+    },
+    {
+     "name": "DYER, Bruce",
+     "votes": 69
+    },
+    {
+     "name": "KUNTZSCH, Jodie",
+     "votes": 1255
+    },
+    {
+     "name": "O'NEILL-STEVENS, Rohan",
+     "votes": 3595
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 5026
+    },
+    {
+     "name": "Labour Party",
+     "votes": 12594
+    },
+    {
+     "name": "National Party",
+     "votes": 11504
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 54
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3654
+    },
+    {
+     "name": "Green Party",
+     "votes": 6174
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 19
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 37
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 80
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 20
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 14
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4139
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 89
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 55
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 98
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 32
+    }
+   ]
+  },
+  {
+   "eNo": 30,
+   "name": "New Plymouth",
+   "votesCounted": 43050,
+   "candidateInformals": 629,
+   "partyInformals": 220,
+   "candidates": [
+    {
+     "name": "CLINTON-GOHDES, Amanda",
+     "votes": 15245
+    },
+    {
+     "name": "KANE, Rusty",
+     "votes": 711
+    },
+    {
+     "name": "LUCAS, Sarah",
+     "votes": 2672
+    },
+    {
+     "name": "MacLEOD, David",
+     "votes": 23352
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 10324
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2620
+    },
+    {
+     "name": "National Party",
+     "votes": 14270
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 5748
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 16
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 48
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 98
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 20
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 23
+    },
+    {
+     "name": "Green Party",
+     "votes": 4269
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5171
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 21
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 39
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 91
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 29
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 40
+    }
+   ]
+  },
+  {
+   "eNo": 31,
+   "name": "North Shore",
+   "votesCounted": 41551,
+   "candidateInformals": 313,
+   "partyInformals": 112,
+   "candidates": [
+    {
+     "name": "CHHOUR, Karen",
+     "votes": 2097
+    },
+    {
+     "name": "COLLINS, Sam",
+     "votes": 10124
+    },
+    {
+     "name": "JACOBSEN, Josh",
+     "votes": 3480
+    },
+    {
+     "name": "KNILL, Holly",
+     "votes": 2066
+    },
+    {
+     "name": "WATTS, Simon",
+     "votes": 22695
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 6183
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8438
+    },
+    {
+     "name": "Green Party",
+     "votes": 4359
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3355
+    },
+    {
+     "name": "National Party",
+     "votes": 16245
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 17
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 38
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 36
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 17
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 15
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2626
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 15
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 15
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 40
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 3
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 34
+    }
+   ]
+  },
+  {
+   "eNo": 32,
+   "name": "Northcote",
+   "votesCounted": 40147,
+   "candidateInformals": 331,
+   "partyInformals": 184,
+   "candidates": [
+    {
+     "name": "BIDOIS, Dan",
+     "votes": 18315
+    },
+    {
+     "name": "CARRINGTON, Lily",
+     "votes": 187
+    },
+    {
+     "name": "DRURY, Marie",
+     "votes": 96
+    },
+    {
+     "name": "FORD, Barak",
+     "votes": 68
+    },
+    {
+     "name": "GOODSIR, Bhen",
+     "votes": 2240
+    },
+    {
+     "name": "HABRAKEN, Daryl",
+     "votes": 1039
+    },
+    {
+     "name": "HALBERT, Shanan",
+     "votes": 15110
+    },
+    {
+     "name": "LUNDQVIST, Martin",
+     "votes": 714
+    },
+    {
+     "name": "MARSH, Cody",
+     "votes": 1261
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 12551
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 72
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 57
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 37
+    },
+    {
+     "name": "Green Party",
+     "votes": 5567
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2904
+    },
+    {
+     "name": "Labour Party",
+     "votes": 11352
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3843
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3374
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 9
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 55
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 20
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 22
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 44
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 4
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 49
+    }
+   ]
+  },
+  {
+   "eNo": 33,
+   "name": "Northland",
+   "votesCounted": 44227,
+   "candidateInformals": 285,
+   "partyInformals": 191,
+   "candidates": [
+    {
+     "name": "CAMERON, Mark",
+     "votes": 2442
+    },
+    {
+     "name": "FINLAYSON, Mike",
+     "votes": 4184
+    },
+    {
+     "name": "JONES, Shane",
+     "votes": 6629
+    },
+    {
+     "name": "LATIMER, Ashleigh",
+     "votes": 10066
+    },
+    {
+     "name": "LYE, Jeffrey",
+     "votes": 526
+    },
+    {
+     "name": "LYELL, Douglas Robert",
+     "votes": 125
+    },
+    {
+     "name": "McCALLUM, Grant Lewis",
+     "votes": 18751
+    },
+    {
+     "name": "McINTOSH, Richard",
+     "votes": 189
+    },
+    {
+     "name": "VERHOEVEN, Pete",
+     "votes": 164
+    },
+    {
+     "name": "WAIT, Alistair",
+     "votes": 244
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 7053
+    },
+    {
+     "name": "Green Party",
+     "votes": 4879
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 7284
+    },
+    {
+     "name": "Labour Party",
+     "votes": 9283
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 168
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 91
+    },
+    {
+     "name": "National Party",
+     "votes": 12653
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 125
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 118
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 9
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 49
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 10
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2069
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 126
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 55
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 34
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 30
+    }
+   ]
+  },
+  {
+   "eNo": 34,
+   "name": "Ōtāhuhu",
+   "votesCounted": 27403,
+   "candidateInformals": 683,
+   "partyInformals": 383,
+   "candidates": [
+    {
+     "name": "ALCOCK, John",
+     "votes": 179
+    },
+    {
+     "name": "ARYA, Lalit",
+     "votes": 3962
+    },
+    {
+     "name": "DEVOE, Henrietta",
+     "votes": 721
+    },
+    {
+     "name": "FALEU, Phillip Harry",
+     "votes": 146
+    },
+    {
+     "name": "HAUNGA, Eseta",
+     "votes": 157
+    },
+    {
+     "name": "MACRAE-MARTIN, Adam",
+     "votes": 543
+    },
+    {
+     "name": "MOKARAKA, Karl",
+     "votes": 293
+    },
+    {
+     "name": "ROBB, James Gordon",
+     "votes": 121
+    },
+    {
+     "name": "SALESA, Jenny",
+     "votes": 17224
+    },
+    {
+     "name": "SKIPWITH, Te Whatanui Leka",
+     "votes": 2109
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand Loyal",
+     "votes": 65
+    },
+    {
+     "name": "National Party",
+     "votes": 4115
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 587
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 612
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 74
+    },
+    {
+     "name": "Labour Party",
+     "votes": 17105
+    },
+    {
+     "name": "Green Party",
+     "votes": 2171
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 7
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 16
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 37
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 21
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2075
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 12
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 87
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 10
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 15
+    }
+   ]
+  },
+  {
+   "eNo": 35,
+   "name": "Pakuranga",
+   "votesCounted": 38363,
+   "candidateInformals": 441,
+   "partyInformals": 182,
+   "candidates": [
+    {
+     "name": "BROWN, Simeon",
+     "votes": 24210
+    },
+    {
+     "name": "HUANG, Kevin",
+     "votes": 2458
+    },
+    {
+     "name": "MATTHEWS, Campbell Henry",
+     "votes": 9445
+    },
+    {
+     "name": "PARMAR, Parmjeet",
+     "votes": 1129
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 17269
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2039
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8055
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4633
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 11
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 37
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 59
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 31
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 23
+    },
+    {
+     "name": "Green Party",
+     "votes": 2960
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2922
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 18
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 18
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 52
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 14
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 38
+    }
+   ]
+  },
+  {
+   "eNo": 36,
+   "name": "Palmerston North",
+   "votesCounted": 41774,
+   "candidateInformals": 706,
+   "partyInformals": 186,
+   "candidates": [
+    {
+     "name": "BAKER, Brian",
+     "votes": 590
+    },
+    {
+     "name": "BANSAL, Ankit",
+     "votes": 15842
+    },
+    {
+     "name": "GHIMIRE, Netra Prasad",
+     "votes": 1280
+    },
+    {
+     "name": "MOSS, Joshua",
+     "votes": 283
+    },
+    {
+     "name": "TUIONO, Teanau",
+     "votes": 3121
+    },
+    {
+     "name": "UTIKERE, Tangi",
+     "votes": 19342
+    }
+   ],
+   "parties": [
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 94
+    },
+    {
+     "name": "National Party",
+     "votes": 10677
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2606
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 44
+    },
+    {
+     "name": "Green Party",
+     "votes": 5377
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13800
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4351
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 87
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 43
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 12
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4288
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 26
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 27
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 106
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 14
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 32
+    }
+   ]
+  },
+  {
+   "eNo": 37,
+   "name": "Papakura",
+   "votesCounted": 36168,
+   "candidateInformals": 600,
+   "partyInformals": 210,
+   "candidates": [
+    {
+     "name": "CHATTERTON, Emma May",
+     "votes": 18831
+    },
+    {
+     "name": "DALTON, Angela",
+     "votes": 3439
+    },
+    {
+     "name": "KANONGATA'A, Anahila",
+     "votes": 9809
+    },
+    {
+     "name": "SINGH, Malkiat",
+     "votes": 1524
+    },
+    {
+     "name": "TAMAKI, Hannah",
+     "votes": 600
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 13101
+    },
+    {
+     "name": "Green Party",
+     "votes": 2535
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10901
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4040
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 121
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 7
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 42
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 56
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 34
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 10
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3757
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 13
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 30
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1157
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 123
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 28
+    }
+   ]
+  },
+  {
+   "eNo": 38,
+   "name": "Port Waikato",
+   "votesCounted": 42681,
+   "candidateInformals": 430,
+   "partyInformals": 190,
+   "candidates": [
+    {
+     "name": "BRACHI, Matt",
+     "votes": 9450
+    },
+    {
+     "name": "COSTELLO, Casey",
+     "votes": 5031
+    },
+    {
+     "name": "LOCHEAD-MACMILLAN, Sarah",
+     "votes": 2853
+    },
+    {
+     "name": "MORGAN, Carl",
+     "votes": 3214
+    },
+    {
+     "name": "PAUL, Matthew",
+     "votes": 20985
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 9105
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5783
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6729
+    },
+    {
+     "name": "Green Party",
+     "votes": 3099
+    },
+    {
+     "name": "National Party",
+     "votes": 15708
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 16
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 70
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 99
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 47
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 13
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 39
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 41
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1570
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 100
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 27
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 42
+    }
+   ]
+  },
+  {
+   "eNo": 39,
+   "name": "Rangitata",
+   "votesCounted": 40292,
+   "candidateInformals": 316,
+   "partyInformals": 185,
+   "candidates": [
+    {
+     "name": "ALLRED, Aaron",
+     "votes": 1062
+    },
+    {
+     "name": "HARRIS, Matt",
+     "votes": 805
+    },
+    {
+     "name": "McCRACKEN, Kevin",
+     "votes": 160
+    },
+    {
+     "name": "MALAMA, Sange",
+     "votes": 9362
+    },
+    {
+     "name": "MEAGER, James",
+     "votes": 24271
+    },
+    {
+     "name": "NICHOLSON, Isaac",
+     "votes": 1978
+    },
+    {
+     "name": "RICHARDS, Dave",
+     "votes": 1738
+    },
+    {
+     "name": "THOMAS, Karl",
+     "votes": 115
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 5794
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1497
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 51
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10678
+    },
+    {
+     "name": "National Party",
+     "votes": 14433
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4817
+    },
+    {
+     "name": "Green Party",
+     "votes": 2517
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 68
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 4
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 39
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 93
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 14
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 16
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 37
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 6
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 41
+    }
+   ]
+  },
+  {
+   "eNo": 40,
+   "name": "Rangitīkei",
+   "votesCounted": 45429,
+   "candidateInformals": 453,
+   "partyInformals": 239,
+   "candidates": [
+    {
+     "name": "BACKHOUSE, Cedric",
+     "votes": 270
+    },
+    {
+     "name": "GIBSON, Steve",
+     "votes": 4099
+    },
+    {
+     "name": "HOGGARD, Andrew",
+     "votes": 3940
+    },
+    {
+     "name": "LONG, Bernard",
+     "votes": 3382
+    },
+    {
+     "name": "REDMAYNE, Suze",
+     "votes": 19432
+    },
+    {
+     "name": "SEVERINSEN, Karl",
+     "votes": 13039
+    },
+    {
+     "name": "SMITH, Jason Michael",
+     "votes": 199
+    }
+   ],
+   "parties": [
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 102
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 6755
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6562
+    },
+    {
+     "name": "Green Party",
+     "votes": 3661
+    },
+    {
+     "name": "National Party",
+     "votes": 13439
+    },
+    {
+     "name": "Labour Party",
+     "votes": 12216
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 53
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 17
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 55
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 100
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 38
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 16
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1977
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 135
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 5
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 18
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 41
+    }
+   ]
+  },
+  {
+   "eNo": 41,
+   "name": "Remutaka",
+   "votesCounted": 44696,
+   "candidateInformals": 457,
+   "partyInformals": 182,
+   "candidates": [
+    {
+     "name": "DENCH, Victor Edward",
+     "votes": 138
+    },
+    {
+     "name": "ELDER, Nigel",
+     "votes": 2223
+    },
+    {
+     "name": "FOSTER, Andy",
+     "votes": 3812
+    },
+    {
+     "name": "HIPKINS, Chris",
+     "votes": 24964
+    },
+    {
+     "name": "LATEEF, Zabeen",
+     "votes": 8382
+    },
+    {
+     "name": "NORTON, Chris",
+     "votes": 2726
+    },
+    {
+     "name": "ROSS, Luke",
+     "votes": 1399
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 3301
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4504
+    },
+    {
+     "name": "Labour Party",
+     "votes": 18488
+    },
+    {
+     "name": "National Party",
+     "votes": 9102
+    },
+    {
+     "name": "Green Party",
+     "votes": 5711
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2972
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 23
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 51
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 95
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 31
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 13
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 32
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 104
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 5
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 29
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 42
+    }
+   ]
+  },
+  {
+   "eNo": 42,
+   "name": "Rotorua",
+   "votesCounted": 36775,
+   "candidateInformals": 344,
+   "partyInformals": 191,
+   "candidates": [
+    {
+     "name": "BROWN, Billy",
+     "votes": 3682
+    },
+    {
+     "name": "LILEY, Finn",
+     "votes": 1346
+    },
+    {
+     "name": "McCLAY, Todd",
+     "votes": 18267
+    },
+    {
+     "name": "WANG, Fisher",
+     "votes": 12736
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 5187
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1951
+    },
+    {
+     "name": "National Party",
+     "votes": 11492
+    },
+    {
+     "name": "Labour Party",
+     "votes": 9043
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4843
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 13
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 33
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 79
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 21
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 9
+    },
+    {
+     "name": "Green Party",
+     "votes": 3604
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 24
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 32
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 158
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 3
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 70
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 22
+    }
+   ]
+  },
+  {
+   "eNo": 43,
+   "name": "Selwyn",
+   "votesCounted": 45380,
+   "candidateInformals": 222,
+   "partyInformals": 130,
+   "candidates": [
+    {
+     "name": "DE ANDA, Alma",
+     "votes": 3249
+    },
+    {
+     "name": "GAUTAM, Sunita",
+     "votes": 9310
+    },
+    {
+     "name": "GRIGG, Nicola",
+     "votes": 24640
+    },
+    {
+     "name": "LUKE, Jesse",
+     "votes": 152
+    },
+    {
+     "name": "MEE, Adrian",
+     "votes": 1445
+    },
+    {
+     "name": "MUNDT, Elizabeth",
+     "votes": 2781
+    },
+    {
+     "name": "MURRAY, Iain",
+     "votes": 1810
+    },
+    {
+     "name": "RAKOVIC, Zoran",
+     "votes": 1112
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 3960
+    },
+    {
+     "name": "Labour Party",
+     "votes": 9787
+    },
+    {
+     "name": "National Party",
+     "votes": 16269
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 35
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2723
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5375
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6820
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 45
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 63
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 38
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 10
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 15
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 23
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 47
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 7
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 31
+    }
+   ]
+  },
+  {
+   "eNo": 44,
+   "name": "Southland",
+   "votesCounted": 39810,
+   "candidateInformals": 270,
+   "partyInformals": 107,
+   "candidates": [
+    {
+     "name": "BEEBE, Bianca",
+     "votes": 2490
+    },
+    {
+     "name": "HERRICK, Jason",
+     "votes": 3059
+    },
+    {
+     "name": "McDONALD, Peter",
+     "votes": 9193
+    },
+    {
+     "name": "MACLEAN, Naomi",
+     "votes": 134
+    },
+    {
+     "name": "MOONEY, Joseph",
+     "votes": 21614
+    },
+    {
+     "name": "STEPHENSON, Todd",
+     "votes": 2535
+    }
+   ],
+   "parties": [
+    {
+     "name": "Opportunity Party",
+     "votes": 2436
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4279
+    },
+    {
+     "name": "Labour Party",
+     "votes": 6581
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 25
+    },
+    {
+     "name": "National Party",
+     "votes": 15619
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6697
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 11
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 28
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 107
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 18
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 7
+    },
+    {
+     "name": "Green Party",
+     "votes": 3735
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 25
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 46
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 55
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 32
+    }
+   ]
+  },
+  {
+   "eNo": 45,
+   "name": "Taieri",
+   "votesCounted": 42595,
+   "candidateInformals": 356,
+   "partyInformals": 203,
+   "candidates": [
+    {
+     "name": "BYARS, Robbie",
+     "votes": 1914
+    },
+    {
+     "name": "FRENCH, Matthew",
+     "votes": 12770
+    },
+    {
+     "name": "KNIGHT, Anna",
+     "votes": 207
+    },
+    {
+     "name": "LEARY, Ingrid",
+     "votes": 17959
+    },
+    {
+     "name": "PATTERSON, Mark",
+     "votes": 5162
+    },
+    {
+     "name": "WILLIS, Scott",
+     "votes": 3870
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 4336
+    },
+    {
+     "name": "National Party",
+     "votes": 10962
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 68
+    },
+    {
+     "name": "Labour Party",
+     "votes": 14447
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4889
+    },
+    {
+     "name": "Green Party",
+     "votes": 4998
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 50
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 73
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 24
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 7
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 19
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 38
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2349
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 74
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 8
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 48
+    }
+   ]
+  },
+  {
+   "eNo": 46,
+   "name": "Takanini",
+   "votesCounted": 32931,
+   "candidateInformals": 730,
+   "partyInformals": 266,
+   "candidates": [
+    {
+     "name": "IKILEI, Elliot",
+     "votes": 2362
+    },
+    {
+     "name": "NAKHLE, Rima",
+     "votes": 14059
+    },
+    {
+     "name": "SINGH, Kharag",
+     "votes": 13600
+    },
+    {
+     "name": "TEIO, Paul",
+     "votes": 223
+    },
+    {
+     "name": "TULLOCH, Lynley",
+     "votes": 495
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 2625
+    },
+    {
+     "name": "National Party",
+     "votes": 11684
+    },
+    {
+     "name": "Labour Party",
+     "votes": 12771
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 21
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 46
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 1845
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 8
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 32
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 33
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 18
+    },
+    {
+     "name": "Green Party",
+     "votes": 2455
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 10
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 979
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 69
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 43
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 24
+    }
+   ]
+  },
+  {
+   "eNo": 47,
+   "name": "Tāmaki",
+   "votesCounted": 44476,
+   "candidateInformals": 375,
+   "partyInformals": 372,
+   "candidates": [
+    {
+     "name": "CHRISTMAS, James",
+     "votes": 9145
+    },
+    {
+     "name": "HARRIS, Max",
+     "votes": 12243
+    },
+    {
+     "name": "HASKELL, Sacha",
+     "votes": 1412
+    },
+    {
+     "name": "MACKENZIE MAYO, Donald",
+     "votes": 2054
+    },
+    {
+     "name": "MURALIDHAR, Mahesh",
+     "votes": 18167
+    },
+    {
+     "name": "PAUSINA, Ryan Earl",
+     "votes": 144
+    },
+    {
+     "name": "SMITH, Finlay",
+     "votes": 191
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 6926
+    },
+    {
+     "name": "Labour Party",
+     "votes": 9340
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 3409
+    },
+    {
+     "name": "Green Party",
+     "votes": 4345
+    },
+    {
+     "name": "National Party",
+     "votes": 17653
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 5
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 21
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 38
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 9
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 10
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2240
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 15
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 7
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 48
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 14
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 22
+    }
+   ]
+  },
+  {
+   "eNo": 48,
+   "name": "Taranaki-King Country",
+   "votesCounted": 42831,
+   "candidateInformals": 317,
+   "partyInformals": 154,
+   "candidates": [
+    {
+     "name": "JOVICIC, Ivana",
+     "votes": 3031
+    },
+    {
+     "name": "KURIGER, Barbara Joan",
+     "votes": 21882
+    },
+    {
+     "name": "McCABE, Phil",
+     "votes": 4129
+    },
+    {
+     "name": "PATTEMORE, David",
+     "votes": 8496
+    },
+    {
+     "name": "SMITH, Lee",
+     "votes": 4501
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 7359
+    },
+    {
+     "name": "National Party",
+     "votes": 15459
+    },
+    {
+     "name": "Green Party",
+     "votes": 3618
+    },
+    {
+     "name": "Labour Party",
+     "votes": 7983
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5914
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 18
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 55
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 98
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 59
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 12
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 21
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 59
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1839
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 132
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 17
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 32
+    }
+   ]
+  },
+  {
+   "eNo": 49,
+   "name": "Taupō",
+   "votesCounted": 44351,
+   "candidateInformals": 662,
+   "partyInformals": 233,
+   "candidates": [
+    {
+     "name": "FLATT, Chris",
+     "votes": 11576
+    },
+    {
+     "name": "KEARNEY, Celine",
+     "votes": 2801
+    },
+    {
+     "name": "NIKOLAO, Itania",
+     "votes": 284
+    },
+    {
+     "name": "PLUMMER, Sam",
+     "votes": 1788
+    },
+    {
+     "name": "UPSTON, Louise Claire",
+     "votes": 25885
+    },
+    {
+     "name": "WILSON, Gordon",
+     "votes": 654
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 9967
+    },
+    {
+     "name": "Green Party",
+     "votes": 3394
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2097
+    },
+    {
+     "name": "National Party",
+     "votes": 15676
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 67
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 7324
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 9
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 48
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 91
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 28
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 7
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5212
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 49
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 95
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 5
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 25
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 24
+    }
+   ]
+  },
+  {
+   "eNo": 50,
+   "name": "Tauranga",
+   "votesCounted": 42291,
+   "candidateInformals": 490,
+   "partyInformals": 127,
+   "candidates": [
+    {
+     "name": "CARTER, Michael",
+     "votes": 2000
+    },
+    {
+     "name": "CONNELY, Sam",
+     "votes": 421
+    },
+    {
+     "name": "MALTBY, Tim",
+     "votes": 394
+    },
+    {
+     "name": "NORTON, Bryan",
+     "votes": 2904
+    },
+    {
+     "name": "OOSTHUIZEN, Daniël",
+     "votes": 2272
+    },
+    {
+     "name": "TINETTI, Jan",
+     "votes": 10607
+    },
+    {
+     "name": "UFFINDELL, Sam",
+     "votes": 22342
+    }
+   ],
+   "parties": [
+    {
+     "name": "Opportunity Party",
+     "votes": 2563
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 62
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 5890
+    },
+    {
+     "name": "Green Party",
+     "votes": 3590
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8600
+    },
+    {
+     "name": "National Party",
+     "votes": 15337
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 11
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 77
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 31
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5782
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 22
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 39
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 91
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 1
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 23
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 34
+    }
+   ]
+  },
+  {
+   "eNo": 51,
+   "name": "Tukituki",
+   "votesCounted": 38962,
+   "candidateInformals": 275,
+   "partyInformals": 275,
+   "candidates": [
+    {
+     "name": "DOUGLAS, Rob",
+     "votes": 1128
+    },
+    {
+     "name": "LONGWORTH, Mark Norman",
+     "votes": 2406
+    },
+    {
+     "name": "MANNING, Romana (Marnz)",
+     "votes": 249
+    },
+    {
+     "name": "RANDELL, Taine",
+     "votes": 4355
+    },
+    {
+     "name": "SCOTT, Dan",
+     "votes": 9579
+    },
+    {
+     "name": "SETON, Grant",
+     "votes": 48
+    },
+    {
+     "name": "TOSH, Allister David",
+     "votes": 35
+    },
+    {
+     "name": "WARD, Rachel",
+     "votes": 1304
+    },
+    {
+     "name": "WEDD, Catherine",
+     "votes": 19175
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 5855
+    },
+    {
+     "name": "Green Party",
+     "votes": 3468
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 84
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 4456
+    },
+    {
+     "name": "Labour Party",
+     "votes": 9694
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2050
+    },
+    {
+     "name": "National Party",
+     "votes": 12829
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 9
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 40
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 31
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 4
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 19
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 27
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 73
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 1
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 12
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 35
+    }
+   ]
+  },
+  {
+   "eNo": 52,
+   "name": "Upper Harbour",
+   "votesCounted": 38139,
+   "candidateInformals": 401,
+   "partyInformals": 230,
+   "candidates": [
+    {
+     "name": "BARAL, Hannah Pia",
+     "votes": 9498
+    },
+    {
+     "name": "BREWER, Cameron",
+     "votes": 19548
+    },
+    {
+     "name": "GRIFFITHS, Jonathon",
+     "votes": 214
+    },
+    {
+     "name": "PATROS, Panos",
+     "votes": 1453
+    },
+    {
+     "name": "RICHARDS, Ryan",
+     "votes": 3056
+    },
+    {
+     "name": "SOARES, Bernadette",
+     "votes": 1576
+    },
+    {
+     "name": "TEVAGA, Romeo",
+     "votes": 1484
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 9261
+    },
+    {
+     "name": "National Party",
+     "votes": 15031
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 4406
+    },
+    {
+     "name": "Green Party",
+     "votes": 3688
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 2870
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2405
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 5
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 30
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 48
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 32
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 15
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 8
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 17
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 60
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 7
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 24
+    }
+   ]
+  },
+  {
+   "eNo": 53,
+   "name": "Waikato",
+   "votesCounted": 43665,
+   "candidateInformals": 435,
+   "partyInformals": 228,
+   "candidates": [
+    {
+     "name": "COOKSON, Robert John",
+     "votes": 4434
+    },
+    {
+     "name": "PARMAR, Ash",
+     "votes": 2443
+    },
+    {
+     "name": "ROBINSON, Turi Te Kamonga",
+     "votes": 208
+    },
+    {
+     "name": "TOKO, Jamie",
+     "votes": 10850
+    },
+    {
+     "name": "VAN DE MOLEN, Tim",
+     "votes": 24351
+    },
+    {
+     "name": "WHYTE, Brendan Richard",
+     "votes": 325
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand First Party",
+     "votes": 5878
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 7136
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8296
+    },
+    {
+     "name": "National Party",
+     "votes": 16969
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 8
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 49
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 111
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 50
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 13
+    },
+    {
+     "name": "Green Party",
+     "votes": 2882
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 31
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 31
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1811
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 119
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 20
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 31
+    }
+   ]
+  },
+  {
+   "eNo": 54,
+   "name": "Waimakariri",
+   "votesCounted": 50162,
+   "candidateInformals": 329,
+   "partyInformals": 158,
+   "candidates": [
+    {
+     "name": "BETTRIDGE, Ashley",
+     "votes": 2042
+    },
+    {
+     "name": "DOOCEY, Matt",
+     "votes": 26711
+    },
+    {
+     "name": "FARRELLY, Jackie",
+     "votes": 2915
+    },
+    {
+     "name": "ROSEWARNE, Dan",
+     "votes": 14320
+    },
+    {
+     "name": "WESLEY, Richard",
+     "votes": 3155
+    }
+   ],
+   "parties": [
+    {
+     "name": "ACT New Zealand",
+     "votes": 6912
+    },
+    {
+     "name": "National Party",
+     "votes": 16521
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 6462
+    },
+    {
+     "name": "Labour Party",
+     "votes": 12552
+    },
+    {
+     "name": "Green Party",
+     "votes": 4532
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 27
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 51
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 73
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 69
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 15
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 16
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 50
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2606
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 52
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 18
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 44
+    }
+   ]
+  },
+  {
+   "eNo": 55,
+   "name": "Wairarapa",
+   "votesCounted": 46516,
+   "candidateInformals": 265,
+   "partyInformals": 228,
+   "candidates": [
+    {
+     "name": "ALE, Victoria",
+     "votes": 75
+    },
+    {
+     "name": "BUTTERICK, Mike",
+     "votes": 19607
+    },
+    {
+     "name": "CRAIG, Lauren",
+     "votes": 1417
+    },
+    {
+     "name": "GARDNER, Jared Warren",
+     "votes": 82
+    },
+    {
+     "name": "McANULTY, Kieran",
+     "votes": 19688
+    },
+    {
+     "name": "MARK, Ron",
+     "votes": 4000
+    },
+    {
+     "name": "SHEPHERD, Matt",
+     "votes": 558
+    },
+    {
+     "name": "YOUNG, Barry",
+     "votes": 320
+    }
+   ],
+   "parties": [
+    {
+     "name": "Alliance Party",
+     "votes": 63
+    },
+    {
+     "name": "National Party",
+     "votes": 14068
+    },
+    {
+     "name": "Green Party",
+     "votes": 4300
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13317
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5685
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2461
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 123
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 5891
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 59
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 112
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 30
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 6
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 31
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 80
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 10
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 50
+    }
+   ]
+  },
+  {
+   "eNo": 56,
+   "name": "Waitākere",
+   "votesCounted": 40678,
+   "candidateInformals": 544,
+   "partyInformals": 205,
+   "candidates": [
+    {
+     "name": "ABEL, Steve",
+     "votes": 5868
+    },
+    {
+     "name": "LOHENI, Agnes",
+     "votes": 12379
+    },
+    {
+     "name": "O'KEEFE, Bianca",
+     "votes": 1438
+    },
+    {
+     "name": "ROACH, Mark",
+     "votes": 1398
+    },
+    {
+     "name": "SHERIDAN, Callum",
+     "votes": 2616
+    },
+    {
+     "name": "WALTERS, Vanushi",
+     "votes": 15729
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 7167
+    },
+    {
+     "name": "National Party",
+     "votes": 10049
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2805
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3441
+    },
+    {
+     "name": "Labour Party",
+     "votes": 12925
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 22
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 41
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 79
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 38
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 19
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3679
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 32
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 29
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 96
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 6
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 9
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 36
+    }
+   ]
+  },
+  {
+   "eNo": 57,
+   "name": "Waitaki",
+   "votesCounted": 45667,
+   "candidateInformals": 375,
+   "partyInformals": 228,
+   "candidates": [
+    {
+     "name": "ANDERSON, Miles John",
+     "votes": 22092
+    },
+    {
+     "name": "BEAMISH, Sean",
+     "votes": 2094
+    },
+    {
+     "name": "GRAAMANS, Adrian Daegal",
+     "votes": 176
+    },
+    {
+     "name": "JUDGE, Bronwyn",
+     "votes": 561
+    },
+    {
+     "name": "LAWS, Michael",
+     "votes": 4396
+    },
+    {
+     "name": "O'CONNOR, Damien",
+     "votes": 13092
+    },
+    {
+     "name": "SHAND, Daniel",
+     "votes": 289
+    },
+    {
+     "name": "TAIT, Helen",
+     "votes": 1951
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 16339
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6985
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5143
+    },
+    {
+     "name": "Labour Party",
+     "votes": 9217
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2688
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 18
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 48
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 100
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 35
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 16
+    },
+    {
+     "name": "Green Party",
+     "votes": 4666
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 33
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 65
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 44
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 7
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 33
+    }
+   ]
+  },
+  {
+   "eNo": 58,
+   "name": "Wellington Bays",
+   "votesCounted": 50821,
+   "candidateInformals": 330,
+   "partyInformals": 228,
+   "candidates": [
+    {
+     "name": "ANDERSON, Liam",
+     "votes": 59
+    },
+    {
+     "name": "GENTER, Julie Anne",
+     "votes": 19603
+    },
+    {
+     "name": "KINGDON-BEBB, Kayla",
+     "votes": 2676
+    },
+    {
+     "name": "McDONALD, Donald DS",
+     "votes": 74
+    },
+    {
+     "name": "McKEE, Nicole",
+     "votes": 1717
+    },
+    {
+     "name": "MUTHU, Karunā",
+     "votes": 6512
+    },
+    {
+     "name": "RENNEY, Craig",
+     "votes": 17993
+    },
+    {
+     "name": "WARNER, Gerald",
+     "votes": 1092
+    },
+    {
+     "name": "WELSH, Bruce",
+     "votes": 117
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 15317
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 6407
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 2212
+    },
+    {
+     "name": "National Party",
+     "votes": 7241
+    },
+    {
+     "name": "Labour Party",
+     "votes": 17101
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1998
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 27
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 33
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 61
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 23
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 12
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 9
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 19
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 92
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 9
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 28
+    }
+   ]
+  },
+  {
+   "eNo": 59,
+   "name": "Wellington North",
+   "votesCounted": 54756,
+   "candidateInformals": 207,
+   "partyInformals": 88,
+   "candidates": [
+    {
+     "name": "APPLEBY, Michael",
+     "votes": 248
+    },
+    {
+     "name": "ARNEIL, Taylor",
+     "votes": 787
+    },
+    {
+     "name": "HAGUE, Matthew",
+     "votes": 1134
+    },
+    {
+     "name": "HAMMOND, Jessica",
+     "votes": 2950
+    },
+    {
+     "name": "HARFORD, Joshua",
+     "votes": 155
+    },
+    {
+     "name": "PAUL, Tamatha",
+     "votes": 22222
+    },
+    {
+     "name": "PITTS, Jonathan",
+     "votes": 9675
+    },
+    {
+     "name": "VERRALL, Ayesha",
+     "votes": 16633
+    }
+   ],
+   "parties": [
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 65
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1727
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3052
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 8369
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 51
+    },
+    {
+     "name": "Green Party",
+     "votes": 15345
+    },
+    {
+     "name": "National Party",
+     "votes": 9404
+    },
+    {
+     "name": "Labour Party",
+     "votes": 16422
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 48
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 15
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 17
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 5
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 21
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 79
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 5
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 41
+    }
+   ]
+  },
+  {
+   "eNo": 60,
+   "name": "West Coast-Tasman",
+   "votesCounted": 42677,
+   "candidateInformals": 257,
+   "partyInformals": 149,
+   "candidates": [
+    {
+     "name": "BEAUMONT, Andrew Charles",
+     "votes": 2935
+    },
+    {
+     "name": "CLEINE, Jamie",
+     "votes": 4538
+    },
+    {
+     "name": "DYATLOVA-MURPHY, Sara",
+     "votes": 104
+    },
+    {
+     "name": "GREY, Sue",
+     "votes": 1552
+    },
+    {
+     "name": "HISLOP, Alexander",
+     "votes": 137
+    },
+    {
+     "name": "HOCKING, Janelle",
+     "votes": 2177
+    },
+    {
+     "name": "MILNE, Katie",
+     "votes": 18288
+    },
+    {
+     "name": "OSMASTON, Richard Francis",
+     "votes": 53
+    },
+    {
+     "name": "PATERSON, Rory William",
+     "votes": 11070
+    },
+    {
+     "name": "ROOKE, Kevin",
+     "votes": 43
+    },
+    {
+     "name": "UDDSTROM, Cindie",
+     "votes": 1069
+    }
+   ],
+   "parties": [
+    {
+     "name": "Green Party",
+     "votes": 5126
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 6665
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 41
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 407
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 93
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 6065
+    },
+    {
+     "name": "National Party",
+     "votes": 12382
+    },
+    {
+     "name": "Labour Party",
+     "votes": 8875
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2569
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 49
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 105
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 14
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 13
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 60
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 17
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 43
+    }
+   ]
+  },
+  {
+   "eNo": 61,
+   "name": "Whanganui",
+   "votesCounted": 41637,
+   "candidateInformals": 509,
+   "partyInformals": 238,
+   "candidates": [
+    {
+     "name": "BATES, Carl",
+     "votes": 21370
+    },
+    {
+     "name": "COFFEY, Juan Charles",
+     "votes": 358
+    },
+    {
+     "name": "HIPANGO-BROWNLIE, Harete",
+     "votes": 3872
+    },
+    {
+     "name": "KYLE, Sandra",
+     "votes": 693
+    },
+    {
+     "name": "ROBERTS, Angela",
+     "votes": 14286
+    }
+   ],
+   "parties": [
+    {
+     "name": "National Party",
+     "votes": 12450
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 6302
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 104
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10949
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 5229
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 16
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 121
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 33
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 19
+    },
+    {
+     "name": "Green Party",
+     "votes": 4123
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 27
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 47
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1824
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 99
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 4
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 9
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 43
+    }
+   ]
+  },
+  {
+   "eNo": 62,
+   "name": "Whangaparāoa",
+   "votesCounted": 43028,
+   "candidateInformals": 416,
+   "partyInformals": 141,
+   "candidates": [
+    {
+     "name": "FAITHFULL, Brenton Bruce",
+     "votes": 639
+    },
+    {
+     "name": "MITCHELL, Mark",
+     "votes": 27735
+    },
+    {
+     "name": "MULLER PALLARÈS, Estefania",
+     "votes": 11026
+    },
+    {
+     "name": "ROZA, Helena",
+     "votes": 2563
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand Loyal",
+     "votes": 118
+    },
+    {
+     "name": "National Party",
+     "votes": 17065
+    },
+    {
+     "name": "Labour Party",
+     "votes": 7457
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 7062
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 11
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 56
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 62
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 41
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "Green Party",
+     "votes": 3537
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 5267
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 28
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2081
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 44
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 6
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 10
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 31
+    }
+   ]
+  },
+  {
+   "eNo": 63,
+   "name": "Whangārei",
+   "votesCounted": 44458,
+   "candidateInformals": 373,
+   "partyInformals": 220,
+   "candidates": [
+    {
+     "name": "BEHARRELL, Luke",
+     "votes": 44
+    },
+    {
+     "name": "BLACKMAN, Collin",
+     "votes": 148
+    },
+    {
+     "name": "BUDD, Lloyd Sam",
+     "votes": 17292
+    },
+    {
+     "name": "CLOTWORTHY, Daryl Warren",
+     "votes": 103
+    },
+    {
+     "name": "COCURULLO, Vince",
+     "votes": 6432
+    },
+    {
+     "name": "DELLABARCA, Simon",
+     "votes": 902
+    },
+    {
+     "name": "GRAHAM, Doug",
+     "votes": 1681
+    },
+    {
+     "name": "PAYINDA, Gary",
+     "votes": 16607
+    },
+    {
+     "name": "TWYMAN, Jon",
+     "votes": 115
+    },
+    {
+     "name": "WAKELAM, Noah",
+     "votes": 262
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand Loyal",
+     "votes": 105
+    },
+    {
+     "name": "National Party",
+     "votes": 13140
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 6734
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2413
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 5795
+    },
+    {
+     "name": "Labour Party",
+     "votes": 10600
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 85
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 12
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 38
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 103
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 29
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 9
+    },
+    {
+     "name": "Green Party",
+     "votes": 4980
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 92
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 43
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 27
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 33
+    }
+   ]
+  },
+  {
+   "eNo": 64,
+   "name": "Wigram",
+   "votesCounted": 40917,
+   "candidateInformals": 511,
+   "partyInformals": 223,
+   "candidates": [
+    {
+     "name": "ALEXANDER, William Donald",
+     "votes": 165
+    },
+    {
+     "name": "McCLURE, Laura",
+     "votes": 1344
+    },
+    {
+     "name": "McTAGUE, Geoff",
+     "votes": 161
+    },
+    {
+     "name": "PANDEY, Shreejan",
+     "votes": 2916
+    },
+    {
+     "name": "PARK, Bryce",
+     "votes": 2375
+    },
+    {
+     "name": "SUMMERFIELD, Tracy",
+     "votes": 14895
+    },
+    {
+     "name": "YANZICK, Dominik",
+     "votes": 17718
+    }
+   ],
+   "parties": [
+    {
+     "name": "Free Palestine",
+     "votes": 54
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 3235
+    },
+    {
+     "name": "Green Party",
+     "votes": 5038
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 3695
+    },
+    {
+     "name": "National Party",
+     "votes": 11533
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13952
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 40
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 38
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 71
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 36
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 23
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 29
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 2847
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 52
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 2
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 5
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 44
+    }
+   ]
+  },
+  {
+   "eNo": 65,
+   "name": "Hauraki-Waikato",
+   "votesCounted": 33859,
+   "candidateInformals": 653,
+   "partyInformals": 448,
+   "candidates": [
+    {
+     "name": "DENBY, Neil",
+     "votes": 865
+    },
+    {
+     "name": "KIRIONA, Kingi",
+     "votes": 9111
+    },
+    {
+     "name": "MAIPI-CLARKE, Hana-Rawhiti",
+     "votes": 22536
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 16691
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 1923
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 275
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 7
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 25
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 175
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 9
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "Green Party",
+     "votes": 11530
+    },
+    {
+     "name": "National Party",
+     "votes": 871
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1164
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 14
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 21
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 515
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 70
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 90
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 20
+    }
+   ]
+  },
+  {
+   "eNo": 66,
+   "name": "Ikaroa-Rāwhiti",
+   "votesCounted": 34203,
+   "candidateInformals": 644,
+   "partyInformals": 356,
+   "candidates": [
+    {
+     "name": "MAXWELL, Haley",
+     "votes": 10812
+    },
+    {
+     "name": "TANGAERE-MANUEL, Cushla",
+     "votes": 13929
+    },
+    {
+     "name": "TE AU-SKIPWORTH, Heather",
+     "votes": 8158
+    }
+   ],
+   "parties": [
+    {
+     "name": "Te Pāti Māori",
+     "votes": 1905
+    },
+    {
+     "name": "Labour Party",
+     "votes": 18290
+    },
+    {
+     "name": "Green Party",
+     "votes": 11060
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 171
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 4
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 16
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 163
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 11
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 8
+    },
+    {
+     "name": "National Party",
+     "votes": 588
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 975
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 4
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 23
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 532
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 35
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 46
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 16
+    }
+   ]
+  },
+  {
+   "eNo": 67,
+   "name": "Tāmaki Makaurau",
+   "votesCounted": 32995,
+   "candidateInformals": 854,
+   "partyInformals": 402,
+   "candidates": [
+    {
+     "name": "KAIPARA, Oriini",
+     "votes": 16723
+    },
+    {
+     "name": "LEONI, Kerrin",
+     "votes": 7373
+    },
+    {
+     "name": "TE OHAERE, Florence",
+     "votes": 6906
+    }
+   ],
+   "parties": [
+    {
+     "name": "Te Pāti Māori",
+     "votes": 1987
+    },
+    {
+     "name": "Labour Party",
+     "votes": 15636
+    },
+    {
+     "name": "Green Party",
+     "votes": 11623
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 207
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 8
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 24
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 130
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 6
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 11
+    },
+    {
+     "name": "National Party",
+     "votes": 748
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1103
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 17
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 19
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 803
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 128
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 123
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 20
+    }
+   ]
+  },
+  {
+   "eNo": 68,
+   "name": "Te Tai Hauāuru",
+   "votesCounted": 33255,
+   "candidateInformals": 522,
+   "partyInformals": 401,
+   "candidates": [
+    {
+     "name": "KĀTENE, Te Pūoho",
+     "votes": 13021
+    },
+    {
+     "name": "NGAREWA-PACKER, Debbie",
+     "votes": 17819
+    },
+    {
+     "name": "RAUKAWA, Coral",
+     "votes": 1350
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 15262
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 1931
+    },
+    {
+     "name": "National Party",
+     "votes": 800
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 241
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 5
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 20
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 177
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 16
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 13
+    },
+    {
+     "name": "Green Party",
+     "votes": 12247
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1291
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 10
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 29
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 673
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 82
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 37
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 20
+    }
+   ]
+  },
+  {
+   "eNo": 69,
+   "name": "Te Tai Tokerau",
+   "votesCounted": 35199,
+   "candidateInformals": 620,
+   "partyInformals": 325,
+   "candidates": [
+    {
+     "name": "BARKLEY, Karl",
+     "votes": 266
+    },
+    {
+     "name": "EDWARDS, Aperahama",
+     "votes": 10358
+    },
+    {
+     "name": "HERBERT, Maki",
+     "votes": 964
+    },
+    {
+     "name": "KAPA-KINGI, Mariameno",
+     "votes": 4937
+    },
+    {
+     "name": "LYNDON, Hūhana",
+     "votes": 9775
+    },
+    {
+     "name": "PRIME, Willow-Jean",
+     "votes": 7421
+    }
+   ],
+   "parties": [
+    {
+     "name": "Te Pāti Māori",
+     "votes": 1658
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 257
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 802
+    },
+    {
+     "name": "Green Party",
+     "votes": 12978
+    },
+    {
+     "name": "Labour Party",
+     "votes": 15282
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 285
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 6
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 23
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 7
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 9
+    },
+    {
+     "name": "National Party",
+     "votes": 1026
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1613
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 24
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 34
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 785
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 66
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 19
+    }
+   ]
+  },
+  {
+   "eNo": 70,
+   "name": "Te Tai Tonga",
+   "votesCounted": 32405,
+   "candidateInformals": 690,
+   "partyInformals": 243,
+   "candidates": [
+    {
+     "name": "FERRIS, Tākuta",
+     "votes": 5607
+    },
+    {
+     "name": "FISHER, Christine",
+     "votes": 633
+    },
+    {
+     "name": "HENARE, Tania Lee",
+     "votes": 1530
+    },
+    {
+     "name": "MURCH, Lisa",
+     "votes": 6011
+    },
+    {
+     "name": "RAMSDEN, Mananui",
+     "votes": 10055
+    },
+    {
+     "name": "TE MORENGA, Lisa",
+     "votes": 7282
+    }
+   ],
+   "parties": [
+    {
+     "name": "New Zealand Loyal",
+     "votes": 30
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 248
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 1181
+    },
+    {
+     "name": "Labour Party",
+     "votes": 13011
+    },
+    {
+     "name": "Green Party",
+     "votes": 11910
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 538
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 17
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 31
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 19
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 13
+    },
+    {
+     "name": "National Party",
+     "votes": 1767
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1953
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 38
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 1254
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 86
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 43
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 23
+    }
+   ]
+  },
+  {
+   "eNo": 71,
+   "name": "Waiariki",
+   "votesCounted": 35127,
+   "candidateInformals": 598,
+   "partyInformals": 361,
+   "candidates": [
+    {
+     "name": "BOYNTON, Toni",
+     "votes": 4814
+    },
+    {
+     "name": "WAIKATO, Tania",
+     "votes": 12617
+    },
+    {
+     "name": "WAITITI, Rawiri",
+     "votes": 15253
+    },
+    {
+     "name": "WHAREWERA, Pāpā",
+     "votes": 1024
+    }
+   ],
+   "parties": [
+    {
+     "name": "Labour Party",
+     "votes": 16097
+    },
+    {
+     "name": "Green Party",
+     "votes": 13347
+    },
+    {
+     "name": "Te Pāti Māori",
+     "votes": 2471
+    },
+    {
+     "name": "Opportunity Party",
+     "votes": 619
+    },
+    {
+     "name": "ACT New Zealand",
+     "votes": 185
+    },
+    {
+     "name": "Alliance Party",
+     "votes": 3
+    },
+    {
+     "name": "Animal Justice Party Aotearoa New Zealand",
+     "votes": 19
+    },
+    {
+     "name": "Aotearoa Legalise Cannabis Party",
+     "votes": 121
+    },
+    {
+     "name": "Conservative Party NZ",
+     "votes": 8
+    },
+    {
+     "name": "Free Palestine",
+     "votes": 10
+    },
+    {
+     "name": "National Party",
+     "votes": 587
+    },
+    {
+     "name": "New Zealand First Party",
+     "votes": 1054
+    },
+    {
+     "name": "New Zealand Loyal",
+     "votes": 10
+    },
+    {
+     "name": "NZ Outdoors & Freedom Party",
+     "votes": 27
+    },
+    {
+     "name": "Te Tai Tokerau Party",
+     "votes": 39
+    },
+    {
+     "name": "Vision New Zealand",
+     "votes": 146
+    },
+    {
+     "name": "Women’s Rights Party",
+     "votes": 23
+    }
+   ]
+  }
+ ],
+ "successful": [
+  {
+   "party": "ACT New Zealand",
+   "name": "CHHOUR, Karen",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "CHRISTMAS, James",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "COURT, Simon",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "HENRY, Paul",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "HOGGARD, Andrew",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "LUXTON, Cameron",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "McCLURE, Laura",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "McKEE, Nicole",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "MODKOVA, Antonia",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "MURRAY, Iain",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "PARMAR, Parmjeet",
+   "eNo": null
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "SEYMOUR, David",
+   "eNo": 10
+  },
+  {
+   "party": "ACT New Zealand",
+   "name": "STEPHENSON, Todd",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "ABEL, Steve",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "CARTER, Kahu",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "DAVIDSON, Marama Mere-Ana",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "GENTER, Julie Anne",
+   "eNo": 58
+  },
+  {
+   "party": "Green Party",
+   "name": "GOODSIR, Bhen",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "HERNANDEZ, Francisco Bagkus",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "LYNDON, Hūhana",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "MENENDEZ MARCH, Ricardo",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "O'NEILL-STEVENS, Rohan",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "PAUL, Tamatha",
+   "eNo": 59
+  },
+  {
+   "party": "Green Party",
+   "name": "PAULING, Craig",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "PHAM, Lan",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "SWARBRICK, Chlöe",
+   "eNo": 1
+  },
+  {
+   "party": "Green Party",
+   "name": "TUIONO, Teanau",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "WAIKATO, Tania",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "WILLIS, Scott",
+   "eNo": null
+  },
+  {
+   "party": "Green Party",
+   "name": "XU-NAN, Lawrence",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "ANDERSEN, Ginny",
+   "eNo": 15
+  },
+  {
+   "party": "Labour Party",
+   "name": "BELICH, Camilla",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "BENNETT, Glen",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "BROOKING, Rachel",
+   "eNo": 7
+  },
+  {
+   "party": "Labour Party",
+   "name": "DANSEY, Georgie",
+   "eNo": 12
+  },
+  {
+   "party": "Labour Party",
+   "name": "DAVIDSON, Reuben John",
+   "eNo": 5
+  },
+  {
+   "party": "Labour Party",
+   "name": "EDMONDS, Barbara",
+   "eNo": 21
+  },
+  {
+   "party": "Labour Party",
+   "name": "FLATT, Chris",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "HALBERT, Shanan",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "HAMPTON, George",
+   "eNo": 4
+  },
+  {
+   "party": "Labour Party",
+   "name": "HIPKINS, Chris",
+   "eNo": 41
+  },
+  {
+   "party": "Labour Party",
+   "name": "JACKSON, William",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "KIRIONA, Kingi",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "LEARY, Ingrid",
+   "eNo": 45
+  },
+  {
+   "party": "Labour Party",
+   "name": "LUXTON, Jo",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "McANULTY, Kieran",
+   "eNo": 55
+  },
+  {
+   "party": "Labour Party",
+   "name": "McLELLAN, Tracey",
+   "eNo": 2
+  },
+  {
+   "party": "Labour Party",
+   "name": "NAIDOO, Rakesh",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "O'CONNOR, Damien",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "PRIME, Willow-Jean",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "RADHAKRISHNAN, Priyanca",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "RAMSDEN, Mananui",
+   "eNo": 70
+  },
+  {
+   "party": "Labour Party",
+   "name": "SALESA, Jenny",
+   "eNo": 34
+  },
+  {
+   "party": "Labour Party",
+   "name": "SEPULONI, Carmel Jean",
+   "eNo": 11
+  },
+  {
+   "party": "Labour Party",
+   "name": "SOSENE, Lemauga Lydia",
+   "eNo": 22
+  },
+  {
+   "party": "Labour Party",
+   "name": "TANGAERE-MANUEL, Cushla",
+   "eNo": 66
+  },
+  {
+   "party": "Labour Party",
+   "name": "TINETTI, Jan",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "TWYFORD, Phil",
+   "eNo": 14
+  },
+  {
+   "party": "Labour Party",
+   "name": "UTIKERE, Tangi",
+   "eNo": 36
+  },
+  {
+   "party": "Labour Party",
+   "name": "VERRALL, Ayesha",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "WALTERS, Vanushi",
+   "eNo": 56
+  },
+  {
+   "party": "Labour Party",
+   "name": "WHITE, Helen",
+   "eNo": 25
+  },
+  {
+   "party": "Labour Party",
+   "name": "WILLIAMS, Arena",
+   "eNo": 23
+  },
+  {
+   "party": "Labour Party",
+   "name": "WOOD, Michael Philip",
+   "eNo": 27
+  },
+  {
+   "party": "Labour Party",
+   "name": "WOODS, Megan",
+   "eNo": null
+  },
+  {
+   "party": "Labour Party",
+   "name": "YANZICK, Dominik",
+   "eNo": 64
+  },
+  {
+   "party": "National Party",
+   "name": "ANDERSON, Miles John",
+   "eNo": 57
+  },
+  {
+   "party": "National Party",
+   "name": "BATES, Carl",
+   "eNo": 61
+  },
+  {
+   "party": "National Party",
+   "name": "BIDOIS, Dan",
+   "eNo": 32
+  },
+  {
+   "party": "National Party",
+   "name": "BREWER, Cameron",
+   "eNo": 52
+  },
+  {
+   "party": "National Party",
+   "name": "BROWN, Simeon",
+   "eNo": 35
+  },
+  {
+   "party": "National Party",
+   "name": "BUDD, Lloyd Sam",
+   "eNo": 63
+  },
+  {
+   "party": "National Party",
+   "name": "CAMERON, Blair",
+   "eNo": 29
+  },
+  {
+   "party": "National Party",
+   "name": "CAMPBELL, Hamish",
+   "eNo": 16
+  },
+  {
+   "party": "National Party",
+   "name": "CHATTERTON, Emma May",
+   "eNo": 37
+  },
+  {
+   "party": "National Party",
+   "name": "COSTLEY, Tim",
+   "eNo": 20
+  },
+  {
+   "party": "National Party",
+   "name": "DOOCEY, Matt",
+   "eNo": 54
+  },
+  {
+   "party": "National Party",
+   "name": "FLEMING, Greg",
+   "eNo": 24
+  },
+  {
+   "party": "National Party",
+   "name": "GRIGG, Nicola",
+   "eNo": 43
+  },
+  {
+   "party": "National Party",
+   "name": "KIRKPATRICK, Dana Margot",
+   "eNo": 8
+  },
+  {
+   "party": "National Party",
+   "name": "KURIGER, Barbara Joan",
+   "eNo": 48
+  },
+  {
+   "party": "National Party",
+   "name": "LUXON, Christopher",
+   "eNo": 3
+  },
+  {
+   "party": "National Party",
+   "name": "McCALLUM, Grant Lewis",
+   "eNo": 33
+  },
+  {
+   "party": "National Party",
+   "name": "McCLAY, Todd",
+   "eNo": 42
+  },
+  {
+   "party": "National Party",
+   "name": "MacLEOD, David",
+   "eNo": 30
+  },
+  {
+   "party": "National Party",
+   "name": "MEAGER, James",
+   "eNo": 39
+  },
+  {
+   "party": "National Party",
+   "name": "MILNE, Katie",
+   "eNo": 60
+  },
+  {
+   "party": "National Party",
+   "name": "MITCHELL, Mark",
+   "eNo": 62
+  },
+  {
+   "party": "National Party",
+   "name": "MOONEY, Joseph",
+   "eNo": 44
+  },
+  {
+   "party": "National Party",
+   "name": "MURALIDHAR, Mahesh",
+   "eNo": 47
+  },
+  {
+   "party": "National Party",
+   "name": "NAKHLE, Rima",
+   "eNo": 46
+  },
+  {
+   "party": "National Party",
+   "name": "NIMON, Katie",
+   "eNo": 28
+  },
+  {
+   "party": "National Party",
+   "name": "PAUL, Matthew",
+   "eNo": 38
+  },
+  {
+   "party": "National Party",
+   "name": "POTAKA, Tama William",
+   "eNo": 13
+  },
+  {
+   "party": "National Party",
+   "name": "REDMAYNE, Suze",
+   "eNo": 40
+  },
+  {
+   "party": "National Party",
+   "name": "ROWE, Jessica",
+   "eNo": 19
+  },
+  {
+   "party": "National Party",
+   "name": "RUTHERFORD, Tom",
+   "eNo": 26
+  },
+  {
+   "party": "National Party",
+   "name": "SIMMONDS, Penny",
+   "eNo": 17
+  },
+  {
+   "party": "National Party",
+   "name": "SIMPSON, Scott",
+   "eNo": 6
+  },
+  {
+   "party": "National Party",
+   "name": "SMITH, Stuart",
+   "eNo": 18
+  },
+  {
+   "party": "National Party",
+   "name": "STANFORD, Erica",
+   "eNo": 9
+  },
+  {
+   "party": "National Party",
+   "name": "UFFINDELL, Sam",
+   "eNo": 50
+  },
+  {
+   "party": "National Party",
+   "name": "UPSTON, Louise Claire",
+   "eNo": 49
+  },
+  {
+   "party": "National Party",
+   "name": "VAN DE MOLEN, Tim",
+   "eNo": 53
+  },
+  {
+   "party": "National Party",
+   "name": "WATTS, Simon",
+   "eNo": 31
+  },
+  {
+   "party": "National Party",
+   "name": "WEDD, Catherine",
+   "eNo": 51
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "COSTELLO, Casey",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "FOSTER, Andy",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "HIPANGO-BROWNLIE, Harete",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "JONES, Shane",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "LAWS, Michael",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "MARCROFT, Jenny",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "NGARO, Alfred",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "PATTERSON, Mark",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "PETERS, Winston",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "RANDELL, Taine",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "STOBO, Craig H.",
+   "eNo": null
+  },
+  {
+   "party": "New Zealand First Party",
+   "name": "WILSON, David Ashley",
+   "eNo": null
+  },
+  {
+   "party": "Opportunity Party",
+   "name": "EB, Daniel",
+   "eNo": null
+  },
+  {
+   "party": "Opportunity Party",
+   "name": "HAMMOND, Jessica",
+   "eNo": null
+  },
+  {
+   "party": "Opportunity Party",
+   "name": "KINGDON-BEBB, Kayla",
+   "eNo": null
+  },
+  {
+   "party": "Opportunity Party",
+   "name": "KUNTZSCH, Jodie",
+   "eNo": null
+  },
+  {
+   "party": "Opportunity Party",
+   "name": "LUCAS, Sarah",
+   "eNo": null
+  },
+  {
+   "party": "Opportunity Party",
+   "name": "SKIPPER, Eden",
+   "eNo": null
+  },
+  {
+   "party": "Opportunity Party",
+   "name": "WONG, Qiulae",
+   "eNo": null
+  },
+  {
+   "party": "Te Pāti Māori",
+   "name": "EDWARDS, Aperahama",
+   "eNo": 69
+  },
+  {
+   "party": "Te Pāti Māori",
+   "name": "KAIPARA, Oriini",
+   "eNo": 67
+  },
+  {
+   "party": "Te Pāti Māori",
+   "name": "MAIPI-CLARKE, Hana-Rawhiti",
+   "eNo": 65
+  },
+  {
+   "party": "Te Pāti Māori",
+   "name": "NGAREWA-PACKER, Debbie",
+   "eNo": 68
+  },
+  {
+   "party": "Te Pāti Māori",
+   "name": "WAITITI, Rawiri",
+   "eNo": 71
+  }
+ ]
+}

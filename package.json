@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "drizzle-kit migrate && next build",
+    "build": "drizzle-kit migrate && pnpm official:import --write && next build",
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
@@ -16,6 +16,8 @@
     "icons:build": "tsx scripts/build-icons.ts",
     "booths:build": "tsx scripts/build-booths.ts",
     "booths:import": "tsx --env-file-if-exists=.env.local scripts/import-booths.ts",
+    "official:distil": "tsx scripts/distil-official.ts",
+    "official:import": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/import-official.ts",
     "scrape": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/scrape.ts",
     "simulate": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/simulate.ts"
   },

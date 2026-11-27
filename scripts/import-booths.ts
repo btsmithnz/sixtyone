@@ -19,8 +19,8 @@
  */
 import path from "node:path";
 import postgres from "postgres";
-import { foldDiacritics } from "../src/lib/text";
 import { readCsv } from "./lib/csv";
+import { nameKey } from "./lib/names";
 
 const args = process.argv.slice(2);
 const write = args.includes("--write");
@@ -42,14 +42,6 @@ type Booth = {
   candidate: Map<string, number>;
   candidateInformals: number;
 };
-
-/** Lenient name key: case, macrons, curly quotes and spacing don't matter. */
-const key = (s: string) =>
-  foldDiacritics(s.normalize("NFKC"))
-    .replace(/[‘’`]/g, "'")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
 
 async function readBooths() {
   const booths = new Map<string, Booth>();
@@ -140,13 +132,13 @@ async function main() {
 
     const partyByName = new Map<string, number>();
     for (const p of parties) {
-      partyByName.set(key(p.name), p.p_no);
-      if (!partyByName.has(key(p.short_name))) {
-        partyByName.set(key(p.short_name), p.p_no);
+      partyByName.set(nameKey(p.name), p.p_no);
+      if (!partyByName.has(nameKey(p.short_name))) {
+        partyByName.set(nameKey(p.short_name), p.p_no);
       }
     }
     const candidateByName = new Map(
-      candidates.map((c) => [`${c.e_no}|${key(c.name)}`, c.c_no]),
+      candidates.map((c) => [`${c.e_no}|${nameKey(c.name)}`, c.c_no]),
     );
     const electorateNames = new Map(electorates.map((e) => [e.e_no, e.name]));
 
@@ -154,18 +146,20 @@ async function main() {
     const resolved = booths.map((b) => {
       if (!electorateNames.has(b.eNo))
         problems.add(`Unknown electorate ${b.eNo}`);
-      else if (key(electorateNames.get(b.eNo) ?? "") !== key(b.electorate)) {
+      else if (
+        nameKey(electorateNames.get(b.eNo) ?? "") !== nameKey(b.electorate)
+      ) {
         problems.add(
           `Electorate ${b.eNo} is "${electorateNames.get(b.eNo)}" in the database but "${b.electorate}" in the CSV`,
         );
       }
       const party = [...b.party].map(([name, votes]) => {
-        const pNo = partyByName.get(key(name));
+        const pNo = partyByName.get(nameKey(name));
         if (pNo === undefined) problems.add(`No party called "${name}"`);
         return { pNo: pNo ?? -1, votes };
       });
       const candidate = [...b.candidate].map(([name, votes]) => {
-        const cNo = candidateByName.get(`${b.eNo}|${key(name)}`);
+        const cNo = candidateByName.get(`${b.eNo}|${nameKey(name)}`);
         if (cNo === undefined) {
           problems.add(
             `No candidate "${name}" in electorate ${b.eNo} (${b.electorate})`,

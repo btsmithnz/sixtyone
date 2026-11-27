@@ -49,11 +49,9 @@ Every snapshot carries a `stage`: `preliminary` or `official` (`src/db/schema.ts
 
 ### Getting official data in
 
-Both paths store the same rows, then revalidate the site once: the scraper's cron route
-does that itself; after an import, call `/api/revalidate` (below). Give each import its
-own `updated` time (when it was published or imported): the newest timestamp is the
-results version, so a re-import with the same one wouldn't refresh open pages or share
-images.
+Both paths store the same rows. Each import has its own `updated` time (when it was
+published or saved): the newest timestamp is the results version, so a re-import with
+the same one is a no-op.
 
 1. **Feed:** set `COUNT_STAGE=official` (Production, then redeploy so the cron route
    sees it) before the feed publishes the official count, and keep it while recounts
@@ -61,13 +59,34 @@ images.
    preliminary. If it's forgotten, the official numbers are stored as preliminary: the
    site keeps showing any official count already stored, but election night's history
    and baseline pick up the official numbers.
-2. **CSV/HTML:** an import script (dry run first, like `pnpm booths:import`) writes one
-   official national snapshot and one per electorate **in a single transaction**, so
-   visitors never see half the electorates official: `storeElection` and
-   `storeElectorate` take a `tx` for this (see `addOfficialCount` in
-   `scripts/simulate.ts`). Electorate snapshots need no voting place counts: an official
-   electorate is always complete. Write the Commission's seat allocation into the party
-   rows, or seats are projected.
+2. **Results pages (what 2026 used):** the results site is HTML behind a Cloudflare
+   challenge, so the pages are saved from a browser into the gitignored
+   `data/official-<year>/` (`index.html`, `successful-candidates.html`, every
+   `electorate-details-NN.html`, and a `manifest.json` of `{ source, fetchedAt, pages }`).
+   Then:
+   - `pnpm official:distil` turns them into `imports/official-<year>.json`: names and
+     numbers only, about 140 KB, committed. Every total on the pages is checked against
+     its parts (votes, informals, majorities, seats, electorate winners), so a change in
+     the page format fails here.
+   - `pnpm official:import` dry-runs it against `DATABASE_URL`: it matches every name to
+     the stored parties, candidates and electorates and prints the seat changes and the
+     electorates that changed hands. Add `--write` to store it.
+   - **The build runs `official:import --write`** after migrating, so committing the file
+     is the release: the PR's preview deployment imports into its Neon branch (check it
+     there), and merging imports into production. A new deployment starts with an empty
+     cache, so nothing needs revalidating. It's a no-op once stored, on a database with no
+     parties, and when a newer official count is stored. A name that doesn't match fails
+     the build.
+   - It writes one official national snapshot and one per electorate **in a single
+     transaction**, with the Commission's seat allocation in the party rows.
+   - The pages have no voting place counts, electors or special votes. Places come from
+     election night's count, turnout uses election night's roll, and special votes are
+     stored as 0. The E9 statistics (mid-December) have the rest; a later file with a
+     newer `fetchedAt` adds a newer official snapshot, which wins.
+   - For the next election, delete the old file from `imports/`: its names won't match
+     the new database, which fails the build.
+
+After a manual import (one that isn't part of a deploy), refresh the site:
 
 ```bash
 curl -H "Authorization: Bearer $CRON_SECRET" https://<site>/api/revalidate

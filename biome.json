@@ -15,6 +15,7 @@
       "!build",
       "!drizzle",
       "!src/data",
+      "!imports",
       "!public/map"
     ]
   },
