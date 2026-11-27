@@ -19,7 +19,7 @@ import { shareMetadata } from "@/lib/site";
 export async function generateMetadata(): Promise<Metadata> {
   const title = "All 71 electorates";
   const description =
-    "Live 2026 New Zealand election results for all 64 general and 7 Māori electorates: who's ahead and by how much.";
+    "2026 New Zealand election results for all 64 general and 7 Māori electorates: who's ahead or won, and by how much.";
   return {
     title,
     description,
@@ -47,7 +47,7 @@ export default function ElectoratesPage() {
 }
 
 async function Grid() {
-  const { electorates, version, updatedAt } = await getOverview();
+  const { electorates, version, updatedAt, stage } = await getOverview();
   const results = new Map(electorates.map((e) => [e.eNo, e]));
   // List all 71 from the static map data, so the grid is complete even
   // before the first scrape has loaded anything into the database.
@@ -66,13 +66,14 @@ async function Grid() {
         ink: partyInkVar(lead?.pNo),
         margin: e?.margin ?? null,
         percentCounted: e?.percentCounted ?? 0,
+        stage: e?.stage ?? "preliminary",
         complete: e?.complete ?? false,
       };
     },
   );
   return (
     <>
-      <LiveStatus updatedAt={updatedAt} version={version} />
+      <LiveStatus updatedAt={updatedAt} stage={stage} version={version} />
       <ElectorateGrid electorates={cards} />
     </>
   );

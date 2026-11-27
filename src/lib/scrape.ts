@@ -15,6 +15,7 @@ import {
   parseParties,
 } from "./feed/parse";
 import { storeElection, storeElectorate, upsertReference } from "./ingest";
+import { parseCountStage } from "./stage";
 
 const ELECTORATE_COUNT = 71;
 const CONCURRENCY = 6;
@@ -33,6 +34,12 @@ export type ScrapeSummary = {
 /**
  * One scrape cycle. Safe to run concurrently or repeatedly: every snapshot is
  * keyed by the feed's own `updated` timestamp, so duplicates are ignored.
+ *
+ * Nothing in the feed reliably says which count it is, so snapshots are
+ * stored as preliminary unless COUNT_STAGE=official: set that while the feed
+ * publishes the official result or a recount (docs/official-results.md).
+ * Even if it's left unset, a preliminary snapshot never replaces an official
+ * one on the site (see latestFirst in results.ts).
  */
 export async function scrapeFeed({
   force = false,
@@ -41,6 +48,7 @@ export async function scrapeFeed({
   force?: boolean;
 } = {}): Promise<ScrapeSummary> {
   const started = Date.now();
+  const stage = parseCountStage(process.env.COUNT_STAGE || "preliminary");
   const [run] = await db
     .insert(schema.scrapeRuns)
     .values({ status: "running" })
@@ -136,7 +144,9 @@ export async function scrapeFeed({
     try {
       const election = await get("election.xml", "election");
       if (election.status === "ok") {
-        electionChanged = await storeElection(parseElection(election.body));
+        electionChanged = await storeElection(parseElection(election.body), {
+          stage,
+        });
       }
       await remember("election.xml", election);
     } catch (err) {
@@ -151,7 +161,7 @@ export async function scrapeFeed({
         const res = await get(path, "electorate");
         const stored =
           res.status === "ok"
-            ? await storeElectorate(parseElectorateResult(res.body))
+            ? await storeElectorate(parseElectorateResult(res.body), { stage })
             : false;
         await remember(path, res);
         return stored;

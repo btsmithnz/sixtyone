@@ -25,8 +25,9 @@
 2. **Swing against 2023.** Needs 2023 results re-aggregated onto the 2025 boundaries
    (booth-level 2023 data plus voting place locations makes this possible).
 3. **Web push for followed electorates**, when a followed race flips.
-4. **Official results.** The final count lands about three weeks later and specials
-   often flip a seat. Ingest it and show "election night vs final".
+4. **Official results importer.** The data model and pages are ready
+   ([official-results.md](./official-results.md)); what's left is parsing whatever format
+   the Commission publishes on the day.
 5. **Hex cartogram view.** An equal-area tile map stops rural electorates dominating
    and makes Auckland legible without an inset.
 6. **Embeds.** An iframe-able race strip for other sites and blogs.

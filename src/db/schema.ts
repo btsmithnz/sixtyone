@@ -11,6 +11,12 @@ import {
   timestamp,
   unique,
 } from "drizzle-orm/pg-core";
+// Relative, not "@/lib/…": drizzle-kit loads this file too.
+import { COUNT_STAGES } from "../lib/stage";
+
+/** Which count a snapshot comes from; see src/lib/stage.ts. */
+const countStage = () =>
+  text("stage", { enum: COUNT_STAGES }).notNull().default("preliminary");
 
 /* ------------------------------------------------------------------ */
 /* Reference data (from parties.xml, electorates.xml, candidates.xml) */
@@ -60,6 +66,7 @@ export const electionSnapshots = pgTable("election_snapshots", {
   capturedAt: timestamp("captured_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
+  stage: countStage(),
   votingPlacesCounted: integer("voting_places_counted").notNull(),
   percentVotingPlacesCounted: real("percent_voting_places_counted").notNull(),
   totalVotesCast: integer("total_votes_cast").notNull(),
@@ -97,6 +104,7 @@ export const electorateSnapshots = pgTable(
     capturedAt: timestamp("captured_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    stage: countStage(),
     final: boolean("final").notNull(),
     totalVotingPlaces: integer("total_voting_places").notNull(),
     votingPlacesCounted: integer("voting_places_counted").notNull(),

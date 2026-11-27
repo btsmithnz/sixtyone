@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useDeferredValue, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toggleFavourite, useFavourites } from "@/lib/favourites";
-import { formatInt, formatPct } from "@/lib/format";
+import { countedLabel, formatInt, formatPct } from "@/lib/format";
+import type { CountStage } from "@/lib/stage";
 import { foldDiacritics } from "@/lib/text";
 import { FavouriteButton } from "./favourite-button";
 import { Skeleton } from "./ui/skeleton";
@@ -16,6 +17,7 @@ export type FavouriteCard = {
   name: string;
   slug: string;
   percentCounted: number;
+  stage: CountStage;
   complete: boolean;
   margin: number | null;
   /** Top three, already in order. Empty until votes are counted. */
@@ -160,7 +162,7 @@ function Card({ e }: { e: FavouriteCard }) {
           />
         </div>
         <span className="num shrink-0">
-          {formatPct(e.percentCounted, 0)} counted
+          {countedLabel(e.stage, e.percentCounted)}
         </span>
       </div>
 

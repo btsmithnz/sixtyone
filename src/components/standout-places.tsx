@@ -4,7 +4,6 @@ import { getNationalStandouts } from "@/lib/booths";
 import { formatPct } from "@/lib/format";
 import { partyColorVar } from "@/lib/parties";
 import type { Overview } from "@/lib/results";
-import { OFFICIAL_RESULTS_DATE } from "@/lib/specials";
 import { STANDOUT_MIN_VOTES } from "@/lib/standouts";
 
 /** Parties with less of the party vote than this (%) don't get a best place. */
@@ -140,7 +139,7 @@ export async function StandoutPlaces({
         it took the most votes for, so students voting for home at a university
         don’t count. Special votes aren’t counted by voting place.
         {stage === "preliminary"
-          ? ` Preliminary counts can include recording slips; the official count on ${OFFICIAL_RESULTS_DATE} checks every voting place.`
+          ? ` Preliminary counts can include recording slips; the official count checks every voting place.`
           : ""}
       </p>
     </section>

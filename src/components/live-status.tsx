@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { formatDay, formatTime, nzDateKey } from "@/lib/format";
-import { countStage } from "@/lib/specials";
+import type { CountStage } from "@/lib/stage";
 
 /**
  * How often an open page asks /api/status whether there's anything new. The
@@ -43,10 +43,13 @@ function updatedLabel(updatedAt: number, today: string | null) {
  */
 export function LiveStatus({
   updatedAt,
+  stage,
   version,
 }: {
   /** When the results shown on this page last changed (for the label). */
   updatedAt: number | null;
+  /** Which count the page's results come from. */
+  stage: CountStage;
   /** Results version the page data was read at (same value /api/status reports). */
   version: number | null;
 }) {
@@ -100,18 +103,26 @@ export function LiveStatus({
 
   return (
     <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+      {/* Pulses while counting. The official count is settled, though it
+          still checks for news: a recount can update it. */}
       <span
         aria-hidden
-        className="size-2.5 rounded-full bg-live"
-        style={{ animation: "live-pulse 2s ease-in-out infinite" }}
+        className={
+          stage === "official"
+            ? "size-2.5 rounded-full bg-primary"
+            : "size-2.5 rounded-full bg-live"
+        }
+        style={
+          stage === "official"
+            ? undefined
+            : { animation: "live-pulse 2s ease-in-out infinite" }
+        }
       />
       {updatedAt ? (
         <span>
           {/* Every page's results come from the same count, so say which. */}
           <span className="font-medium text-foreground">
-            {countStage(updatedAt) === "official"
-              ? "Official count"
-              : "Preliminary count"}
+            {stage === "official" ? "Official count" : "Preliminary count"}
           </span>
           {" · "}
           Updated <span className="num">{updatedLabel(updatedAt, today)}</span>
